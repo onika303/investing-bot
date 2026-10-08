@@ -255,10 +255,14 @@ def test_status_shows_counts(fake_message):
 
 
 def test_status_unauthorized(fake_message):
-    from src.bot import cmd_status
-    msg = fake_message("/status", chat_id=777)
-    run(cmd_status(msg, make_state()))
-    assert "Доступ запрещён" in msg.answers[0]
+    """Авторизация вынесена в фильтр IsAuthorized (шаг 4.1/4.3)."""
+    from src.bot import IsAuthorized
+    state = make_state()
+    allowed = fake_message("/status", chat_id=100)
+    denied = fake_message("/status", chat_id=777)
+    assert run(IsAuthorized()(allowed, state=state)) is True
+    assert run(IsAuthorized()(denied, state=state)) is False
+    assert "chat_id" in denied.answers[0] and "777" in denied.answers[0]
 
 
 def test_scan_returns_cached_report(fake_message):

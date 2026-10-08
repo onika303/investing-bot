@@ -16,14 +16,18 @@ class ConfigError(RuntimeError):
 @dataclass
 class BotConfig:
     bot_token: str
-    admin_chat_id: int
+    admin_chat_id: int | str  # числовой id либо @username (публичные каналы/чаты с ботом-админом)
     allowed_user_ids: list[int] = field(default_factory=list)
     timezone: str = "Europe/Moscow"
     report_cache_hours: float = 6.0  # насколько «свежим» считается last_report для /scan без force
 
-    def is_authorized(self, chat_id: int) -> bool:
-        """Приватный режим: доступ только админу и явно разрешённым чатам."""
-        if chat_id == self.admin_chat_id:
+    def is_authorized(self, chat_id: int | str) -> bool:
+        """Приватный режим: доступ только админу и явно разрешённым чатам.
+
+        chat_id может быть числом (личные чаты) или "@username" (публичный
+        канал/группа) — сравниваем как строки, чтобы поддерживать оба варианта.
+        """
+        if str(chat_id).lower() == str(self.admin_chat_id).lower():
             return True
         return chat_id in self.allowed_user_ids
 
@@ -68,10 +72,17 @@ def load_config(env_file: str | None = None) -> BotConfig:
             "ADMIN_CHAT_ID не задан. Узнайте свой chat_id (напишите @userinfobot "
             "или команду /id боту @getmyid_bot) и добавьте в .env."
         )
-    try:
-        admin_chat_id = int(chat_raw)
-    except ValueError:
-        raise ConfigError(f"ADMIN_CHAT_ID должен быть числом, получено: {chat_raw!r}")
+    if chat_raw.startswith("@"):
+        # Публичный канал/группа по username (бот должен быть там админом,
+        # а пользователь — сначала отправить боту /start в этом чате).
+        admin_chat_id: int | str = chat_raw
+    else:
+        try:
+            admin_chat_id = int(chat_raw)
+        except ValueError:
+            raise ConfigError(
+                f"ADMIN_CHAT_ID должен быть числом или '@username', получено: {chat_raw!r}"
+            )
 
     try:
         allowed = _parse_int_list(os.getenv("ALLOWED_USER_IDS", ""))

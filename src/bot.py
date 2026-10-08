@@ -25,8 +25,8 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from aiogram import Bot, Dispatcher, Router
-from aiogram.filters import Command, CommandObject, CommandStart
+from aiogram import Bot, Dispatcher, F, Router
+from aiogram.filters import BaseFilter, Command, CommandObject, CommandStart
 from aiogram.types import Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -68,6 +68,22 @@ class AppState:
         return self.scan_lock.locked() or self.update_lock.locked()
 
 
+class IsAuthorized(BaseFilter):
+    """Приватный режим: доступ только разрешённым чатам (ADMIN_CHAT_ID / ALLOWED_USER_IDS).
+
+    AppState передаётся через workflow data (`dp["state"] = ...`), фильтр получает
+    его как обычный kwargs-параметр `state`. Неавторизованным — отказ с их chat_id.
+    """
+
+    async def __call__(self, message: Message, state: "AppState | None" = None) -> bool:
+        if state is None or state.cfg.is_authorized(message.chat.id):
+            return True
+        await message.answer(
+            f"⛔ Доступ закрыт. Ваш chat_id: <code>{message.chat.id}</code>",
+            parse_mode="HTML")
+        return False
+
+
 async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
     for ch in chunks:
         try:
@@ -79,7 +95,7 @@ async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
 
 # ---------------------------------------------------------------- handlers
 
-@router.message(CommandStart())
+@router.message(CommandStart(), IsAuthorized())
 async def cmd_start(message: Message):
     await message.answer(
         "🤖 <b>Инвестиционный сканер MOEX</b>\n\n"
@@ -94,15 +110,13 @@ async def cmd_start(message: Message):
         parse_mode="HTML")
 
 
-@router.message(Command("help"))
+@router.message(Command("help"), IsAuthorized())
 async def cmd_help(message: Message):
     await cmd_start(message)
 
 
-@router.message(Command("status"))
+@router.message(Command("status"), IsAuthorized())
 async def cmd_status(message: Message, state: AppState):
-    if not state.cfg.is_authorized(message.chat.id):
-        return await message.answer("⛔ Доступ запрещён.")
     db = DatabaseManager(DB_PATH)
     n_secids = db.fetch_one("SELECT COUNT(DISTINCT secid) FROM raw_candles")[0]
     last_scan = (state.report["generated_at"].replace("T", " ")
@@ -137,10 +151,8 @@ async def do_full_scan(state: AppState, bot: Bot | None, chat_id: int | None,
     return report
 
 
-@router.message(Command("scan"))
+@router.message(Command("scan"), IsAuthorized())
 async def cmd_scan(message: Message, state: AppState):
-    if not state.cfg.is_authorized(message.chat.id):
-        return await message.answer("⛔ Доступ запрещён.")
     force = bool(message.text and "force" in message.text.lower())
 
     if not force and state.report:
@@ -165,10 +177,8 @@ async def cmd_scan(message: Message, state: AppState):
         await notify_admin(message.bot, state, f"❌ Ошибка ручного /scan: {e}")
 
 
-@router.message(Command("signals"))
+@router.message(Command("signals"), IsAuthorized())
 async def cmd_signals(message: Message, command: CommandObject, state: AppState):
-    if not state.cfg.is_authorized(message.chat.id):
-        return await message.answer("⛔ Доступ запрещён.")
     wanted = (command.args or "").strip().lower()
     if wanted not in ("buy", "sell", "watch"):
         return await message.answer("Использование: /signals buy|sell|watch")
@@ -186,10 +196,8 @@ async def cmd_signals(message: Message, command: CommandObject, state: AppState)
                          parse_mode="HTML")
 
 
-@router.message(Command("asset"))
+@router.message(Command("asset"), IsAuthorized())
 async def cmd_asset(message: Message, command: CommandObject, state: AppState):
-    if not state.cfg.is_authorized(message.chat.id):
-        return await message.answer("⛔ Доступ запрещён.")
     secid = (command.args or "").strip().upper()
     if not secid:
         return await message.answer("Использование: /asset SBER")
@@ -220,10 +228,8 @@ async def cmd_asset(message: Message, command: CommandObject, state: AppState):
         parse_mode="HTML")
 
 
-@router.message(Command("reload_config"))
+@router.message(Command("reload_config"), IsAuthorized())
 async def cmd_reload(message: Message, state: AppState):
-    if not state.cfg.is_authorized(message.chat.id):
-        return await message.answer("⛔ Доступ запрещён.")
     try:
         state.assets = await asyncio.to_thread(load_assets, CONFIG_PATH)
         return await message.answer(
