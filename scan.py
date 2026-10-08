@@ -65,6 +65,8 @@ def print_report(results: list, top: int):
         if 'sl_tp' in r and r['verdict'] in ('buy', 'sell'):
             sl_tp = f"{r['sl_tp']['stop_loss']} / {r['sl_tp']['take_profit']}"
         icon = {'buy': '🟢 ПОКУПКА', 'sell': '🔴 ПРОДАЖА', 'watch': '👁 наблюдение'}.get(r['verdict'], r['verdict'])
+        if r.get('sell_blocked_reasons'):
+            icon += ' (шорт запрещён)'
         rows.append([r['secid'], r['asset_type'], r['date'], r['price'], icon,
                      f"B{r['score_buy']}/S{r['score_sell']}", rules, sl_tp])
 
