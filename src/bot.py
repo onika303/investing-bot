@@ -71,12 +71,12 @@ class AppState:
 class IsAuthorized(BaseFilter):
     """Приватный режим: доступ только разрешённым чатам (ADMIN_CHAT_ID / ALLOWED_USER_IDS).
 
-    AppState передаётся через workflow data (`dp["state"] = ...`), фильтр получает
-    его как обычный kwargs-параметр `state`. Неавторизованным — отказ с их chat_id.
+    AppState лежит в workflow_data под ключом "app" (имя "state" занято FSMContext).
+    Фильтр получает его как kwarg `app`. Неавторизованным — отказ с их chat_id.
     """
 
-    async def __call__(self, message: Message, state: "AppState | None" = None) -> bool:
-        if state is None or state.cfg.is_authorized(message.chat.id):
+    async def __call__(self, message: Message, app: AppState | None = None) -> bool:
+        if app is None or app.cfg.is_authorized(message.chat.id):
             return True
         await message.answer(
             f"⛔ Доступ закрыт. Ваш chat_id: <code>{message.chat.id}</code>",
@@ -95,8 +95,39 @@ async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
 
 # ---------------------------------------------------------------- handlers
 
+def _persist_admin_chat_id(chat_id: int) -> bool:
+    """Записывает ADMIN_CHAT_ID в .env (PENDING-режим приёмки)."""
+    try:
+        env_path = Path(".env")
+        lines = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
+        replaced = False
+        for i, line in enumerate(lines):
+            if line.strip().startswith("ADMIN_CHAT_ID"):
+                lines[i] = f"ADMIN_CHAT_ID={chat_id}"
+                replaced = True
+                break
+        if not replaced:
+            lines.append(f"ADMIN_CHAT_ID={chat_id}")
+        env_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        logger.info(f"ADMIN_CHAT_ID={chat_id} сохранён в .env")
+        return True
+    except OSError as e:
+        logger.error(f"Не удалось сохранить chat_id в .env: {e}")
+        return False
+
+
 @router.message(CommandStart(), IsAuthorized())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, app: AppState | None = None):
+    # Режим приёмки (ADMIN_CHAT_ID=PENDING): первый /start назначает админский чат.
+    if app is not None and str(app.cfg.admin_chat_id) == "":
+        app.cfg.admin_chat_id = message.chat.id
+        saved = _persist_admin_chat_id(message.chat.id)
+        await message.answer(
+            f"✅ Чат <code>{message.chat.id}</code> назначен админским."
+            + ("\nЗначение сохранено в .env — после перезапуска бота режим PENDING больше не нужен."
+               if saved else
+               "\nНе удалось записать в .env — добавьте ADMIN_CHAT_ID вручную."),
+            parse_mode="HTML")
     await message.answer(
         "🤖 <b>Инвестиционный сканер MOEX</b>\n\n"
         "Каждый будний день: 09:45 дозагрузка данных, 10:00 утренний отчёт, "
@@ -111,80 +142,80 @@ async def cmd_start(message: Message):
 
 
 @router.message(Command("help"), IsAuthorized())
-async def cmd_help(message: Message):
-    await cmd_start(message)
+async def cmd_help(message: Message, app: AppState | None = None):
+    await cmd_start(message, app)
 
 
 @router.message(Command("status"), IsAuthorized())
-async def cmd_status(message: Message, state: AppState):
+async def cmd_status(message: Message, app: AppState):
     db = DatabaseManager(DB_PATH)
     n_secids = db.fetch_one("SELECT COUNT(DISTINCT secid) FROM raw_candles")[0]
-    last_scan = (state.report["generated_at"].replace("T", " ")
-                 if state.report else "нет")
+    last_scan = (app.report["generated_at"].replace("T", " ")
+                 if app.report else "нет")
     lines = [
         "📡 <b>Статус</b>",
-        f"Активов в config: {sum(len(v) for v in state.assets.values())} "
-        f"(акции {len(state.assets.get('stocks', []))}, "
-        f"фьючерсы {len(state.assets.get('futures', []))})",
+        f"Активов в config: {sum(len(v) for v in app.assets.values())} "
+        f"(акции {len(app.assets.get('stocks', []))}, "
+        f"фьючерсы {len(app.assets.get('futures', []))})",
         f"Уникальных secid в БД: {n_secids}",
         f"Последний скан: {last_scan}",
-        f"Идёт задача: {'да ⏳' if state.busy else 'нет'}",
-        f"Бот запущен: {state.bot_started_at:%d.%m %H:%M}",
+        f"Идёт задача: {'да ⏳' if app.busy else 'нет'}",
+        f"Бот запущен: {app.bot_started_at:%d.%m %H:%M}",
     ]
-    if state.last_update_stats:
-        lines.append(f"Последняя дозагрузка: {state.last_update_stats}")
+    if app.last_update_stats:
+        lines.append(f"Последняя дозагрузка: {app.last_update_stats}")
     await message.answer("\n".join(lines), parse_mode="HTML")
 
 
-async def do_full_scan(state: AppState, bot: Bot | None, chat_id: int | None,
+async def do_full_scan(app: AppState, bot: Bot | None, chat_id: int | None,
                        do_update: bool) -> dict:
     """Единая точка запуска скана с guard-локом. Возвращает report."""
-    if state.scan_lock.locked():
+    if app.scan_lock.locked():
         raise RuntimeError("Скан уже выполняется, подождите завершения.")
-    async with state.scan_lock:
+    async with app.scan_lock:
         report, stats = await asyncio.to_thread(
             scan_and_report, DB_PATH, CONFIG_PATH, do_update)
-        state.report = report
-        state.last_update_stats = stats
+        app.report = report
+        app.last_update_stats = stats
     if bot and chat_id:
         await send_chunks(bot, chat_id, format_report_text(report))
     return report
 
 
 @router.message(Command("scan"), IsAuthorized())
-async def cmd_scan(message: Message, state: AppState):
+async def cmd_scan(message: Message, app: AppState):
     force = bool(message.text and "force" in message.text.lower())
 
-    if not force and state.report:
-        age = report_age_hours(state.report)
-        if age <= state.cfg.report_cache_hours:
+    if not force and app.report:
+        age = report_age_hours(app.report)
+        if age <= app.cfg.report_cache_hours:
             return await send_chunks(message.bot, message.chat.id,
-                                     format_report_text(state.report))
+                                     format_report_text(app.report))
 
-    if state.busy:
+    if app.busy:
         return await message.answer("⏳ Уже выполняется задача, попробуйте позже.")
 
-    total = sum(len(v) for v in state.assets.values())
+    total = sum(len(v) for v in app.assets.values())
     progress = await message.answer(f"⏳ Запускаю полный скан (~{total} активов)...")
     try:
-        report = await do_full_scan(state, message.bot, message.chat.id,
+        report = await do_full_scan(app, message.bot, message.chat.id,
                                     do_update=True)
         dur = report.get("duration_sec")
         await progress.edit_text(f"✅ Скан завершён за {dur} с.")
     except Exception as e:
         logger.exception("Скан упал")
         await progress.edit_text(f"❌ Ошибка скана: {e}")
-        await notify_admin(message.bot, state, f"❌ Ошибка ручного /scan: {e}")
+        await notify_admin(message.bot, app, f"❌ Ошибка ручного /scan: {e}")
 
 
 @router.message(Command("signals"), IsAuthorized())
-async def cmd_signals(message: Message, command: CommandObject, state: AppState):
+async def cmd_signals(message: Message, command: CommandObject, app: AppState):
     wanted = (command.args or "").strip().lower()
     if wanted not in ("buy", "sell", "watch"):
         return await message.answer("Использование: /signals buy|sell|watch")
-    if not state.report:
+    if not app.report:
         return await message.answer("Нет кэша отчёта — сначала /scan")
-    rows = [r for r in state.report["results"] if r["verdict"] == wanted]
+    rows = [r for r in app.report["results"] if r["verdict"] == wanted]
     icon = {"buy": "🟢", "sell": "🔴", "watch": "👁"}[wanted]
     if not rows:
         return await message.answer(f"{icon} Сигналов '{wanted}' нет.")
@@ -197,11 +228,11 @@ async def cmd_signals(message: Message, command: CommandObject, state: AppState)
 
 
 @router.message(Command("asset"), IsAuthorized())
-async def cmd_asset(message: Message, command: CommandObject, state: AppState):
+async def cmd_asset(message: Message, command: CommandObject, app: AppState):
     secid = (command.args or "").strip().upper()
     if not secid:
         return await message.answer("Использование: /asset SBER")
-    asset_type = next((t for t, lst in state.assets.items() if secid in lst), None)
+    asset_type = next((t for t, lst in app.assets.items() if secid in lst), None)
     if not asset_type:
         asset_type = "stocks"  # попробуем как акцию; вердикт «нет данных» если не так
 
@@ -229,62 +260,65 @@ async def cmd_asset(message: Message, command: CommandObject, state: AppState):
 
 
 @router.message(Command("reload_config"), IsAuthorized())
-async def cmd_reload(message: Message, state: AppState):
+async def cmd_reload(message: Message, app: AppState):
     try:
-        state.assets = await asyncio.to_thread(load_assets, CONFIG_PATH)
+        app.assets = await asyncio.to_thread(load_assets, CONFIG_PATH)
         return await message.answer(
             f"♻️ config.yaml перечитан: "
-            f"{sum(len(v) for v in state.assets.values())} активов.")
+            f"{sum(len(v) for v in app.assets.values())} активов.")
     except Exception as e:
         return await message.answer(f"❌ Ошибка чтения config.yaml: {e}")
 
 
-async def notify_admin(bot: Bot, state: AppState, text: str):
+async def notify_admin(bot: Bot, app: AppState, text: str):
+    if str(app.cfg.admin_chat_id) == "":  # PENDING-режим приёмки — слать некуда
+        logger.info(f"Уведомление (чат не назначен): {text[:120]}")
+        return
     try:
-        await bot.send_message(state.cfg.admin_chat_id, text)
+        await bot.send_message(app.cfg.admin_chat_id, text)
     except Exception as e:
         logger.error(f"Не удалось уведомить админа: {e}")
 
 
 # ---------------------------------------------------------------- schedule
 
-def build_scheduler(state: AppState, bot: Bot) -> AsyncIOScheduler:
-    sched = AsyncIOScheduler(timezone=state.cfg.timezone)
-    chat = state.cfg.admin_chat_id
+def build_scheduler(app: AppState, bot: Bot) -> AsyncIOScheduler:
+    sched = AsyncIOScheduler(timezone=app.cfg.timezone)
+    chat = lambda: app.cfg.admin_chat_id  # читаем динамически (PENDING → /start назначит чат)
 
     async def job_morning_update():
-        if state.update_lock.locked():
+        if app.update_lock.locked():
             logger.warning("Пропуск 09:45: уже идёт загрузка")
             return
-        async with state.update_lock:
+        async with app.update_lock:
             try:
                 stats = await asyncio.to_thread(
-                    incremental_update, state.assets, DB_PATH)
-                state.last_update_stats = stats
+                    incremental_update, app.assets, DB_PATH)
+                app.last_update_stats = stats
                 logger.info(f"09:45 update done: {stats}")
             except Exception as e:
                 logger.exception("Утренняя загрузка упала")
-                await notify_admin(bot, state, f"❌ Ошибка загрузки 09:45: {e}")
+                await notify_admin(bot, app, f"❌ Ошибка загрузки 09:45: {e}")
 
     async def job_morning_scan():
         try:
-            await do_full_scan(state, bot, chat, do_update=False)
+            await do_full_scan(app, bot, chat, do_update=False)
         except RuntimeError as e:
-            await notify_admin(bot, state, f"ℹ️ Утренний скан пропущен: {e}")
+            await notify_admin(bot, app, f"ℹ️ Утренний скан пропущен: {e}")
         except Exception as e:
             logger.exception("Утренний скан упал")
-            await notify_admin(bot, state, f"❌ Ошибка утреннего скана 10:00: {e}")
+            await notify_admin(bot, app, f"❌ Ошибка утреннего скана 10:00: {e}")
 
     async def job_evening_scan():
         # 00:00 MSK — «вечерний» отчёт после закрытия всех сессий MOEX
         # (основная до ~23:50); do_update=True подтянет всё, что появилось за сутки.
         try:
-            await do_full_scan(state, bot, chat, do_update=True)
+            await do_full_scan(app, bot, chat, do_update=True)
         except RuntimeError as e:
-            await notify_admin(bot, state, f"ℹ️ Вечерний скан пропущен: {e}")
+            await notify_admin(bot, app, f"ℹ️ Вечерний скан пропущен: {e}")
         except Exception as e:
             logger.exception("Вечерний скан упал")
-            await notify_admin(bot, state, f"❌ Ошибка вечернего скана 00:00: {e}")
+            await notify_admin(bot, app, f"❌ Ошибка вечернего скана 00:00: {e}")
 
     async def job_saturday_hygiene():
         try:
@@ -298,9 +332,9 @@ def build_scheduler(state: AppState, bot: Bot) -> AsyncIOScheduler:
                 logger.info("Экспираций в ближайшие 4 недели не найдено")
         except Exception as e:
             logger.exception("Субботняя проверка упала")
-            await notify_admin(bot, state, f"❌ Ошибка субботней проверки: {e}")
+            await notify_admin(bot, app, f"❌ Ошибка субботней проверки: {e}")
 
-    tz = state.cfg.timezone
+    tz = app.cfg.timezone
     sched.add_job(job_morning_update,
                   CronTrigger(hour=9, minute=45, day_of_week="mon-fri", timezone=tz),
                   id="update_0945", misfire_grace_time=3600, coalesce=True)
@@ -325,17 +359,19 @@ async def main():
 
     bot = Bot(token=cfg.bot_token)
     dp = Dispatcher()
-    state = AppState(cfg)
-    dp["state"] = state
+    app = AppState(cfg)
+    # Ключ "app": в aiogram 3.x имя "state" зарезервировано под FSMContext,
+    # поэтому AppState инжектится в хендлеры/фильтры как отдельный kwarg.
+    dp.workflow_data.update({"app": app})
     dp.include_router(router)
 
-    scheduler = build_scheduler(state, bot)
+    scheduler = build_scheduler(app, bot)
     scheduler.start()
     for job in scheduler.get_jobs():
         logger.info(f"Планировщик: {job.id} → следующий запуск {job.next_run_time}")
 
     logger.info("Бот запущен, включаю long polling…")
-    await bot.delete_webhook(drop_pending_updates=True)
+    await bot.delete_webhook(drop_pending_updates=False)  # не теряем команды, присланные пока бот лежал
     await dp.start_polling(bot)
 
 

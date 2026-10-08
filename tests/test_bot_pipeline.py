@@ -260,8 +260,8 @@ def test_status_unauthorized(fake_message):
     state = make_state()
     allowed = fake_message("/status", chat_id=100)
     denied = fake_message("/status", chat_id=777)
-    assert run(IsAuthorized()(allowed, state=state)) is True
-    assert run(IsAuthorized()(denied, state=state)) is False
+    assert run(IsAuthorized()(allowed, app=state)) is True
+    assert run(IsAuthorized()(denied, app=state)) is False
     assert "chat_id" in denied.answers[0] and "777" in denied.answers[0]
 
 
