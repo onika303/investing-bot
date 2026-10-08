@@ -3,49 +3,37 @@
 # Фьючерсы: топ по дневному обороту (VALTODAY, FORTS)
 assets:
   stocks:
-    - ABIO
-    - ABRD
-    - AFKS
-    - AFLT
-    - AKRN
-    - ALRS
-    - APRI
-    - APTK
-    - AQUA
-    - ARSA
-    - ASSB
-    - ASTR
-    - AVAN
-    - BANE
-    - BANEP
-    - BAZA
-    - BELU
-    - BISVP
-    - BLNG
-    - BRZL
-    - BSPB
-    - BSPBP
-    - BTBR
-    - CARM
-    - CBOM
-    - CHGZ
-    - CHKZ
+    - SBER
+    - GAZP
+    - ROSN
+    - LKOH
+    - NVTK
+    - PLZL
+    - GMKN
+    - YDEX
+    - VTBR
+    - TATN
     - CHMF
-    - CHMK
-    - CNRU
-    - CNTL
-    - CNTLP
-    - DATA
-    - DELI
-    - DIAS
-    - DIOD
+    - PHOR
+    - NLMK
+    - RUAL
+    - MTSS
+    - ALRS
+    - MAGN
+    - SNGS
+    - SNGSP
+    - AKRN
+    - TRNFP
+    - MOEX
+    - PIKK
+    - IRAO
+    - HYDR
+    - AFLT
+    - CBOM
+    - LENT
+    - FLOT
+    - FEES
     - DOMRF
-    - DVEC
-    - DZRD
-    - DZRDP
-    - EELT
-    - ELFV
-    - ELMT
     - ENPG
     - ETLN
     - EUTR
@@ -64,40 +52,13 @@ assets:
     - GMKN
     - GTRK
     - HEAD
-    - HIMCP
-    - HNFG
-    - HYDR
-    - IGST
-    - IGSTP
-    - INCB
-    - IRAO
-    - IRKT
-    - IVAT
-    - JNOS
-    - JNOSP
-    - KAZT
-    - KAZTP
-    - KBSB
-    - KCHE
-    - KCHEP
-    - KFBA
-    - KGKC
-    - KGKCP
-    - KLSB
-    - KLVZ
-    - KMAZ
-    - KMEZ
-    - KOGK
-    - KRKN
-    - KRKNP
-    - KRKOP
-    - KROT
-    - KROTP
-    - KRSB
-    - KRSBP
-    - KUZB
+    - GCHE
     - KZOS
-    - KZOSP
+    - RAGR
+    - SGZH
+    - BSPB
+    - POSI
+    - AFKS
     - LEAS
     - LENT
     - LIFE
@@ -153,110 +114,29 @@ assets:
     - OGKB
     - OMZZP
     - OZON
-    - OZPH
-    - PAZA
-    - PHOR
-    - PIKK
-    - PLZL
-    - PMSB
-    - PMSBP
-    - POSI
-    - PRFN
-    - PRMB
-    - PRMD
-    - RAGR
-    - RASP
-    - RBCM
-    - RDRB
+    - FIXR
     - RENI
-    - RGSS
-    - RKKE
-    - RNFT
-    - ROLO
-    - ROSN
-    - ROST
-    - RTGZ
-    - RTKM
-    - RTKMP
-    - RTSB
-    - RTSBP
-    - RUAL
-    - RUSI
-    - RZSB
-    - SAGO
-    - SAGOP
-    - SARE
-    - SAREP
-    - SBER
-    - SBERP
-    - SELG
     - SFIN
-    - SGZH
-    - SIBN
-    - SLEN
     - SMLT
-    - SNGS
-    - SNGSP
-    - SOFL
-    - SPBE
-    - STSB
-    - STSBP
-    - SVAV
-    - SVCB
-    - SVET
-    - SVETP
-    - T
-    - TASB
-    - TASBP
-    - TATN
-    - TATNP
-    - TGKA
-    - TGKB
-    - TGKBP
-    - TGKN
-    - TNSE
-    - TORS
-    - TORSP
-    - TRMK
-    - TRNFP
-    - TTLK
-    - TUZA
-    - UGLD
-    - UKUZ
-    - UNAC
-    - UNKL
-    - UPRO
-    - URKZ
-    - USBN
-    - UTAR
-    - UWGN
-    - VEON-RX
-    - VGSB
-    - VGSBP
-    - VJGZ
-    - VJGZP
-    - VKCO
-    - VLHZ
-    - VRSB
-    - VRSBP
-    - VSEH
-    - VSMO
-    - VSYD
-    - VSYDP
-    - VTBR
-    - WTCM
-    - WTCMP
+    - ETLN
     - WUSH
-    - X5
-    - YAKG
-    - YDEX
-    - YKEN
-    - YKENP
-    - YRSB
-    - YRSBP
     - ZAYM
-    - ZILL
     - ZVEZ
+    - ABIO
+    - ABRD
+    - AVAN
+    - ELFV
+    - EUTR
+    - VKCO
+    - YAKG
+    - MTLR
+    - ASTR
+    - MAGE
+    - MSRS
+    - OGKB
+    - OMZZP
+    - TGKA
+    - TTLK
 
   # Фьючерсы MOEX FORTS: конкретные сезонные контракты ("быстрый вариант").
   # Проверены запросами к ISS 2026-10-08 — все отдают свечи через стандартный
