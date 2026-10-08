@@ -56,10 +56,6 @@ assets:
     - FLOT
     - GAZA
     - GAZAP
-    - GAZC
-    - GAZP
-    - GAZS
-    - GAZT
     - GCHE
     - GECO
     - GEMA
@@ -121,7 +117,6 @@ assets:
     - MFGSP
     - MGKL
     - MGNT
-    - MGNZ
     - MGTS
     - MGTSP
     - MISB
