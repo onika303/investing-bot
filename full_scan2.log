@@ -1,0 +1,1293 @@
+2026-10-08 15:48:22.206 | INFO     | src.database:_init_db:58 - База данных инициализирована (таблицы созданы)
+2026-10-08 15:48:22.206 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ABIO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:23.238 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:23.239 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ABIO
+2026-10-08 15:48:23.239 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ABIO (stock)
+2026-10-08 15:48:23.239 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ABRD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:24.466 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:24.467 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ABRD
+2026-10-08 15:48:24.467 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ABRD (stock)
+2026-10-08 15:48:24.467 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/AFKS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:25.652 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:25.653 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для AFKS
+2026-10-08 15:48:25.653 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для AFKS (stock)
+2026-10-08 15:48:25.653 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/AFLT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:26.619 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:26.619 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для AFLT
+2026-10-08 15:48:26.619 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для AFLT (stock)
+2026-10-08 15:48:26.620 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/AKRN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:27.611 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:27.611 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для AKRN
+2026-10-08 15:48:27.611 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для AKRN (stock)
+2026-10-08 15:48:27.612 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ALRS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:31.797 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:31.798 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ALRS
+2026-10-08 15:48:31.798 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ALRS (stock)
+2026-10-08 15:48:31.798 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/APRI/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:32.794 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:32.798 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для APRI
+2026-10-08 15:48:32.799 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для APRI (stock)
+2026-10-08 15:48:32.800 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/APTK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:33.801 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:33.801 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для APTK
+2026-10-08 15:48:33.801 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для APTK (stock)
+2026-10-08 15:48:33.802 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/AQUA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:34.817 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:34.818 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для AQUA
+2026-10-08 15:48:34.818 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для AQUA (stock)
+2026-10-08 15:48:34.818 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ARSA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:35.802 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:35.803 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ARSA
+2026-10-08 15:48:35.803 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ARSA (stock)
+2026-10-08 15:48:35.803 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ASSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:36.772 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:36.772 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ASSB
+2026-10-08 15:48:36.773 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ASSB (stock)
+2026-10-08 15:48:36.773 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ASTR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:37.783 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:37.784 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ASTR
+2026-10-08 15:48:37.784 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ASTR (stock)
+2026-10-08 15:48:37.784 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/AVAN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:38.752 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:38.752 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для AVAN
+2026-10-08 15:48:38.752 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для AVAN (stock)
+2026-10-08 15:48:38.753 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BANE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:39.779 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:39.779 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BANE
+2026-10-08 15:48:39.779 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BANE (stock)
+2026-10-08 15:48:39.780 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BANEP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:40.748 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:40.749 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BANEP
+2026-10-08 15:48:40.749 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BANEP (stock)
+2026-10-08 15:48:40.749 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BAZA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:41.747 | INFO     | src.database:insert_raw_candles:110 - Вставлено 273 записей в raw_candles
+2026-10-08 15:48:41.747 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BAZA
+2026-10-08 15:48:41.747 | INFO     | src.moex_loader:load_asset:207 - Загружено 273 свечей для BAZA (stock)
+2026-10-08 15:48:41.748 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BELU/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:42.754 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:42.755 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BELU
+2026-10-08 15:48:42.755 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BELU (stock)
+2026-10-08 15:48:42.756 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BISVP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:43.766 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:43.766 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BISVP
+2026-10-08 15:48:43.767 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BISVP (stock)
+2026-10-08 15:48:43.767 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BLNG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:44.748 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:44.749 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BLNG
+2026-10-08 15:48:44.749 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BLNG (stock)
+2026-10-08 15:48:44.749 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BRZL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:45.748 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:45.749 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BRZL
+2026-10-08 15:48:45.749 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BRZL (stock)
+2026-10-08 15:48:45.749 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BSPB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:46.803 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:46.803 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BSPB
+2026-10-08 15:48:46.804 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BSPB (stock)
+2026-10-08 15:48:46.804 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BSPBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:47.798 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:47.799 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BSPBP
+2026-10-08 15:48:47.799 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для BSPBP (stock)
+2026-10-08 15:48:47.800 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/BTBR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:48.795 | INFO     | src.database:insert_raw_candles:110 - Вставлено 156 записей в raw_candles
+2026-10-08 15:48:48.796 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BTBR
+2026-10-08 15:48:48.796 | INFO     | src.moex_loader:load_asset:207 - Загружено 156 свечей для BTBR (stock)
+2026-10-08 15:48:48.796 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CARM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:49.782 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:49.782 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CARM
+2026-10-08 15:48:49.782 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CARM (stock)
+2026-10-08 15:48:49.783 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CBOM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:50.789 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:50.790 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CBOM
+2026-10-08 15:48:50.790 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CBOM (stock)
+2026-10-08 15:48:50.790 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CHGZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:51.832 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:51.833 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CHGZ
+2026-10-08 15:48:51.833 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CHGZ (stock)
+2026-10-08 15:48:51.833 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CHKZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:52.889 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:52.890 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CHKZ
+2026-10-08 15:48:52.890 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CHKZ (stock)
+2026-10-08 15:48:52.890 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CHMF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:53.893 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:53.894 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CHMF
+2026-10-08 15:48:53.894 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CHMF (stock)
+2026-10-08 15:48:53.894 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CHMK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:54.871 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:54.871 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CHMK
+2026-10-08 15:48:54.872 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CHMK (stock)
+2026-10-08 15:48:54.872 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CNRU/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:55.892 | INFO     | src.database:insert_raw_candles:110 - Вставлено 493 записей в raw_candles
+2026-10-08 15:48:55.893 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CNRU
+2026-10-08 15:48:55.893 | INFO     | src.moex_loader:load_asset:207 - Загружено 493 свечей для CNRU (stock)
+2026-10-08 15:48:55.893 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CNTL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:56.963 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:56.964 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CNTL
+2026-10-08 15:48:56.964 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CNTL (stock)
+2026-10-08 15:48:56.964 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/CNTLP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:57.971 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:57.971 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CNTLP
+2026-10-08 15:48:57.972 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CNTLP (stock)
+2026-10-08 15:48:57.972 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DATA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:48:58.973 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:48:58.974 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DATA
+2026-10-08 15:48:58.974 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DATA (stock)
+2026-10-08 15:48:58.974 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DELI/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:00.017 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:00.017 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DELI
+2026-10-08 15:49:00.017 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DELI (stock)
+2026-10-08 15:49:00.018 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DIAS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:01.024 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:01.025 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DIAS
+2026-10-08 15:49:01.025 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DIAS (stock)
+2026-10-08 15:49:01.026 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DIOD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:02.018 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:02.019 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DIOD
+2026-10-08 15:49:02.019 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DIOD (stock)
+2026-10-08 15:49:02.019 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DOMRF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:02.990 | INFO     | src.database:insert_raw_candles:110 - Вставлено 291 записей в raw_candles
+2026-10-08 15:49:02.991 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DOMRF
+2026-10-08 15:49:02.991 | INFO     | src.moex_loader:load_asset:207 - Загружено 291 свечей для DOMRF (stock)
+2026-10-08 15:49:02.992 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DVEC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:04.003 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:04.004 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DVEC
+2026-10-08 15:49:04.004 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DVEC (stock)
+2026-10-08 15:49:04.005 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DZRD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:05.015 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:05.016 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DZRD
+2026-10-08 15:49:05.016 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DZRD (stock)
+2026-10-08 15:49:05.016 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/DZRDP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:06.043 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:06.043 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DZRDP
+2026-10-08 15:49:06.043 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для DZRDP (stock)
+2026-10-08 15:49:06.044 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/EELT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:07.072 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:07.072 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EELT
+2026-10-08 15:49:07.072 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для EELT (stock)
+2026-10-08 15:49:07.073 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ELFV/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:08.097 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:08.098 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ELFV
+2026-10-08 15:49:08.098 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ELFV (stock)
+2026-10-08 15:49:08.098 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ELMT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:09.103 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:09.104 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ELMT
+2026-10-08 15:49:09.104 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ELMT (stock)
+2026-10-08 15:49:09.104 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ENPG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:10.117 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:10.118 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ENPG
+2026-10-08 15:49:10.118 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ENPG (stock)
+2026-10-08 15:49:10.119 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ETLN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:11.083 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:11.083 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ETLN
+2026-10-08 15:49:11.083 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ETLN (stock)
+2026-10-08 15:49:11.084 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/EUTR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:12.118 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:12.119 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EUTR
+2026-10-08 15:49:12.119 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для EUTR (stock)
+2026-10-08 15:49:12.119 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/EVRZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:12.929 | INFO     | src.database:insert_raw_candles:110 - Вставлено 102 записей в raw_candles
+2026-10-08 15:49:12.929 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EVRZ
+2026-10-08 15:49:12.929 | INFO     | src.moex_loader:load_asset:207 - Загружено 102 свечей для EVRZ (stock)
+2026-10-08 15:49:12.930 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/FEES/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:14.167 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:14.168 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для FEES
+2026-10-08 15:49:14.168 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для FEES (stock)
+2026-10-08 15:49:14.168 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/FESH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:15.136 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:15.137 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для FESH
+2026-10-08 15:49:15.137 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для FESH (stock)
+2026-10-08 15:49:15.138 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/FIXR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:16.334 | INFO     | src.database:insert_raw_candles:110 - Вставлено 379 записей в raw_candles
+2026-10-08 15:49:16.335 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для FIXR
+2026-10-08 15:49:16.335 | INFO     | src.moex_loader:load_asset:207 - Загружено 379 свечей для FIXR (stock)
+2026-10-08 15:49:16.335 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/FLOT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:17.342 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:17.342 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для FLOT
+2026-10-08 15:49:17.342 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для FLOT (stock)
+2026-10-08 15:49:17.343 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:18.371 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:18.371 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZA
+2026-10-08 15:49:18.371 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GAZA (stock)
+2026-10-08 15:49:18.372 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZAP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:19.338 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:19.338 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZAP
+2026-10-08 15:49:19.338 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GAZAP (stock)
+2026-10-08 15:49:19.339 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:20.114 | INFO     | src.database:insert_raw_candles:110 - Вставлено 1 записей в raw_candles
+2026-10-08 15:49:20.114 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZC
+2026-10-08 15:49:20.115 | INFO     | src.moex_loader:load_asset:207 - Загружено 1 свечей для GAZC (stock)
+2026-10-08 15:49:20.115 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:21.135 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:21.136 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZP
+2026-10-08 15:49:21.136 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GAZP (stock)
+2026-10-08 15:49:21.136 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:21.933 | INFO     | src.database:insert_raw_candles:110 - Вставлено 1 записей в raw_candles
+2026-10-08 15:49:21.933 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZS
+2026-10-08 15:49:21.933 | INFO     | src.moex_loader:load_asset:207 - Загружено 1 свечей для GAZS (stock)
+2026-10-08 15:49:21.934 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GAZT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:22.745 | INFO     | src.database:insert_raw_candles:110 - Вставлено 1 записей в raw_candles
+2026-10-08 15:49:22.746 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GAZT
+2026-10-08 15:49:22.746 | INFO     | src.moex_loader:load_asset:207 - Загружено 1 свечей для GAZT (stock)
+2026-10-08 15:49:22.746 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GCHE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:23.718 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:23.719 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GCHE
+2026-10-08 15:49:23.719 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GCHE (stock)
+2026-10-08 15:49:23.719 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GECO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:24.846 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:24.847 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GECO
+2026-10-08 15:49:24.847 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GECO (stock)
+2026-10-08 15:49:24.847 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GEMA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:25.979 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:25.979 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GEMA
+2026-10-08 15:49:25.979 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GEMA (stock)
+2026-10-08 15:49:25.980 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GEMC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:27.118 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:27.119 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GEMC
+2026-10-08 15:49:27.119 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GEMC (stock)
+2026-10-08 15:49:27.119 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GLRX/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:28.073 | INFO     | src.database:insert_raw_candles:110 - Вставлено 307 записей в raw_candles
+2026-10-08 15:49:28.073 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GLRX
+2026-10-08 15:49:28.073 | INFO     | src.moex_loader:load_asset:207 - Загружено 307 свечей для GLRX (stock)
+2026-10-08 15:49:28.074 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GMKN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:29.066 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:29.067 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GMKN
+2026-10-08 15:49:29.067 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GMKN (stock)
+2026-10-08 15:49:29.068 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/GTRK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:30.148 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:30.148 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GTRK
+2026-10-08 15:49:30.148 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GTRK (stock)
+2026-10-08 15:49:30.149 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/HEAD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:31.130 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:31.131 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для HEAD
+2026-10-08 15:49:31.131 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для HEAD (stock)
+2026-10-08 15:49:31.131 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/HIMCP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:32.195 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:32.196 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для HIMCP
+2026-10-08 15:49:32.196 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для HIMCP (stock)
+2026-10-08 15:49:32.197 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/HNFG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:33.175 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:33.176 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для HNFG
+2026-10-08 15:49:33.176 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для HNFG (stock)
+2026-10-08 15:49:33.176 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/HYDR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:34.205 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:34.206 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для HYDR
+2026-10-08 15:49:34.206 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для HYDR (stock)
+2026-10-08 15:49:34.206 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/IGST/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:35.194 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:35.195 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IGST
+2026-10-08 15:49:35.195 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IGST (stock)
+2026-10-08 15:49:35.195 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/IGSTP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:36.194 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:36.195 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IGSTP
+2026-10-08 15:49:36.195 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IGSTP (stock)
+2026-10-08 15:49:36.195 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/INCB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:37.181 | INFO     | src.database:insert_raw_candles:110 - Вставлено 93 записей в raw_candles
+2026-10-08 15:49:37.182 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для INCB
+2026-10-08 15:49:37.182 | INFO     | src.moex_loader:load_asset:207 - Загружено 93 свечей для INCB (stock)
+2026-10-08 15:49:37.182 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/IRAO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:38.231 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:38.232 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IRAO
+2026-10-08 15:49:38.232 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IRAO (stock)
+2026-10-08 15:49:38.232 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/IRKT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:39.263 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:39.264 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IRKT
+2026-10-08 15:49:39.264 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IRKT (stock)
+2026-10-08 15:49:39.264 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/IVAT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:40.279 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:40.279 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IVAT
+2026-10-08 15:49:40.279 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IVAT (stock)
+2026-10-08 15:49:40.280 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/JNOS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:41.252 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:41.253 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для JNOS
+2026-10-08 15:49:41.253 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для JNOS (stock)
+2026-10-08 15:49:41.253 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/JNOSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:42.252 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:42.252 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для JNOSP
+2026-10-08 15:49:42.252 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для JNOSP (stock)
+2026-10-08 15:49:42.253 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KAZT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:43.280 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:43.281 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KAZT
+2026-10-08 15:49:43.281 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KAZT (stock)
+2026-10-08 15:49:43.281 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KAZTP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:44.367 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:44.368 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KAZTP
+2026-10-08 15:49:44.368 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KAZTP (stock)
+2026-10-08 15:49:44.368 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KBSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:45.381 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:45.382 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KBSB
+2026-10-08 15:49:45.382 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KBSB (stock)
+2026-10-08 15:49:45.383 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KCHE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:46.658 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:46.659 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KCHE
+2026-10-08 15:49:46.659 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KCHE (stock)
+2026-10-08 15:49:46.659 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KCHEP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:47.631 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:47.632 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KCHEP
+2026-10-08 15:49:47.632 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KCHEP (stock)
+2026-10-08 15:49:47.633 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KFBA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:48.611 | INFO     | src.database:insert_raw_candles:110 - Вставлено 398 записей в raw_candles
+2026-10-08 15:49:48.612 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KFBA
+2026-10-08 15:49:48.612 | INFO     | src.moex_loader:load_asset:207 - Загружено 398 свечей для KFBA (stock)
+2026-10-08 15:49:48.612 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KGKC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:49.631 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:49.631 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KGKC
+2026-10-08 15:49:49.632 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KGKC (stock)
+2026-10-08 15:49:49.632 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KGKCP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:50.609 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:50.610 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KGKCP
+2026-10-08 15:49:50.610 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KGKCP (stock)
+2026-10-08 15:49:50.610 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KLSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:51.614 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:51.615 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KLSB
+2026-10-08 15:49:51.615 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KLSB (stock)
+2026-10-08 15:49:51.615 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KLVZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:52.727 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:52.728 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KLVZ
+2026-10-08 15:49:52.728 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KLVZ (stock)
+2026-10-08 15:49:52.728 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KMAZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:53.777 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:53.777 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KMAZ
+2026-10-08 15:49:53.778 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KMAZ (stock)
+2026-10-08 15:49:53.778 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KMEZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:54.768 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:54.769 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KMEZ
+2026-10-08 15:49:54.769 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KMEZ (stock)
+2026-10-08 15:49:54.769 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KOGK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:55.747 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:55.748 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KOGK
+2026-10-08 15:49:55.748 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KOGK (stock)
+2026-10-08 15:49:55.748 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KRKN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:56.727 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:56.727 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KRKN
+2026-10-08 15:49:56.727 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KRKN (stock)
+2026-10-08 15:49:56.728 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KRKNP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:57.813 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:57.814 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KRKNP
+2026-10-08 15:49:57.814 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KRKNP (stock)
+2026-10-08 15:49:57.814 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KRKOP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:49:58.801 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:49:58.802 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KRKOP
+2026-10-08 15:49:58.802 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KRKOP (stock)
+2026-10-08 15:49:58.802 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KROT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:00.095 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:00.095 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KROT
+2026-10-08 15:50:00.095 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KROT (stock)
+2026-10-08 15:50:00.096 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KROTP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:01.088 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:01.089 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KROTP
+2026-10-08 15:50:01.089 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KROTP (stock)
+2026-10-08 15:50:01.089 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KRSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:02.116 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:02.117 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KRSB
+2026-10-08 15:50:02.117 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KRSB (stock)
+2026-10-08 15:50:02.118 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KRSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:03.119 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:03.120 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KRSBP
+2026-10-08 15:50:03.120 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KRSBP (stock)
+2026-10-08 15:50:03.120 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KUZB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:04.141 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:04.141 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KUZB
+2026-10-08 15:50:04.141 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KUZB (stock)
+2026-10-08 15:50:04.142 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KZOS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:05.424 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:05.425 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KZOS
+2026-10-08 15:50:05.425 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KZOS (stock)
+2026-10-08 15:50:05.425 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/KZOSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:06.497 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:06.498 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KZOSP
+2026-10-08 15:50:06.498 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для KZOSP (stock)
+2026-10-08 15:50:06.498 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LEAS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:07.503 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:07.504 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LEAS
+2026-10-08 15:50:07.504 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LEAS (stock)
+2026-10-08 15:50:07.505 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LENT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:08.580 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:08.580 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LENT
+2026-10-08 15:50:08.580 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LENT (stock)
+2026-10-08 15:50:08.581 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LIFE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:09.549 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:09.550 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LIFE
+2026-10-08 15:50:09.551 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LIFE (stock)
+2026-10-08 15:50:09.551 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LKOH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:10.570 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:10.571 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LKOH
+2026-10-08 15:50:10.571 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LKOH (stock)
+2026-10-08 15:50:10.571 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LMBZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:11.624 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:11.625 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LMBZ
+2026-10-08 15:50:11.625 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LMBZ (stock)
+2026-10-08 15:50:11.625 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LPSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:12.651 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:12.652 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LPSB
+2026-10-08 15:50:12.652 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LPSB (stock)
+2026-10-08 15:50:12.652 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LSNG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:13.707 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:13.708 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LSNG
+2026-10-08 15:50:13.708 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LSNG (stock)
+2026-10-08 15:50:13.708 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LSNGP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:14.803 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:14.804 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LSNGP
+2026-10-08 15:50:14.804 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LSNGP (stock)
+2026-10-08 15:50:14.804 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LSRG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:15.812 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:15.813 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LSRG
+2026-10-08 15:50:15.813 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LSRG (stock)
+2026-10-08 15:50:15.813 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/LVHK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:16.837 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:16.837 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LVHK
+2026-10-08 15:50:16.838 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для LVHK (stock)
+2026-10-08 15:50:16.838 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MAGE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:17.836 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:17.837 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MAGE
+2026-10-08 15:50:17.837 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MAGE (stock)
+2026-10-08 15:50:17.837 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MAGEP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:18.851 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:18.852 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MAGEP
+2026-10-08 15:50:18.852 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MAGEP (stock)
+2026-10-08 15:50:18.852 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MAGN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:20.062 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:20.062 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MAGN
+2026-10-08 15:50:20.062 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MAGN (stock)
+2026-10-08 15:50:20.063 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MBNK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:21.206 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:21.206 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MBNK
+2026-10-08 15:50:21.207 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MBNK (stock)
+2026-10-08 15:50:21.207 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MDMG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:22.200 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:22.200 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MDMG
+2026-10-08 15:50:22.201 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MDMG (stock)
+2026-10-08 15:50:22.201 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MFGS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:23.162 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:23.163 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MFGS
+2026-10-08 15:50:23.163 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MFGS (stock)
+2026-10-08 15:50:23.163 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MFGSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:24.132 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:24.133 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MFGSP
+2026-10-08 15:50:24.133 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MFGSP (stock)
+2026-10-08 15:50:24.133 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MGKL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:25.139 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:25.140 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MGKL
+2026-10-08 15:50:25.140 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MGKL (stock)
+2026-10-08 15:50:25.140 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MGNT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:26.259 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:26.259 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MGNT
+2026-10-08 15:50:26.259 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MGNT (stock)
+2026-10-08 15:50:26.259 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MGNZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:27.079 | WARNING  | src.moex_loader:fetch_candles_async:83 - Нет данных для MGNZ за период 2023-10-09 - 2026-10-08
+2026-10-08 15:50:27.082 | WARNING  | src.moex_loader:load_asset:195 - Нет данных для MGNZ (stock)
+2026-10-08 15:50:27.082 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MGTS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:28.082 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:28.082 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MGTS
+2026-10-08 15:50:28.083 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MGTS (stock)
+2026-10-08 15:50:28.083 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MGTSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:29.080 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:29.080 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MGTSP
+2026-10-08 15:50:29.081 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MGTSP (stock)
+2026-10-08 15:50:29.081 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MISB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:30.069 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:30.069 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MISB
+2026-10-08 15:50:30.069 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MISB (stock)
+2026-10-08 15:50:30.070 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MISBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:31.055 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:31.056 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MISBP
+2026-10-08 15:50:31.056 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MISBP (stock)
+2026-10-08 15:50:31.056 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MOEX/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:32.056 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:32.057 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MOEX
+2026-10-08 15:50:32.057 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MOEX (stock)
+2026-10-08 15:50:32.057 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:33.049 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:33.049 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKC
+2026-10-08 15:50:33.050 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKC (stock)
+2026-10-08 15:50:33.050 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:34.068 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:34.069 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKK
+2026-10-08 15:50:34.069 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKK (stock)
+2026-10-08 15:50:34.070 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:35.084 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:35.084 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKP
+2026-10-08 15:50:35.084 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKP (stock)
+2026-10-08 15:50:35.085 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:36.083 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:36.084 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKS
+2026-10-08 15:50:36.084 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKS (stock)
+2026-10-08 15:50:36.084 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKU/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:37.055 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:37.056 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKU
+2026-10-08 15:50:37.056 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKU (stock)
+2026-10-08 15:50:37.056 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKV/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:38.085 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:38.086 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKV
+2026-10-08 15:50:38.086 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKV (stock)
+2026-10-08 15:50:38.086 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKY/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:39.115 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:39.115 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKY
+2026-10-08 15:50:39.115 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKY (stock)
+2026-10-08 15:50:39.116 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRKZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:40.108 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:40.108 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRKZ
+2026-10-08 15:50:40.108 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRKZ (stock)
+2026-10-08 15:50:40.109 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MRSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:41.124 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:41.124 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MRSB
+2026-10-08 15:50:41.124 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MRSB (stock)
+2026-10-08 15:50:41.125 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MSNG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:42.119 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:42.120 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MSNG
+2026-10-08 15:50:42.120 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MSNG (stock)
+2026-10-08 15:50:42.120 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MSRS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:43.123 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:43.124 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MSRS
+2026-10-08 15:50:43.124 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MSRS (stock)
+2026-10-08 15:50:43.124 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MSTT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:44.110 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:44.111 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MSTT
+2026-10-08 15:50:44.111 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MSTT (stock)
+2026-10-08 15:50:44.112 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MTLR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:45.282 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:45.283 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MTLR
+2026-10-08 15:50:45.283 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MTLR (stock)
+2026-10-08 15:50:45.283 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MTLRP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:46.471 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:46.472 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MTLRP
+2026-10-08 15:50:46.472 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MTLRP (stock)
+2026-10-08 15:50:46.472 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MTSS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:47.448 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:47.448 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MTSS
+2026-10-08 15:50:47.449 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MTSS (stock)
+2026-10-08 15:50:47.449 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/MVID/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:48.456 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:48.457 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MVID
+2026-10-08 15:50:48.457 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для MVID (stock)
+2026-10-08 15:50:48.458 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NAUK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:49.455 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:49.456 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NAUK
+2026-10-08 15:50:49.456 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NAUK (stock)
+2026-10-08 15:50:49.457 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NFAZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:50.692 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:50.693 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NFAZ
+2026-10-08 15:50:50.693 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NFAZ (stock)
+2026-10-08 15:50:50.693 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NKHP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:51.688 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:51.689 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NKHP
+2026-10-08 15:50:51.689 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NKHP (stock)
+2026-10-08 15:50:51.689 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NKNC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:52.714 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:52.715 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NKNC
+2026-10-08 15:50:52.715 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NKNC (stock)
+2026-10-08 15:50:52.716 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NKNCP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:53.733 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:53.734 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NKNCP
+2026-10-08 15:50:53.734 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NKNCP (stock)
+2026-10-08 15:50:53.735 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NKSH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:54.764 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:54.765 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NKSH
+2026-10-08 15:50:54.765 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NKSH (stock)
+2026-10-08 15:50:54.766 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NLMK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:55.973 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:55.974 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NLMK
+2026-10-08 15:50:55.974 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NLMK (stock)
+2026-10-08 15:50:55.974 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NMTP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:57.101 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:57.102 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NMTP
+2026-10-08 15:50:57.102 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NMTP (stock)
+2026-10-08 15:50:57.102 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NNSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:58.104 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:58.105 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NNSB
+2026-10-08 15:50:58.105 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NNSB (stock)
+2026-10-08 15:50:58.105 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NNSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:50:59.086 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:50:59.087 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NNSBP
+2026-10-08 15:50:59.087 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NNSBP (stock)
+2026-10-08 15:50:59.087 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NSVZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:00.086 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:00.087 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NSVZ
+2026-10-08 15:51:00.087 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NSVZ (stock)
+2026-10-08 15:51:00.087 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/NVTK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:01.151 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:01.151 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NVTK
+2026-10-08 15:51:01.152 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для NVTK (stock)
+2026-10-08 15:51:01.152 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/OGKB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:02.241 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:02.241 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для OGKB
+2026-10-08 15:51:02.242 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для OGKB (stock)
+2026-10-08 15:51:02.242 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/OMZZP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:03.236 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:03.237 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для OMZZP
+2026-10-08 15:51:03.237 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для OMZZP (stock)
+2026-10-08 15:51:03.237 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/OZON/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:04.275 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:04.276 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для OZON
+2026-10-08 15:51:04.276 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для OZON (stock)
+2026-10-08 15:51:04.276 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/OZPH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:05.474 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:05.474 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для OZPH
+2026-10-08 15:51:05.475 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для OZPH (stock)
+2026-10-08 15:51:05.475 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PAZA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:06.981 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:06.982 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PAZA
+2026-10-08 15:51:06.982 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PAZA (stock)
+2026-10-08 15:51:06.982 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PHOR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:08.203 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:08.204 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PHOR
+2026-10-08 15:51:08.204 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PHOR (stock)
+2026-10-08 15:51:08.204 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PIKK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:09.231 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:09.232 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PIKK
+2026-10-08 15:51:09.232 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PIKK (stock)
+2026-10-08 15:51:09.232 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PLZL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:10.222 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:10.223 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PLZL
+2026-10-08 15:51:10.223 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PLZL (stock)
+2026-10-08 15:51:10.223 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PMSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:11.214 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:11.214 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PMSB
+2026-10-08 15:51:11.215 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PMSB (stock)
+2026-10-08 15:51:11.215 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PMSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:12.248 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:12.249 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PMSBP
+2026-10-08 15:51:12.250 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PMSBP (stock)
+2026-10-08 15:51:12.250 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/POSI/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:13.455 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:13.456 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для POSI
+2026-10-08 15:51:13.456 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для POSI (stock)
+2026-10-08 15:51:13.456 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PRFN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:14.684 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:14.685 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PRFN
+2026-10-08 15:51:14.685 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PRFN (stock)
+2026-10-08 15:51:14.686 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PRMB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:15.657 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:15.658 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PRMB
+2026-10-08 15:51:15.658 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PRMB (stock)
+2026-10-08 15:51:15.658 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/PRMD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:16.832 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:16.833 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PRMD
+2026-10-08 15:51:16.833 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для PRMD (stock)
+2026-10-08 15:51:16.833 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RAGR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:17.833 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:17.834 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RAGR
+2026-10-08 15:51:17.834 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RAGR (stock)
+2026-10-08 15:51:17.834 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RASP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:18.981 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:18.982 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RASP
+2026-10-08 15:51:18.982 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RASP (stock)
+2026-10-08 15:51:18.982 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RBCM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:19.984 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:19.984 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RBCM
+2026-10-08 15:51:19.985 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RBCM (stock)
+2026-10-08 15:51:19.985 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RDRB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:21.029 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:21.030 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RDRB
+2026-10-08 15:51:21.030 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RDRB (stock)
+2026-10-08 15:51:21.030 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RENI/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:22.030 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:22.031 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RENI
+2026-10-08 15:51:22.031 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RENI (stock)
+2026-10-08 15:51:22.031 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RGSS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:23.024 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:23.025 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RGSS
+2026-10-08 15:51:23.025 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RGSS (stock)
+2026-10-08 15:51:23.025 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RKKE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:24.146 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:24.146 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RKKE
+2026-10-08 15:51:24.146 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RKKE (stock)
+2026-10-08 15:51:24.147 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RNFT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:25.316 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:25.317 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RNFT
+2026-10-08 15:51:25.317 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RNFT (stock)
+2026-10-08 15:51:25.317 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ROLO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:26.343 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:26.344 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ROLO
+2026-10-08 15:51:26.344 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ROLO (stock)
+2026-10-08 15:51:26.344 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ROSN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:27.352 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:27.352 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ROSN
+2026-10-08 15:51:27.353 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ROSN (stock)
+2026-10-08 15:51:27.353 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ROST/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:28.316 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:28.317 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ROST
+2026-10-08 15:51:28.317 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ROST (stock)
+2026-10-08 15:51:28.318 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RTGZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:29.334 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:29.335 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RTGZ
+2026-10-08 15:51:29.335 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RTGZ (stock)
+2026-10-08 15:51:29.335 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RTKM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:30.348 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:30.348 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RTKM
+2026-10-08 15:51:30.348 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RTKM (stock)
+2026-10-08 15:51:30.349 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RTKMP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:31.366 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:31.367 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RTKMP
+2026-10-08 15:51:31.367 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RTKMP (stock)
+2026-10-08 15:51:31.367 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RTSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:32.359 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:32.359 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RTSB
+2026-10-08 15:51:32.360 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RTSB (stock)
+2026-10-08 15:51:32.360 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RTSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:33.368 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:33.369 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RTSBP
+2026-10-08 15:51:33.369 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RTSBP (stock)
+2026-10-08 15:51:33.369 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RUAL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:34.630 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:34.631 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RUAL
+2026-10-08 15:51:34.631 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RUAL (stock)
+2026-10-08 15:51:34.632 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RUSI/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:35.614 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:35.615 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RUSI
+2026-10-08 15:51:35.615 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RUSI (stock)
+2026-10-08 15:51:35.615 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/RZSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:36.615 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:36.616 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RZSB
+2026-10-08 15:51:36.616 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для RZSB (stock)
+2026-10-08 15:51:36.616 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SAGO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:37.600 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:37.601 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SAGO
+2026-10-08 15:51:37.601 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SAGO (stock)
+2026-10-08 15:51:37.601 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SAGOP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:38.627 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:38.627 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SAGOP
+2026-10-08 15:51:38.627 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SAGOP (stock)
+2026-10-08 15:51:38.628 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SARE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:39.987 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:39.988 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SARE
+2026-10-08 15:51:39.988 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SARE (stock)
+2026-10-08 15:51:39.988 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SAREP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:41.086 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:41.087 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SAREP
+2026-10-08 15:51:41.087 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SAREP (stock)
+2026-10-08 15:51:41.087 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SBER/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:42.085 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:42.085 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SBER
+2026-10-08 15:51:42.085 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SBER (stock)
+2026-10-08 15:51:42.086 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SBERP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:43.110 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:43.111 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SBERP
+2026-10-08 15:51:43.111 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SBERP (stock)
+2026-10-08 15:51:43.111 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SELG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:44.364 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:44.365 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SELG
+2026-10-08 15:51:44.365 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SELG (stock)
+2026-10-08 15:51:44.365 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SFIN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:45.385 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:45.386 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SFIN
+2026-10-08 15:51:45.386 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SFIN (stock)
+2026-10-08 15:51:45.386 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SGZH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:46.386 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:46.387 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SGZH
+2026-10-08 15:51:46.387 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SGZH (stock)
+2026-10-08 15:51:46.387 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SIBN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:47.350 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:47.351 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SIBN
+2026-10-08 15:51:47.351 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SIBN (stock)
+2026-10-08 15:51:47.351 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SLEN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:48.356 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:48.356 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SLEN
+2026-10-08 15:51:48.357 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SLEN (stock)
+2026-10-08 15:51:48.357 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SMLT/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:49.393 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:49.394 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SMLT
+2026-10-08 15:51:49.394 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SMLT (stock)
+2026-10-08 15:51:49.394 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SNGS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:50.365 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:50.365 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SNGS
+2026-10-08 15:51:50.366 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SNGS (stock)
+2026-10-08 15:51:50.366 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SNGSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:52.503 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:52.503 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SNGSP
+2026-10-08 15:51:52.504 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SNGSP (stock)
+2026-10-08 15:51:52.504 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SOFL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:53.526 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:53.527 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SOFL
+2026-10-08 15:51:53.527 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SOFL (stock)
+2026-10-08 15:51:53.527 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SPBE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:54.537 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:54.537 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SPBE
+2026-10-08 15:51:54.537 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SPBE (stock)
+2026-10-08 15:51:54.537 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/STSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:55.550 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:55.551 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для STSB
+2026-10-08 15:51:55.551 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для STSB (stock)
+2026-10-08 15:51:55.551 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/STSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:56.518 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:56.519 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для STSBP
+2026-10-08 15:51:56.519 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для STSBP (stock)
+2026-10-08 15:51:56.520 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SVAV/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:57.516 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:57.517 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SVAV
+2026-10-08 15:51:57.517 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SVAV (stock)
+2026-10-08 15:51:57.517 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SVCB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:58.518 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:58.519 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SVCB
+2026-10-08 15:51:58.519 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SVCB (stock)
+2026-10-08 15:51:58.519 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SVET/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:51:59.577 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:51:59.577 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SVET
+2026-10-08 15:51:59.577 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SVET (stock)
+2026-10-08 15:51:59.578 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/SVETP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:00.549 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:00.550 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SVETP
+2026-10-08 15:52:00.550 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для SVETP (stock)
+2026-10-08 15:52:00.550 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/T/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:01.577 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:01.578 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для T
+2026-10-08 15:52:01.578 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для T (stock)
+2026-10-08 15:52:01.578 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TASB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:02.587 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:02.587 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TASB
+2026-10-08 15:52:02.588 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TASB (stock)
+2026-10-08 15:52:02.588 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TASBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:03.595 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:03.596 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TASBP
+2026-10-08 15:52:03.596 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TASBP (stock)
+2026-10-08 15:52:03.596 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TATN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:04.569 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:04.570 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TATN
+2026-10-08 15:52:04.570 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TATN (stock)
+2026-10-08 15:52:04.570 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TATNP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:05.753 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:05.754 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TATNP
+2026-10-08 15:52:05.754 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TATNP (stock)
+2026-10-08 15:52:05.754 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TGKA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:06.819 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:06.820 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TGKA
+2026-10-08 15:52:06.820 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TGKA (stock)
+2026-10-08 15:52:06.820 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TGKB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:07.784 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:07.785 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TGKB
+2026-10-08 15:52:07.785 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TGKB (stock)
+2026-10-08 15:52:07.785 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TGKBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:08.842 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:08.843 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TGKBP
+2026-10-08 15:52:08.843 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TGKBP (stock)
+2026-10-08 15:52:08.843 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TGKN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:09.845 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:09.845 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TGKN
+2026-10-08 15:52:09.845 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TGKN (stock)
+2026-10-08 15:52:09.846 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TNSE/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:10.855 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:10.856 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TNSE
+2026-10-08 15:52:10.856 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TNSE (stock)
+2026-10-08 15:52:10.856 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TORS/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:11.836 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:11.836 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TORS
+2026-10-08 15:52:11.836 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TORS (stock)
+2026-10-08 15:52:11.837 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TORSP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:12.889 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:12.890 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TORSP
+2026-10-08 15:52:12.890 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TORSP (stock)
+2026-10-08 15:52:12.891 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TRMK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:13.863 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:13.864 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TRMK
+2026-10-08 15:52:13.864 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TRMK (stock)
+2026-10-08 15:52:13.865 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TRNFP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:14.862 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:14.863 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TRNFP
+2026-10-08 15:52:14.863 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TRNFP (stock)
+2026-10-08 15:52:14.863 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TTLK/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:15.866 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:15.866 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TTLK
+2026-10-08 15:52:15.866 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TTLK (stock)
+2026-10-08 15:52:15.867 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/TUZA/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:16.926 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:16.926 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TUZA
+2026-10-08 15:52:16.926 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для TUZA (stock)
+2026-10-08 15:52:16.927 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UGLD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:17.955 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:17.956 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UGLD
+2026-10-08 15:52:17.956 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UGLD (stock)
+2026-10-08 15:52:17.956 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UKUZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:18.942 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:18.943 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UKUZ
+2026-10-08 15:52:18.943 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UKUZ (stock)
+2026-10-08 15:52:18.943 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UNAC/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:19.968 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:19.969 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UNAC
+2026-10-08 15:52:19.969 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UNAC (stock)
+2026-10-08 15:52:19.970 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UNKL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:20.968 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:20.969 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UNKL
+2026-10-08 15:52:20.969 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UNKL (stock)
+2026-10-08 15:52:20.969 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UPRO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:22.215 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:22.215 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UPRO
+2026-10-08 15:52:22.215 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UPRO (stock)
+2026-10-08 15:52:22.216 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/URKZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:23.184 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:23.185 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для URKZ
+2026-10-08 15:52:23.185 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для URKZ (stock)
+2026-10-08 15:52:23.185 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/USBN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:24.171 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:24.172 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для USBN
+2026-10-08 15:52:24.173 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для USBN (stock)
+2026-10-08 15:52:24.173 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UTAR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:25.394 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:25.395 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UTAR
+2026-10-08 15:52:25.395 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UTAR (stock)
+2026-10-08 15:52:25.396 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/UWGN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:26.614 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:26.615 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UWGN
+2026-10-08 15:52:26.615 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для UWGN (stock)
+2026-10-08 15:52:26.615 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VEON-RX/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:27.634 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:27.634 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VEON-RX
+2026-10-08 15:52:27.635 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VEON-RX (stock)
+2026-10-08 15:52:27.635 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VGSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:28.610 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:28.611 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VGSB
+2026-10-08 15:52:28.611 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VGSB (stock)
+2026-10-08 15:52:28.611 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VGSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:29.645 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:29.646 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VGSBP
+2026-10-08 15:52:29.646 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VGSBP (stock)
+2026-10-08 15:52:29.646 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VJGZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:30.715 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:30.716 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VJGZ
+2026-10-08 15:52:30.716 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VJGZ (stock)
+2026-10-08 15:52:30.716 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VJGZP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:32.037 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:32.038 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VJGZP
+2026-10-08 15:52:32.038 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VJGZP (stock)
+2026-10-08 15:52:32.038 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VKCO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:33.183 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:33.183 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VKCO
+2026-10-08 15:52:33.184 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VKCO (stock)
+2026-10-08 15:52:33.184 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VLHZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:34.179 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:34.180 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VLHZ
+2026-10-08 15:52:34.180 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VLHZ (stock)
+2026-10-08 15:52:34.180 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VRSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:35.233 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:35.233 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VRSB
+2026-10-08 15:52:35.233 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VRSB (stock)
+2026-10-08 15:52:35.234 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VRSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:36.218 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:36.218 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VRSBP
+2026-10-08 15:52:36.218 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VRSBP (stock)
+2026-10-08 15:52:36.219 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VSEH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:37.388 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:37.389 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VSEH
+2026-10-08 15:52:37.389 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VSEH (stock)
+2026-10-08 15:52:37.389 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VSMO/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:38.365 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:38.366 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VSMO
+2026-10-08 15:52:38.366 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VSMO (stock)
+2026-10-08 15:52:38.367 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VSYD/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:39.374 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:39.374 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VSYD
+2026-10-08 15:52:39.374 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VSYD (stock)
+2026-10-08 15:52:39.375 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VSYDP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:40.381 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:40.381 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VSYDP
+2026-10-08 15:52:40.382 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VSYDP (stock)
+2026-10-08 15:52:40.382 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/VTBR/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:41.393 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:41.394 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для VTBR
+2026-10-08 15:52:41.394 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для VTBR (stock)
+2026-10-08 15:52:41.394 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/WTCM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:42.389 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:42.390 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для WTCM
+2026-10-08 15:52:42.391 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для WTCM (stock)
+2026-10-08 15:52:42.391 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/WTCMP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:43.363 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:43.364 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для WTCMP
+2026-10-08 15:52:43.364 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для WTCMP (stock)
+2026-10-08 15:52:43.364 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/WUSH/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:44.428 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:44.429 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для WUSH
+2026-10-08 15:52:44.429 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для WUSH (stock)
+2026-10-08 15:52:44.429 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/X5/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:45.714 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:45.714 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для X5
+2026-10-08 15:52:45.714 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для X5 (stock)
+2026-10-08 15:52:45.715 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YAKG/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:46.744 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:46.744 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YAKG
+2026-10-08 15:52:46.744 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YAKG (stock)
+2026-10-08 15:52:46.745 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YDEX/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:47.853 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:47.854 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YDEX
+2026-10-08 15:52:47.854 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YDEX (stock)
+2026-10-08 15:52:47.854 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YKEN/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:49.038 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:49.039 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YKEN
+2026-10-08 15:52:49.039 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YKEN (stock)
+2026-10-08 15:52:49.039 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YKENP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:50.040 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:50.041 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YKENP
+2026-10-08 15:52:50.041 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YKENP (stock)
+2026-10-08 15:52:50.042 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YRSB/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:51.033 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:51.034 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YRSB
+2026-10-08 15:52:51.034 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YRSB (stock)
+2026-10-08 15:52:51.034 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/YRSBP/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:52.400 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:52.400 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для YRSBP
+2026-10-08 15:52:52.400 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для YRSBP (stock)
+2026-10-08 15:52:52.401 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ZAYM/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:53.480 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:53.481 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ZAYM
+2026-10-08 15:52:53.481 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ZAYM (stock)
+2026-10-08 15:52:53.481 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ZILL/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:54.487 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:54.488 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ZILL
+2026-10-08 15:52:54.488 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ZILL (stock)
+2026-10-08 15:52:54.488 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/ZVEZ/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:55.543 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:52:55.543 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ZVEZ
+2026-10-08 15:52:55.543 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для ZVEZ (stock)
+2026-10-08 15:52:55.543 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SiZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:56.529 | INFO     | src.database:insert_raw_candles:110 - Вставлено 435 записей в raw_candles
+2026-10-08 15:52:56.530 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SiZ6
+2026-10-08 15:52:56.530 | INFO     | src.moex_loader:load_asset:207 - Загружено 435 свечей для SiZ6 (futures)
+2026-10-08 15:52:56.530 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/CRZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:57.320 | INFO     | src.database:insert_raw_candles:110 - Вставлено 331 записей в raw_candles
+2026-10-08 15:52:57.320 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CRZ6
+2026-10-08 15:52:57.320 | INFO     | src.moex_loader:load_asset:207 - Загружено 331 свечей для CRZ6 (futures)
+2026-10-08 15:52:57.321 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/UCZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:58.105 | INFO     | src.database:insert_raw_candles:110 - Вставлено 116 записей в raw_candles
+2026-10-08 15:52:58.106 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UCZ6
+2026-10-08 15:52:58.106 | INFO     | src.moex_loader:load_asset:207 - Загружено 116 свечей для UCZ6 (futures)
+2026-10-08 15:52:58.106 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/EDZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:52:59.449 | INFO     | src.database:insert_raw_candles:110 - Вставлено 178 записей в raw_candles
+2026-10-08 15:52:59.450 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EDZ6
+2026-10-08 15:52:59.450 | INFO     | src.moex_loader:load_asset:207 - Загружено 178 свечей для EDZ6 (futures)
+2026-10-08 15:52:59.450 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/UMZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:00.244 | INFO     | src.database:insert_raw_candles:110 - Вставлено 87 записей в raw_candles
+2026-10-08 15:53:00.244 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для UMZ6
+2026-10-08 15:53:00.245 | INFO     | src.moex_loader:load_asset:207 - Загружено 87 свечей для UMZ6 (futures)
+2026-10-08 15:53:00.245 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/USDRUBF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:01.240 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:53:01.241 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для USDRUBF
+2026-10-08 15:53:01.241 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для USDRUBF (futures)
+2026-10-08 15:53:01.241 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/EURRUBF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:02.240 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:53:02.240 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EURRUBF
+2026-10-08 15:53:02.240 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для EURRUBF (futures)
+2026-10-08 15:53:02.241 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/CNYRUBF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:03.290 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:53:03.291 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CNYRUBF
+2026-10-08 15:53:03.291 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для CNYRUBF (futures)
+2026-10-08 15:53:03.291 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SRZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:04.312 | INFO     | src.database:insert_raw_candles:110 - Вставлено 197 записей в raw_candles
+2026-10-08 15:53:04.313 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SRZ6
+2026-10-08 15:53:04.313 | INFO     | src.moex_loader:load_asset:207 - Загружено 197 свечей для SRZ6 (futures)
+2026-10-08 15:53:04.313 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/KKZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:05.284 | INFO     | src.database:insert_raw_candles:110 - Вставлено 6 записей в raw_candles
+2026-10-08 15:53:05.285 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KKZ6
+2026-10-08 15:53:05.285 | INFO     | src.moex_loader:load_asset:207 - Загружено 6 свечей для KKZ6 (futures)
+2026-10-08 15:53:05.285 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/MXZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:06.071 | INFO     | src.database:insert_raw_candles:110 - Вставлено 249 записей в raw_candles
+2026-10-08 15:53:06.072 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MXZ6
+2026-10-08 15:53:06.072 | INFO     | src.moex_loader:load_asset:207 - Загружено 249 свечей для MXZ6 (futures)
+2026-10-08 15:53:06.072 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/MMZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:07.057 | INFO     | src.database:insert_raw_candles:110 - Вставлено 477 записей в raw_candles
+2026-10-08 15:53:07.058 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для MMZ6
+2026-10-08 15:53:07.058 | INFO     | src.moex_loader:load_asset:207 - Загружено 477 свечей для MMZ6 (futures)
+2026-10-08 15:53:07.058 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/RIZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:07.870 | INFO     | src.database:insert_raw_candles:110 - Вставлено 295 записей в raw_candles
+2026-10-08 15:53:07.871 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RIZ6
+2026-10-08 15:53:07.871 | INFO     | src.moex_loader:load_asset:207 - Загружено 295 свечей для RIZ6 (futures)
+2026-10-08 15:53:07.872 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/RBZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:08.666 | INFO     | src.database:insert_raw_candles:110 - Вставлено 223 записей в raw_candles
+2026-10-08 15:53:08.667 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RBZ6
+2026-10-08 15:53:08.667 | INFO     | src.moex_loader:load_asset:207 - Загружено 223 свечей для RBZ6 (futures)
+2026-10-08 15:53:08.668 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/RGBIF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:09.656 | INFO     | src.database:insert_raw_candles:110 - Вставлено 201 записей в raw_candles
+2026-10-08 15:53:09.657 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для RGBIF
+2026-10-08 15:53:09.657 | INFO     | src.moex_loader:load_asset:207 - Загружено 201 свечей для RGBIF (futures)
+2026-10-08 15:53:09.657 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/IMOEXF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:10.625 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:53:10.626 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для IMOEXF
+2026-10-08 15:53:10.626 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для IMOEXF (futures)
+2026-10-08 15:53:10.626 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SFZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:11.436 | INFO     | src.database:insert_raw_candles:110 - Вставлено 204 записей в raw_candles
+2026-10-08 15:53:11.437 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SFZ6
+2026-10-08 15:53:11.437 | INFO     | src.moex_loader:load_asset:207 - Загружено 204 свечей для SFZ6 (futures)
+2026-10-08 15:53:11.437 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/NAZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:12.238 | INFO     | src.database:insert_raw_candles:110 - Вставлено 208 записей в raw_candles
+2026-10-08 15:53:12.239 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NAZ6
+2026-10-08 15:53:12.239 | INFO     | src.moex_loader:load_asset:207 - Загружено 208 свечей для NAZ6 (futures)
+2026-10-08 15:53:12.239 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/DJZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:13.025 | INFO     | src.database:insert_raw_candles:110 - Вставлено 50 записей в raw_candles
+2026-10-08 15:53:13.026 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для DJZ6
+2026-10-08 15:53:13.026 | INFO     | src.moex_loader:load_asset:207 - Загружено 50 свечей для DJZ6 (futures)
+2026-10-08 15:53:13.026 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/BRZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:13.829 | INFO     | src.database:insert_raw_candles:110 - Вставлено 118 записей в raw_candles
+2026-10-08 15:53:13.830 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BRZ6
+2026-10-08 15:53:13.830 | INFO     | src.moex_loader:load_asset:207 - Загружено 118 свечей для BRZ6 (futures)
+2026-10-08 15:53:13.831 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/BRX6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:14.623 | INFO     | src.database:insert_raw_candles:110 - Вставлено 141 записей в raw_candles
+2026-10-08 15:53:14.623 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BRX6
+2026-10-08 15:53:14.624 | INFO     | src.moex_loader:load_asset:207 - Загружено 141 свечей для BRX6 (futures)
+2026-10-08 15:53:14.624 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/WTZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:15.421 | INFO     | src.database:insert_raw_candles:110 - Вставлено 1 записей в raw_candles
+2026-10-08 15:53:15.422 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для WTZ6
+2026-10-08 15:53:15.422 | INFO     | src.moex_loader:load_asset:207 - Загружено 1 свечей для WTZ6 (futures)
+2026-10-08 15:53:15.422 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/NGZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:16.243 | INFO     | src.database:insert_raw_candles:110 - Вставлено 101 записей в raw_candles
+2026-10-08 15:53:16.244 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NGZ6
+2026-10-08 15:53:16.244 | INFO     | src.moex_loader:load_asset:207 - Загружено 101 свечей для NGZ6 (futures)
+2026-10-08 15:53:16.244 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/NRZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:17.046 | INFO     | src.database:insert_raw_candles:110 - Вставлено 102 записей в raw_candles
+2026-10-08 15:53:17.047 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NRZ6
+2026-10-08 15:53:17.047 | INFO     | src.moex_loader:load_asset:207 - Загружено 102 свечей для NRZ6 (futures)
+2026-10-08 15:53:17.047 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/GZZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:17.846 | INFO     | src.database:insert_raw_candles:110 - Вставлено 212 записей в raw_candles
+2026-10-08 15:53:17.847 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GZZ6
+2026-10-08 15:53:17.847 | INFO     | src.moex_loader:load_asset:207 - Загружено 212 свечей для GZZ6 (futures)
+2026-10-08 15:53:17.848 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/GDZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:18.660 | INFO     | src.database:insert_raw_candles:110 - Вставлено 207 записей в raw_candles
+2026-10-08 15:53:18.661 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GDZ6
+2026-10-08 15:53:18.661 | INFO     | src.moex_loader:load_asset:207 - Загружено 207 свечей для GDZ6 (futures)
+2026-10-08 15:53:18.661 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/GLZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:19.455 | INFO     | src.database:insert_raw_candles:110 - Вставлено 208 записей в raw_candles
+2026-10-08 15:53:19.456 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GLZ6
+2026-10-08 15:53:19.456 | INFO     | src.moex_loader:load_asset:207 - Загружено 208 свечей для GLZ6 (futures)
+2026-10-08 15:53:19.457 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/GLDRUBF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:20.457 | INFO     | src.database:insert_raw_candles:110 - Вставлено 500 записей в raw_candles
+2026-10-08 15:53:20.457 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для GLDRUBF
+2026-10-08 15:53:20.458 | INFO     | src.moex_loader:load_asset:207 - Загружено 500 свечей для GLDRUBF (futures)
+2026-10-08 15:53:20.458 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SVZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:21.255 | INFO     | src.database:insert_raw_candles:110 - Вставлено 212 записей в raw_candles
+2026-10-08 15:53:21.256 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SVZ6
+2026-10-08 15:53:21.256 | INFO     | src.moex_loader:load_asset:207 - Загружено 212 свечей для SVZ6 (futures)
+2026-10-08 15:53:21.256 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SLVRUBF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:22.183 | INFO     | src.database:insert_raw_candles:110 - Вставлено 136 записей в raw_candles
+2026-10-08 15:53:22.183 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SLVRUBF
+2026-10-08 15:53:22.183 | INFO     | src.moex_loader:load_asset:207 - Загружено 136 свечей для SLVRUBF (futures)
+2026-10-08 15:53:22.184 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/PDZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:23.012 | INFO     | src.database:insert_raw_candles:110 - Вставлено 207 записей в raw_candles
+2026-10-08 15:53:23.013 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PDZ6
+2026-10-08 15:53:23.013 | INFO     | src.moex_loader:load_asset:207 - Загружено 207 свечей для PDZ6 (futures)
+2026-10-08 15:53:23.013 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/PTZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:24.244 | INFO     | src.database:insert_raw_candles:110 - Вставлено 205 записей в raw_candles
+2026-10-08 15:53:24.245 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для PTZ6
+2026-10-08 15:53:24.245 | INFO     | src.moex_loader:load_asset:207 - Загружено 205 свечей для PTZ6 (futures)
+2026-10-08 15:53:24.245 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/LDZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:25.064 | INFO     | src.database:insert_raw_candles:110 - Вставлено 142 записей в raw_candles
+2026-10-08 15:53:25.065 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LDZ6
+2026-10-08 15:53:25.065 | INFO     | src.moex_loader:load_asset:207 - Загружено 142 свечей для LDZ6 (futures)
+2026-10-08 15:53:25.065 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/LTZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:26.024 | INFO     | src.database:insert_raw_candles:110 - Вставлено 147 записей в raw_candles
+2026-10-08 15:53:26.025 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для LTZ6
+2026-10-08 15:53:26.025 | INFO     | src.moex_loader:load_asset:207 - Загружено 147 свечей для LTZ6 (futures)
+2026-10-08 15:53:26.025 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/NCZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:27.190 | INFO     | src.database:insert_raw_candles:110 - Вставлено 69 записей в raw_candles
+2026-10-08 15:53:27.190 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для NCZ6
+2026-10-08 15:53:27.190 | INFO     | src.moex_loader:load_asset:207 - Загружено 69 свечей для NCZ6 (futures)
+2026-10-08 15:53:27.191 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/CEZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:27.996 | INFO     | src.database:insert_raw_candles:110 - Вставлено 92 записей в raw_candles
+2026-10-08 15:53:27.997 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CEZ6
+2026-10-08 15:53:27.997 | INFO     | src.moex_loader:load_asset:207 - Загружено 92 свечей для CEZ6 (futures)
+2026-10-08 15:53:27.997 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/ANZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:28.777 | INFO     | src.database:insert_raw_candles:110 - Вставлено 90 записей в raw_candles
+2026-10-08 15:53:28.778 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ANZ6
+2026-10-08 15:53:28.778 | INFO     | src.moex_loader:load_asset:207 - Загружено 90 свечей для ANZ6 (futures)
+2026-10-08 15:53:28.778 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/ZCZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:29.625 | INFO     | src.database:insert_raw_candles:110 - Вставлено 71 записей в raw_candles
+2026-10-08 15:53:29.625 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ZCZ6
+2026-10-08 15:53:29.626 | INFO     | src.moex_loader:load_asset:207 - Загружено 71 свечей для ZCZ6 (futures)
+2026-10-08 15:53:29.626 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/KCX6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:30.578 | INFO     | src.database:insert_raw_candles:110 - Вставлено 85 записей в raw_candles
+2026-10-08 15:53:30.579 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для KCX6
+2026-10-08 15:53:30.579 | INFO     | src.moex_loader:load_asset:207 - Загружено 85 свечей для KCX6 (futures)
+2026-10-08 15:53:30.579 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/CCX6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:31.391 | INFO     | src.database:insert_raw_candles:110 - Вставлено 81 записей в raw_candles
+2026-10-08 15:53:31.392 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для CCX6
+2026-10-08 15:53:31.392 | INFO     | src.moex_loader:load_asset:207 - Загружено 81 свечей для CCX6 (futures)
+2026-10-08 15:53:31.392 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SuV6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:32.211 | INFO     | src.database:insert_raw_candles:110 - Вставлено 44 записей в raw_candles
+2026-10-08 15:53:32.211 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SuV6
+2026-10-08 15:53:32.212 | INFO     | src.moex_loader:load_asset:207 - Загружено 44 свечей для SuV6 (futures)
+2026-10-08 15:53:32.212 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/W4Z6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:32.993 | INFO     | src.database:insert_raw_candles:110 - Вставлено 173 записей в raw_candles
+2026-10-08 15:53:32.994 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для W4Z6
+2026-10-08 15:53:32.994 | INFO     | src.moex_loader:load_asset:207 - Загружено 173 свечей для W4Z6 (futures)
+2026-10-08 15:53:32.994 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/BTZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:33.789 | INFO     | src.database:insert_raw_candles:110 - Вставлено 15 записей в raw_candles
+2026-10-08 15:53:33.790 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BTZ6
+2026-10-08 15:53:33.790 | INFO     | src.moex_loader:load_asset:207 - Загружено 15 свечей для BTZ6 (futures)
+2026-10-08 15:53:33.791 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/EHZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:34.594 | INFO     | src.database:insert_raw_candles:110 - Вставлено 14 записей в raw_candles
+2026-10-08 15:53:34.595 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для EHZ6
+2026-10-08 15:53:34.595 | INFO     | src.moex_loader:load_asset:207 - Загружено 14 свечей для EHZ6 (futures)
+2026-10-08 15:53:34.595 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/S3Z6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:35.677 | INFO     | src.database:insert_raw_candles:110 - Вставлено 15 записей в raw_candles
+2026-10-08 15:53:35.677 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для S3Z6
+2026-10-08 15:53:35.677 | INFO     | src.moex_loader:load_asset:207 - Загружено 15 свечей для S3Z6 (futures)
+2026-10-08 15:53:35.678 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/TXX6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:36.464 | INFO     | src.database:insert_raw_candles:110 - Вставлено 22 записей в raw_candles
+2026-10-08 15:53:36.465 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для TXX6
+2026-10-08 15:53:36.465 | INFO     | src.moex_loader:load_asset:207 - Загружено 22 свечей для TXX6 (futures)
+2026-10-08 15:53:36.465 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/XRZ6/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:37.341 | INFO     | src.database:insert_raw_candles:110 - Вставлено 13 записей в raw_candles
+2026-10-08 15:53:37.342 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для XRZ6
+2026-10-08 15:53:37.342 | INFO     | src.moex_loader:load_asset:207 - Загружено 13 свечей для XRZ6 (futures)
+2026-10-08 15:53:37.342 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/BTCUSDF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:38.131 | INFO     | src.database:insert_raw_candles:110 - Вставлено 13 записей в raw_candles
+2026-10-08 15:53:38.132 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для BTCUSDF
+2026-10-08 15:53:38.132 | INFO     | src.moex_loader:load_asset:207 - Загружено 13 свечей для BTCUSDF (futures)
+2026-10-08 15:53:38.132 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/ETHUSDF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:38.982 | INFO     | src.database:insert_raw_candles:110 - Вставлено 13 записей в raw_candles
+2026-10-08 15:53:38.983 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для ETHUSDF
+2026-10-08 15:53:38.983 | INFO     | src.moex_loader:load_asset:207 - Загружено 13 свечей для ETHUSDF (futures)
+2026-10-08 15:53:38.983 | DEBUG    | src.moex_loader:_fetch_page:48 - Запрос: https://iss.moex.com/iss/engines/futures/markets/forts/securities/SOLUSDF/candles.json?from=2023-10-09&till=2026-10-08&interval=24&iss.meta=off&start=0
+2026-10-08 15:53:40.183 | INFO     | src.database:insert_raw_candles:110 - Вставлено 13 записей в raw_candles
+2026-10-08 15:53:40.184 | INFO     | src.database:upsert_meta:149 - Мета-информация обновлена для SOLUSDF
+2026-10-08 15:53:40.184 | INFO     | src.moex_loader:load_asset:207 - Загружено 13 свечей для SOLUSDF (futures)
+2026-10-08 15:53:50.154 | WARNING  | src.scanner:scan_all:131 - Без данных (нет свечей в БД): 15 активов, напр. ['GAZC', 'GAZS', 'GAZT', 'MGNZ', 'KKZ6']
+
+Отчёт сканера на 2026-10-08 15:53 | просканировано: 294, сигналов buy/sell: 20, watch: 220
++----------+---------+------------+---------+--------------+---------+------------------------------------------------------------------+-----------------------+
+| TICKER   | ТИП     | ДАТА       | ЦЕНА    | СИГНАЛ       | SCORE   | ОСНОВАНИЕ                                                        | SL/TP                 |
++==========+=========+============+=========+==============+=========+==================================================================+=======================+
+| ASSB     | stocks  | 2025-09-16 | 2.525   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (79.5); Close above upper BB; Strong trend ADX=35 | 2.7429 / 2.1982       |
+| AVAN     | stocks  | 2025-09-16 | 723.0   | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (23.9); Close below lower BB; Strong trend ADX=32   | 691.0 / 771.0         |
+| BAZA     | stocks  | 2026-10-07 | 115.34  | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (72.9); Close above upper BB; Strong trend ADX=34 | 119.9743 / 108.3886   |
+| BSPB     | stocks  | 2025-08-07 | 409.9   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (72.1); Close above upper BB; Strong trend ADX=33 | 422.4514 / 391.0729   |
+| IRKT     | stocks  | 2025-08-11 | 29.86   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (78.8); Close above upper BB; Strong trend ADX=30 | 31.24 / 27.79         |
+| IVAT     | stocks  | 2026-02-19 | 158.95  | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (29.4); Close below lower BB; Strong trend ADX=27   | 154.2214 / 166.0429   |
+| KGKC     | stocks  | 2026-07-15 | 34.4    | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (13.3); Close below lower BB; Strong trend ADX=61   | 31.2 / 39.2           |
+| KGKCP    | stocks  | 2026-07-15 | 36.0    | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (6.1); Close below lower BB; Strong trend ADX=49    | 31.1714 / 43.2429     |
+| MRKU     | stocks  | 2025-08-18 | 0.3958  | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (76.7); Close above upper BB; Strong trend ADX=34 | 0.4174 / 0.3634       |
+| MRSB     | stocks  | 2025-09-16 | 0.872   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (88.2); Close above upper BB; Strong trend ADX=44 | 0.9083 / 0.8176       |
+| MVID     | stocks  | 2025-08-11 | 99.5    | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (81.5); Close above upper BB; Strong trend ADX=28 | 104.5929 / 91.8607    |
+| POSI     | stocks  | 2025-08-05 | 1312.4  | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (27.2); Close below lower BB; Strong trend ADX=32   | 1215.7429 / 1457.3857 |
+| RNFT     | stocks  | 2025-08-11 | 129.0   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (78.5); Close above upper BB; Strong trend ADX=27 | 135.4357 / 119.3464   |
+| RTKMP    | stocks  | 2025-08-11 | 79.5    | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (90.6); Close above upper BB; Strong trend ADX=67 | 82.5357 / 74.9464     |
+| SVETP    | stocks  | 2026-03-17 | 25.15   | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (20.8); Close below lower BB; Strong trend ADX=27   | 23.85 / 27.1          |
+| TATNP    | stocks  | 2025-08-07 | 686.3   | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (74.3); Close above upper BB; Strong trend ADX=31 | 718.9571 / 637.3143   |
+| TGKA     | stocks  | 2025-08-11 | 0.0066  | 🔴 ПРОДАЖА    | B10/S35 | RSI overbought (74.2); Close above upper BB; Strong trend ADX=30 | 0.0069 / 0.0062       |
+| PTZ6     | futures | 2026-10-07 | 1643.9  | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (25.7); Close below lower BB; Strong trend ADX=39   | 1531.6571 / 1812.2643 |
+| LTZ6     | futures | 2026-10-07 | 1644.8  | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (26.0); Close below lower BB; Strong trend ADX=30   | 1515.6429 / 1838.5357 |
+| ANZ6     | futures | 2026-10-07 | 3074.5  | 🟢 ПОКУПКА    | B35/S10 | RSI oversold (12.6); Close below lower BB; Strong trend ADX=41   | 2972.4286 / 3227.6071 |
+| APTK     | stocks  | 2025-08-17 | 9.676   | 👁 наблюдение | B10/S25 | RSI overbought (79.5); Strong trend ADX=31                       |                       |
+| AQUA     | stocks  | 2025-08-16 | 639.0   | 👁 наблюдение | B10/S25 | RSI overbought (72.2); Strong trend ADX=27                       |                       |
+| BANEP    | stocks  | 2025-08-13 | 1061.5  | 👁 наблюдение | B10/S25 | RSI overbought (73.3); Strong trend ADX=32                       |                       |
+| BELU     | stocks  | 2025-08-17 | 463.0   | 👁 наблюдение | B10/S25 | RSI overbought (77.2); Strong trend ADX=37                       |                       |
+| BLNG     | stocks  | 2025-12-16 | 12.51   | 👁 наблюдение | B10/S25 | RSI overbought (70.7); Strong trend ADX=58                       |                       |
+| BRZL     | stocks  | 2025-09-16 | 1672.0  | 👁 наблюдение | B10/S25 | RSI overbought (79.0); Strong trend ADX=49                       |                       |
+| BSPBP    | stocks  | 2025-09-16 | 59.25   | 👁 наблюдение | B25/S0  | RSI oversold (24.8); Close below lower BB                        |                       |
+| CHGZ     | stocks  | 2025-09-29 | 82.8    | 👁 наблюдение | B25/S10 | RSI oversold (29.1); Strong trend ADX=55                         |                       |
+| CNTLP    | stocks  | 2025-09-02 | 6.92    | 👁 наблюдение | B25/S10 | RSI oversold (21.7); Strong trend ADX=40                         |                       |
+| ELFV     | stocks  | 2025-08-11 | 0.5206  | 👁 наблюдение | B0/S25  | RSI overbought (84.6); Close above upper BB                      |                       |
+| FESH     | stocks  | 2025-08-17 | 64.77   | 👁 наблюдение | B10/S25 | RSI overbought (77.1); Strong trend ADX=48                       |                       |
+| GAZAP    | stocks  | 2026-05-26 | 357.0   | 👁 наблюдение | B25/S10 | RSI oversold (11.5); Strong trend ADX=58                         |                       |
+| GAZP     | stocks  | 2026-10-07 | 96.18   | 👁 наблюдение | B25/S10 | RSI oversold (29.9); Strong trend ADX=32                         |                       |
+| GECO     | stocks  | 2025-09-02 | 27.1    | 👁 наблюдение | B25/S10 | RSI oversold (27.1); Strong trend ADX=42                         |                       |
+| GMKN     | stocks  | 2025-08-11 | 128.2   | 👁 наблюдение | B10/S25 | RSI overbought (79.3); Strong trend ADX=43                       |                       |
+| HNFG     | stocks  | 2025-09-06 | 560.1   | 👁 наблюдение | B25/S10 | RSI oversold (28.7); Strong trend ADX=50                         |                       |
+| LENT     | stocks  | 2025-08-17 | 1727.5  | 👁 наблюдение | B10/S25 | RSI overbought (73.6); Strong trend ADX=68                       |                       |
+| LSNGP    | stocks  | 2025-08-27 | 267.55  | 👁 наблюдение | B10/S25 | RSI overbought (70.3); Strong trend ADX=55                       |                       |
+| MGTS     | stocks  | 2025-09-16 | 1130.0  | 👁 наблюдение | B10/S25 | RSI overbought (71.9); Strong trend ADX=31                       |                       |
+| MRKS     | stocks  | 2025-08-17 | 0.5165  | 👁 наблюдение | B10/S25 | RSI overbought (72.7); Strong trend ADX=46                       |                       |
+| MRKY     | stocks  | 2025-09-02 | 0.0906  | 👁 наблюдение | B10/S25 | RSI overbought (70.9); Strong trend ADX=78                       |                       |
+| MSTT     | stocks  | 2025-08-27 | 127.5   | 👁 наблюдение | B25/S10 | RSI oversold (28.9); Strong trend ADX=33                         |                       |
+| MTSS     | stocks  | 2026-10-07 | 167.05  | 👁 наблюдение | B25/S10 | RSI oversold (24.3); Strong trend ADX=59                         |                       |
+| NKNCP    | stocks  | 2025-09-02 | 71.16   | 👁 наблюдение | B25/S10 | RSI oversold (25.2); Strong trend ADX=30                         |                       |
+| NNSB     | stocks  | 2025-09-25 | 4110.0  | 👁 наблюдение | B25/S10 | RSI oversold (26.7); Strong trend ADX=44                         |                       |
+| OGKB     | stocks  | 2025-08-11 | 0.3737  | 👁 наблюдение | B10/S25 | RSI overbought (74.6); Strong trend ADX=42                       |                       |
+| RAGR     | stocks  | 2026-08-28 | 72.2    | 👁 наблюдение | B25/S10 | RSI oversold (26.3); Strong trend ADX=55                         |                       |
+| RKKE     | stocks  | 2025-08-27 | 17460.0 | 👁 наблюдение | B25/S10 | RSI oversold (22.5); Strong trend ADX=57                         |                       |
+| ROSN     | stocks  | 2026-10-07 | 347.8   | 👁 наблюдение | B25/S10 | RSI oversold (27.4); Strong trend ADX=33                         |                       |
+| SARE     | stocks  | 2025-09-16 | 0.587   | 👁 наблюдение | B10/S25 | RSI overbought (70.4); Strong trend ADX=56                       |                       |
++----------+---------+------------+---------+--------------+---------+------------------------------------------------------------------+-----------------------+

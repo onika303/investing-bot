@@ -1,8 +1,1 @@
-# Logs
-*.logsrc/.cache/
-
-src/.cache/
-__pycache__/
-full_scan*.log
-src/__pycache__/
-__pycache__/
+(empty)
