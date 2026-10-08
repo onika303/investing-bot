@@ -7,6 +7,7 @@
 в асинхронном коде бота запускать через asyncio.to_thread.
 """
 import json
+import os
 import re
 import time
 from datetime import datetime, timedelta
@@ -130,6 +131,27 @@ def load_cached_report(path: Path = LAST_REPORT_PATH) -> Optional[dict]:
 def report_age_hours(report: dict) -> float:
     gen = datetime.fromisoformat(report["generated_at"])
     return (datetime.now() - gen).total_seconds() / 3600
+
+
+def report_matches_config(report: dict, assets: dict, config_path: str = "config.yaml") -> bool:
+    """Актуален ли кэш отчёта относительно ТЕКУЩЕГО config.yaml.
+
+    Отчёт считается несогласованным, если mtime config.yaml новее времени
+    генерации отчёта либо состав активов в отчёте расходится со списком
+    из файла конфигурации (например, список сократили, а бот отдаёт старый
+    кэш со «старым количеством активов»)."""
+    import yaml  # локальный импорт: модуль используется и в лёгких тестах
+    try:
+        gen = datetime.fromisoformat(report["generated_at"])
+        if datetime.fromtimestamp(os.path.getmtime(config_path)) > gen:
+            return False
+        with open(config_path, encoding="utf-8") as f:
+            cur = yaml.safe_load(f)["assets"]
+        cached = {r["secid"] for r in report["results"]}
+        wanted = {s for lst in cur.values() for s in lst}
+        return cached == wanted
+    except Exception:
+        return False
 
 
 def fmt_price(v) -> str:
