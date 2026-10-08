@@ -1,0 +1,28 @@
+assets:
+  stocks:
+    - SBERP
+    - GAZP
+    - ROSN
+    - LKOH
+    - VTBR
+    - YDEX
+    - NVTK
+    - PLZL
+    - TATN
+    - MGNT
+    - T
+    - PHOR
+    - X5
+    - MTSS
+
+  futures:
+    - SiZ6          # доллар-рубль (уточните точный код, если он другой)
+    - GOLD-9.26     # золото (проверьте актуальный тикер)
+    - SILV-9.26
+    - BR-9.26       # нефть Brent
+    - MIX
+    
+    # добавьте другие фьючерсы по мере необходимости
+  indices:
+    - IMOEX
+    - RGBI
