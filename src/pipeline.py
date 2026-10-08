@@ -139,75 +139,101 @@ def fmt_price(v) -> str:
         return "-"
 
 
+def _horizons_of(r: dict) -> dict:
+    """Горизонты результата. Старые кэши без поля 'horizons' — считаем 1Д."""
+    h = r.get("horizons")
+    if h:
+        return h
+    return {"1d": {
+        "tf": "1d", "tf_label": "1Д", "horizon": "внутри недели",
+        "verdict": r.get("verdict", "neutral"),
+        "score_buy": r.get("score_buy", 0), "score_sell": r.get("score_sell", 0),
+        "strength": max(r.get("score_buy", 0), r.get("score_sell", 0)),
+        "price": r.get("price"), "signals": r.get("signals", []),
+        "sl_tp": r.get("sl_tp"),
+        "sell_blocked_reasons": r.get("sell_blocked_reasons"),
+    }}
+
+
 def format_report_text(report: dict, top: int = 25) -> list[str]:
-    """Отчёт сканера для Telegram: сверху важные сигналы, ниже — список наблюдения,
-    отсортированный по сумме очков (не по алфавиту). Сообщения разбиваются под
-    лимит 4096 символов."""
+    """Отчёт сканера для Telegram. Аналитика в разрезе ГОРИЗОНТОВ ПЛАНИРОВАНИЯ:
+    1Ч = сделки на 1-2 дня, 1Д = сделка внутри недели; сигналы горизонтов НЕ
+    смешиваются. Внутри каждого горизонта: сверху важные сигналы (buy/sell),
+    ниже — наблюдение; оба списка отсортированы по очкам (не по алфавиту)."""
     results = report["results"]
 
-    def strength(r):
-        # Итоговая сила: 1Д (вес 1.0) + 1Ч (вес 0.5); для старых кэшей без поля — max(B,S)
-        return r.get("strength") or max(r.get("score_buy", 0), r.get("score_sell", 0))
+    # раскладываем активы по горизонтам
+    per_tf: dict[str, list[tuple[dict, dict]]] = {}
+    for r in results:
+        for tf, h in _horizons_of(r).items():
+            per_tf.setdefault(tf, []).append((r, h))
 
-    active = [r for r in results if r["verdict"] in ("buy", "sell")]
-    watch = [r for r in results if r["verdict"] == "watch"]
-    active.sort(key=strength, reverse=True)
-    watch.sort(key=strength, reverse=True)
-
-    n_buy = sum(1 for r in active if r["verdict"] == "buy")
-    n_sell = sum(1 for r in active if r["verdict"] == "sell")
     header = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
               f"<code>{'─' * 38}</code>\n"
-              f"Таймфреймы: <b>1Д + 1Ч</b> | EMA 13/21/50/100 | BB σ=2.5\n"
-              f"Просканировано: {len(results)}\n"
-              f"🟢 покупок: <b>{n_buy}</b>   🔴 продаж: <b>{n_sell}</b>   👁 наблюдение: <b>{len(watch)}</b>\n")
+              f"Индикаторы: EMA 13/21/50/100 | BB σ=2.5\n"
+              f"Просканировано активов: {len(results)}\n")
 
-    def signal_line(r: dict, rank: int | None = None) -> str:
-        icon = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
-                "watch": "👁 НАБЛЮДЕНИЕ"}.get(r["verdict"], r["verdict"])
-        head = ""
-        if rank is not None:
-            head = f"{rank:>2}. "
-        line = (f"{head}<b>{r['secid']}</b>  {icon}"
-                f"  {'✅' if r.get('tf_confirmed') else '⏳'}"
-                f"  💪 {strength(r):g}")
-        scores = (f"     📊 1Д: B{r['score_buy']}/S{r['score_sell']}"
-                  + (f"  ·  1Ч: B{r.get('score_buy_1h', 0)}/S{r.get('score_sell_1h', 0)}"
-                     if r.get("score_buy_1h") or r.get("score_sell_1h") else ""))
-        line += "\n" + scores + f"\n     💵 {fmt_price(r['price'])}"
-        if r["verdict"] in ("buy", "sell") and r.get("sl_tp"):
-            line += (f"  ·  🛑 SL {fmt_price(r['sl_tp']['stop_loss'])}"
-                     f"  →  🎯 TP {fmt_price(r['sl_tp']['take_profit'])}")
-        rules = "; ".join(f"[{s.get('tf', '1Д')}] {s['rule']}"
-                          for s in r["signals"][:4]) or "-"
-        line += f"\n     💡 {rules}"
-        if r.get("sell_blocked_reasons"):
-            line += f"\n     ⛔ шорт запрещён: {r['sell_blocked_reasons'][0]}"
-        return line
+    def active_count(items) -> tuple[int, int, int]:
+        nb = sum(1 for _, h in items if h["verdict"] == "buy")
+        ns = sum(1 for _, h in items if h["verdict"] == "sell")
+        nw = sum(1 for _, h in items if h["verdict"] == "watch")
+        return nb, ns, nw
 
-    lines: list[str] = []
-    if active:
-        lines.append("\n🚨 <b>ВАЖНЫЕ СИГНАЛЫ</b>")
+    tf_meta = {"1h": ("⚡", "1–2 дня"), "1d": ("📅", "внутри недели")}
+    lines: list[str] = [header]
+    for tf in ("1d", "1h"):  # дневной — основной, показываем первым
+        items = per_tf.get(tf)
+        if not items:
+            continue
+        icon, horizon = tf_meta.get(tf, ("•", tf))
+        label = {"1d": "1Д", "1h": "1Ч"}.get(tf, tf)
+        nb, ns, nw = active_count(items)
+        lines.append(f"\n{icon} <b>ГОРИЗОНТ {label} — {horizon}</b>")
+        lines.append(f"🟢 покупка: <b>{nb}</b>   🔴 продажа: <b>{ns}</b>   👁 наблюдение: <b>{nw}</b>")
         lines.append("<code>" + "═" * 38 + "</code>")
-        for i, r in enumerate(active, 1):
-            lines.append(signal_line(r, rank=i))
+
+        active = sorted([p for p in items if p[1]["verdict"] in ("buy", "sell")],
+                        key=lambda p: p[1]["strength"], reverse=True)
+        watch = sorted([p for p in items if p[1]["verdict"] == "watch"],
+                       key=lambda p: p[1]["strength"], reverse=True)
+
+        def signal_line(r: dict, h: dict, rank: int) -> str:
+            v = h["verdict"]
+            sym = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
+                   "watch": "👁 наблюдение"}.get(v, v)
+            line = (f"{rank:>2}. <b>{r['secid']}</b>  {sym}  💪 {h['strength']:g}\n"
+                    f"     📊 B{h['score_buy']}/S{h['score_sell']}"
+                    f"  ·  💵 {fmt_price(h.get('price') or r['price'])}")
+            if v in ("buy", "sell") and h.get("sl_tp"):
+                line += (f"\n     🛑 SL {fmt_price(h['sl_tp']['stop_loss'])}"
+                         f"  →  🎯 TP {fmt_price(h['sl_tp']['take_profit'])}")
+            rules = "; ".join(s["rule"] for s in h.get("signals", [])[:4]) or "-"
+            line += f"\n     💡 {rules}"
+            if h.get("sell_blocked_reasons"):
+                line += f"\n     ⛔ шорт запрещён: {h['sell_blocked_reasons'][0]}"
+            return line
+
+        if active:
+            lines.append("\n🚨 <b>ВАЖНЫЕ СИГНАЛЫ</b>")
+            for i, (r, h) in enumerate(active, 1):
+                lines.append(signal_line(r, h, i))
+        else:
+            lines.append("\n🚨 Активных сигналов нет.")
+
+        show_watch = watch[:max(0, top - len(active))]
+        if show_watch:
+            lines.append("\n👁 <b>НАБЛЮДЕНИЕ</b> (по очкам)")
+            for i, (r, h) in enumerate(show_watch, 1):
+                lines.append(signal_line(r, h, i))
         lines.append("")
-    else:
-        lines.append("\n🚨 Активных сигналов нет.\n")
 
-    show_watch = watch[:max(0, top - len(active))]
-    if show_watch:
-        lines.append("👁 <b>НАБЛЮДЕНИЕ</b> (по очкам)")
-        lines.append("<code>" + "═" * 38 + "</code>")
-        for i, r in enumerate(show_watch, 1):
-            lines.append(signal_line(r, rank=i))
-    body = "\n".join(lines)
+    body_lines = lines
 
     # разбивка на сообщения ≤ 4096 по границам блоков
     chunks: list[str] = []
-    cur = header
-    for block in lines:
-        piece = block + "\n"
+    cur = ""
+    for block in body_lines:
+        piece = block if block.endswith("\n") else block + "\n"
         if len(cur) + len(piece) > TG_MESSAGE_LIMIT - 100 and cur.strip():
             chunks.append(cur)
             cur = ""

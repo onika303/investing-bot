@@ -26,16 +26,28 @@ from src.pipeline import (
 
 def mk_result(secid, verdict, buy=0, sell=0, rules=("RSI перепроданность",),
               price=100.0, blocked=None, sl_tp=True):
+    h = {
+        "tf": "1d", "tf_label": "1Д", "horizon": "внутри недели",
+        "verdict": verdict, "score_buy": buy, "score_sell": sell,
+        "strength": max(buy, sell), "price": price,
+        "signals": [{"rule": x, "tf": "1Д",
+                     "type": verdict if verdict in ("buy", "sell") else "sell",
+                     "weight": 15} for x in rules],
+    }
+    if sl_tp and verdict in ("buy", "sell"):
+        h["sl_tp"] = {"stop_loss": round(price * 0.97, 2),
+                      "take_profit": round(price * 1.05, 2)}
+    if blocked:
+        h["sell_blocked_reasons"] = blocked
     r = {
         "secid": secid, "asset_type": "stocks", "date": "2026-10-08",
         "price": price, "verdict": verdict, "score_buy": buy, "score_sell": sell,
-        "signals": [{"rule": x, "type": verdict if verdict in ("buy", "sell") else "sell",
-                     "weight": 15} for x in rules],
+        "strength": max(buy, sell),
+        "signals": h["signals"], "horizons": {"1d": dict(h)},
         "trade_access": {"short_allowed": not blocked, "reasons": blocked or []},
     }
     if sl_tp and verdict in ("buy", "sell"):
-        r["sl_tp"] = {"stop_loss": round(price * 0.97, 2),
-                      "take_profit": round(price * 1.05, 2)}
+        r["sl_tp"] = h["sl_tp"]
     if blocked:
         r["sell_blocked_reasons"] = blocked
     return r
@@ -118,36 +130,55 @@ def test_format_report_basic():
 
 def test_format_report_no_signals():
     chunks = format_report_text(mk_report([]))
-    assert any("Активных сигналов нет" in c for c in chunks)
-
-
-def test_format_report_chunking_under_limit():
-    results = [mk_result(f"TIC{i}", "buy", 35, 0, rules=("правило " * 30,))
-               for i in range(60)]
-    chunks = format_report_text(mk_report(results), top=60)
-    assert len(chunks) > 1
-    for c in chunks:
-        assert len(c) <= TG_MESSAGE_LIMIT
+    assert any("Просканировано активов: 0" in c for c in chunks)
 
 
 def test_format_report_params_in_header():
-    """В шапке отчёта указаны параметры сигналосва: ТФ 1Д+1Ч, EMA 13/21/50/100, BB σ=2.5."""
+    """В шапке отчёта указаны параметры сигналосва: EMA 13/21/50/100, BB σ=2.5."""
     text = "\n".join(format_report_text(mk_report([mk_result("FLOT", "buy", 35, 0)])))
-    assert "1Д + 1Ч" in text
     assert "EMA 13/21/50/100" in text
     assert "BB σ=2.5" in text
 
 
 def test_format_report_sorted_by_strength_not_alphabet():
-    """Списки ранжируются по очкам (strength), а не по алфавиту тикеров."""
+    """Списки ранжируются по очкам (strength внутри горизонта), а не по алфавиту."""
     a = mk_result("AAA", "watch", 40, 0)   # слабее по силе
     b = mk_result("BBB", "watch", 90, 0)   # сильнее, но буквенно позже
-    a["strength"] = 40.0
-    b["strength"] = 90.0
     text = "\n".join(format_report_text(mk_report([a, b])))
     assert text.index("BBB") < text.index("AAA"), "наблюдение должно быть по очкам"
-    # формат строки: 💪 сила, 📊 очки по каждому ТФ
-    assert "💪 90" in text and "📊 1Д: B90/S0" in text
+    # формат строки: 💪 сила, 📊 очки горизонта
+    assert "💪 90" in text and "📊 B90/S0" in text
+
+
+def test_format_report_horizons_not_mixed():
+    """Отчёт разделён по горизонтам планирования: 1Д (внутри недели) и 1Ч (1-2 дня);
+    сигналы горизонтов не смешиваются, вердикт считается в каждом отдельно."""
+    r = mk_result("MTSX", "buy", 60, 10)
+    r["horizons"]["1h"] = {
+        "tf": "1h", "tf_label": "1Ч", "horizon": "1–2 дня",
+        "verdict": "sell", "score_buy": 5, "score_sell": 40, "strength": 40,
+        "price": 99.0,
+        "signals": [{"rule": "RSI overbought (75.0)", "tf": "1Ч", "type": "sell", "weight": 15}],
+    }
+    text = "\n".join(format_report_text(mk_report([r])))
+    assert "ГОРИЗОНТ 1Д — внутри недели" in text
+    assert "ГОРИЗОНТ 1Ч — 1–2 дня" in text
+    # дневной buy НЕ «подтверждается» часовиком — каждый горизонт сам по себе:
+    i_d = text.index("ГОРИЗОНТ 1Д")
+    i_h = text.index("ГОРИЗОНТ 1Ч")
+    seg_d, seg_h = text[i_d:i_h], text[i_h:]
+    assert "🟢 ПОКУПКА" in seg_d and "🔴 ПРОДАЖА" not in seg_d
+    assert "🔴 ПРОДАЖА" in seg_h and "🟢 ПОКУПКА" not in seg_h
+
+
+def test_format_report_chunking_under_limit():
+    """Много длинных блоков -> разбивка на сообщения ≤ лимита Telegram."""
+    results = [mk_result(f"TIC{i}", "watch", 35, 0, rules=("правило " * 30,))
+               for i in range(60)]
+    chunks = format_report_text(mk_report(results), top=60)
+    assert len(chunks) > 1
+    for c in chunks:
+        assert len(c) <= TG_MESSAGE_LIMIT
 
 
 # ---------------------------------------------------------------- expiration hygiene
@@ -292,7 +323,7 @@ def test_scan_returns_cached_report(fake_message):
                                  report_cache_hours=1000))
     run(cmd_scan(msg, state))
     sent = "".join(t for _, t in msg.bot.send_message.sent)
-    assert "Отчёт сканера MOEX" in sent and "FLOT" in sent
+    assert "Сканер MOEX" in sent and "FLOT" in sent
 
 
 def test_signals_filter(fake_message):

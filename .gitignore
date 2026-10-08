@@ -1,6 +1,9 @@
-# Compiled files
+# Compiled/Binary files
 __pycache__/
 *.pyc
+
+# Logs and temp files
+*.log
 
 # Database files
 *.db
