@@ -1,8 +1,2 @@
-# Python bytecode
-__pycache__/
-*.pyc
-
 # Logs
-*.log__pycache__/
-*.pyc
-bot_live.log
+*.log
