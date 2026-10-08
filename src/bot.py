@@ -96,7 +96,14 @@ async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
 # ---------------------------------------------------------------- handlers
 
 @router.message(CommandStart(), IsAuthorized())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, state: "AppState | None" = None):
+    # Режим приёмки (ADMIN_CHAT_ID=PENDING): первый /start назначает админский чат.
+    if state is not None and str(state.cfg.admin_chat_id) == "":
+        state.cfg.admin_chat_id = message.chat.id
+        await message.answer(
+            f"✅ Чат <code>{message.chat.id}</code> назначен админским. "
+            "Добавьте это значение в .env как ADMIN_CHAT_ID и перезапустите бота.",
+            parse_mode="HTML")
     await message.answer(
         "🤖 <b>Инвестиционный сканер MOEX</b>\n\n"
         "Каждый будний день: 09:45 дозагрузка данных, 10:00 утренний отчёт, "
@@ -240,6 +247,9 @@ async def cmd_reload(message: Message, state: AppState):
 
 
 async def notify_admin(bot: Bot, state: AppState, text: str):
+    if str(state.cfg.admin_chat_id) == "":  # PENDING-режим приёмки — слать некуда
+        logger.info(f"Уведомление (чат не назначен): {text[:120]}")
+        return
     try:
         await bot.send_message(state.cfg.admin_chat_id, text)
     except Exception as e:
@@ -250,7 +260,7 @@ async def notify_admin(bot: Bot, state: AppState, text: str):
 
 def build_scheduler(state: AppState, bot: Bot) -> AsyncIOScheduler:
     sched = AsyncIOScheduler(timezone=state.cfg.timezone)
-    chat = state.cfg.admin_chat_id
+    chat = lambda: state.cfg.admin_chat_id  # читаем динамически (PENDING → /start назначит чат)
 
     async def job_morning_update():
         if state.update_lock.locked():

@@ -26,7 +26,13 @@ class BotConfig:
 
         chat_id может быть числом (личные чаты) или "@username" (публичный
         канал/группа) — сравниваем как строки, чтобы поддерживать оба варианта.
+
+        Пустой admin_chat_id = режим приёмки (ADMIN_CHAT_ID=PENDING): авторизуем
+        всех, логгируя chat_id, чтобы потом вписать его в .env.
         """
+        if str(self.admin_chat_id) == "":
+            logger.info(f"PENDING-режим: входящий chat_id = {chat_id}")
+            return True
         if str(chat_id).lower() == str(self.admin_chat_id).lower():
             return True
         return chat_id in self.allowed_user_ids
@@ -72,7 +78,11 @@ def load_config(env_file: str | None = None) -> BotConfig:
             "ADMIN_CHAT_ID не задан. Узнайте свой chat_id (напишите @userinfobot "
             "или команду /id боту @getmyid_bot) и добавьте в .env."
         )
-    if chat_raw.startswith("@"):
+    if chat_raw.upper() == "PENDING":
+        # Режим первичной приёмки: чат ещё неизвестен — бот подхватит его
+        # из первого полученного апдейта (см. src/bot.py).
+        admin_chat_id: int | str = ""
+    elif chat_raw.startswith("@"):
         # Публичный канал/группа по username (бот должен быть там админом,
         # а пользователь — сначала отправить боту /start в этом чате).
         admin_chat_id: int | str = chat_raw
