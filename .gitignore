@@ -2,5 +2,5 @@
 __pycache__/
 *.pyc
 
-# Database backups
-*.db.bak
+# Database files
+*.db

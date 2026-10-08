@@ -130,6 +130,26 @@ def test_format_report_chunking_under_limit():
         assert len(c) <= TG_MESSAGE_LIMIT
 
 
+def test_format_report_params_in_header():
+    """В шапке отчёта указаны параметры сигналосва: ТФ 1Д+1Ч, EMA 13/21/50/100, BB σ=2.5."""
+    text = "\n".join(format_report_text(mk_report([mk_result("FLOT", "buy", 35, 0)])))
+    assert "1Д + 1Ч" in text
+    assert "EMA 13/21/50/100" in text
+    assert "BB σ=2.5" in text
+
+
+def test_format_report_sorted_by_strength_not_alphabet():
+    """Списки ранжируются по очкам (strength), а не по алфавиту тикеров."""
+    a = mk_result("AAA", "watch", 40, 0)   # слабее по силе
+    b = mk_result("BBB", "watch", 90, 0)   # сильнее, но буквенно позже
+    a["strength"] = 40.0
+    b["strength"] = 90.0
+    text = "\n".join(format_report_text(mk_report([a, b])))
+    assert text.index("BBB") < text.index("AAA"), "наблюдение должно быть по очкам"
+    # формат строки: 💪 сила, 📊 очки по каждому ТФ
+    assert "💪 90" in text and "📊 1Д: B90/S0" in text
+
+
 # ---------------------------------------------------------------- expiration hygiene
 
 NOW = datetime(2026, 10, 8)

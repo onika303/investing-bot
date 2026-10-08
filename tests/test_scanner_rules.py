@@ -88,3 +88,37 @@ def test_scan_all_sorting_and_no_data(tmp_db, v_shape_df):
     assert len(res) == 1
     assert res[0]['secid'] == 'GAS'
     assert set(res[0]) >= {'verdict', 'score_buy', 'score_sell', 'trade_access'}
+
+
+def test_result_has_strength_and_tf_scores(tmp_db=None):
+    """scan_asset отдаёт strength (1Д*1.0 + 1Ч*0.5) и очки по каждому ТФ."""
+    import sqlite3
+    from src.database import DatabaseManager
+    from src.scanner import InvestmentScanner
+
+    con = sqlite3.connect(':memory:')
+    db = DatabaseManager.__new__(DatabaseManager)
+    db.db_path = ':memory:'
+    db._conn = con
+    con.execute("CREATE TABLE raw_candles (secid TEXT, interval INT, ts INT, open REAL,"
+                " high REAL, low REAL, close REAL, volume REAL, oi INT)")
+    # ровный растущий ряд 1Д + флэт 1Ч — индикаторы считаются стабильно
+    import math
+    rows = []
+    for i in range(250):
+        c = 100 + i * 0.5
+        rows.append(("TEST", 24, 1_600_000_000 + i * 86400, c * 0.99, c * 1.01, c, c * 1e6, 0))
+    for i in range(200):
+        c = 100 + 249 * 0.5
+        rows.append(("TEST", 60, 1_740_000_000 + i * 3600, c * 0.995, c * 1.005, c, c * 1e5, 0))
+    con.executemany("INSERT INTO raw_candles VALUES (?,?,?,?,?,?,?,?)", rows)
+    db.fetch_all = lambda q, p=(): list(con.execute(q, p))
+
+    sc = InvestmentScanner(db, short_restrictions={})
+    sc._fetch_issue_info = lambda secid: {}  # без сети
+    r = sc.scan_asset("TEST", "stocks")
+    assert r is not None
+    expected = round(max(r['score_buy'], r['score_sell']) * sc.WEIGHT_1D
+                     + max(r['score_buy_1h'], r['score_sell_1h']) * sc.WEIGHT_1H, 1)
+    assert r['strength'] == expected
+    assert set(['score_buy_1h', 'score_sell_1h']) <= set(r.keys())

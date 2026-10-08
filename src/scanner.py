@@ -45,6 +45,10 @@ class InvestmentScanner:
     BUY_CONFIRM = 45   # score_buy >= этого И buy-сигнал на 1ч -> verdict=buy
     SELL_CONFIRM = 45  # аналогично для шорта
     SOLO_THRESHOLD = 30  # одиночный ТФ-сигнал -> максимум 'watch'
+    # Сила сигнала для ранжирования отчёта: суммарный балл по обоим ТФ.
+    # Дневной весит больше (основной ТФ), часовой — подтверждающий.
+    WEIGHT_1D = 1.0
+    WEIGHT_1H = 0.5
 
     def __init__(self, db: DatabaseManager,
                  short_restrictions: Optional[Dict[str, str]] = None):
@@ -245,12 +249,14 @@ class InvestmentScanner:
         all_signals = [{**s, 'tf': self.TF_LABEL['1d']} for s in base['signals']] \
             if daily else list(base['signals'])
         confirmed_buy = confirmed_sell = False
+        h_buy = h_sell = 0
         if '1h' in tf_results and tf_results['1h'] is not base:
             h = tf_results['1h']
             for s in h['signals']:
                 all_signals.append({**s, 'tf': self.TF_LABEL['1h']})
             confirmed_buy = any(s['type'] == 'buy' for s in h['signals'])
             confirmed_sell = any(s['type'] == 'sell' for s in h['signals'])
+            h_buy, h_sell = h['score_buy'], h['score_sell']
 
         # Проверка доступности актива к сделке: если шорт запрещён (санкции,
         # новая эмиссия и т.п.) — сигнал на продажу не выдаём.
@@ -287,10 +293,13 @@ class InvestmentScanner:
             'verdict': verdict,
             'tf_confirmed': tf_confirmed,
             'trade_access': access,
+            # Итоговая сила сигнала: 1Д (вес 1.0) + 1Ч (вес 0.5) — используется
+            # в отчёте для ранжирования списков (не по алфавиту, а по очкам).
+            'strength': round(max(score_buy, score_sell) * self.WEIGHT_1D
+                              + max(h_buy, h_sell) * self.WEIGHT_1H, 1),
+            'score_buy_1h': h_buy,
+            'score_sell_1h': h_sell,
         }
-        if '1h' in tf_results and tf_results['1h'] is not base:
-            result['score_buy_1h'] = tf_results['1h']['score_buy']
-            result['score_sell_1h'] = tf_results['1h']['score_sell']
         if sell_blocked:
             result['sell_blocked_reasons'] = access['reasons']
         if verdict == 'sell':

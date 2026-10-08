@@ -146,7 +146,8 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
     results = report["results"]
 
     def strength(r):
-        return max(r.get("score_buy", 0), r.get("score_sell", 0))
+        # Итоговая сила: 1Д (вес 1.0) + 1Ч (вес 0.5); для старых кэшей без поля — max(B,S)
+        return r.get("strength") or max(r.get("score_buy", 0), r.get("score_sell", 0))
 
     active = [r for r in results if r["verdict"] in ("buy", "sell")]
     watch = [r for r in results if r["verdict"] == "watch"]
@@ -157,7 +158,8 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
     n_sell = sum(1 for r in active if r["verdict"] == "sell")
     header = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
               f"<code>{'─' * 38}</code>\n"
-              f"Таймфреймы: 1Д + подтверждение 1Ч | Просканировано: {len(results)}\n"
+              f"Таймфреймы: <b>1Д + 1Ч</b> | EMA 13/21/50/100 | BB σ=2.5\n"
+              f"Просканировано: {len(results)}\n"
               f"🟢 покупок: <b>{n_buy}</b>   🔴 продаж: <b>{n_sell}</b>   👁 наблюдение: <b>{len(watch)}</b>\n")
 
     def signal_line(r: dict, rank: int | None = None) -> str:
@@ -168,15 +170,14 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
             head = f"{rank:>2}. "
         line = (f"{head}<b>{r['secid']}</b>  {icon}"
                 f"  {'✅' if r.get('tf_confirmed') else '⏳'}"
-                f"  📊 B{r['score_buy']}/S{r['score_sell']}")
-        extra = []
-        if r.get("score_buy_1h") or r.get("score_sell_1h"):
-            extra.append(f"1ч: B{r.get('score_buy_1h', 0)}/S{r.get('score_sell_1h', 0)}")
-        extra.append(f"цена {fmt_price(r['price'])}")
+                f"  💪 {strength(r):g}")
+        scores = (f"     📊 1Д: B{r['score_buy']}/S{r['score_sell']}"
+                  + (f"  ·  1Ч: B{r.get('score_buy_1h', 0)}/S{r.get('score_sell_1h', 0)}"
+                     if r.get("score_buy_1h") or r.get("score_sell_1h") else ""))
+        line += "\n" + scores + f"\n     💵 {fmt_price(r['price'])}"
         if r["verdict"] in ("buy", "sell") and r.get("sl_tp"):
-            extra.append(f"🛑 SL {fmt_price(r['sl_tp']['stop_loss'])} "
-                         f"→ 🎯 TP {fmt_price(r['sl_tp']['take_profit'])}")
-        line += "\n     " + " · ".join(extra)
+            line += (f"  ·  🛑 SL {fmt_price(r['sl_tp']['stop_loss'])}"
+                     f"  →  🎯 TP {fmt_price(r['sl_tp']['take_profit'])}")
         rules = "; ".join(f"[{s.get('tf', '1Д')}] {s['rule']}"
                           for s in r["signals"][:4]) or "-"
         line += f"\n     💡 {rules}"
