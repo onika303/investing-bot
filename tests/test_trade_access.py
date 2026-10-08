@@ -149,10 +149,10 @@ def uptrend_df(base_df):
 
 
 
-def _insert_candles(db, secid, df):
-    rows = [(secid, int(r.ts), r.open, r.high, r.low, r.close, int(r.volume), 0)
+def _insert_candles(db, secid, df, interval=24):
+    rows = [(secid, int(r.ts), interval, r.open, r.high, r.low, r.close, int(r.volume), 0)
             for r in df.itertuples()]
-    db.executemany("INSERT OR REPLACE INTO raw_candles VALUES (?,?,?,?,?,?,?,?)", rows)
+    db.executemany("INSERT OR REPLACE INTO raw_candles VALUES (?,?,?,?,?,?,?,?,?)", rows)
 
 
 def test_scan_asset_sell_blocked_to_watch(scanner, v_shape_df):
@@ -172,15 +172,29 @@ def test_scan_asset_sell_blocked_to_watch(scanner, v_shape_df):
 
 
 def test_scan_asset_sell_allowed_when_accessible(scanner, v_shape_df):
-    """Тот же sell-паттерн без ограничений -> verdict sell."""
+    """Sell-паттерн на 1д + подтверждение на 1ч без ограничений -> verdict sell."""
     df = downtrend_df(v_shape_df)
-    _insert_candles(scanner.db, 'ALLOWED', df)
+    _insert_candles(scanner.db, 'ALLOWED', df, interval=24)
+    _insert_candles(scanner.db, 'ALLOWED', df, interval=60)  # тот же паттерн на часовике
     with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
         r = scanner.scan_asset('ALLOWED', 'stocks')
     assert r['verdict'] == 'sell', f"got {r['verdict']} B{r['score_buy']}/S{r['score_sell']}"
+    assert r['tf_confirmed'] is True
     assert r['trade_access']['short_allowed'] is True
     assert r['can_short'] is True
     assert 'sl_tp' in r and r['sl_tp']['stop_loss'] > r['price']
+
+
+def test_sell_without_hourly_confirm_is_watch(scanner, v_shape_df):
+    """Дневная sell-доминанта БЕЗ подтверждения 1ч -> максимум watch."""
+    df = downtrend_df(v_shape_df)
+    _insert_candles(scanner.db, 'NOCONF', df, interval=24)  # 1ч свечей нет
+    with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
+        r = scanner.scan_asset('NOCONF', 'stocks')
+    assert r['score_sell'] >= 30 and r['score_sell'] > r['score_buy']
+    assert r['verdict'] == 'watch'
+    assert r['tf_confirmed'] is False
+    assert r['timeframes'] == ['1d']
 
 def test_buy_signal_not_affected_by_short_restriction(scanner, v_shape_df):
     """Ограничение на шорт НЕ блокирует buy-сигналы."""

@@ -38,11 +38,14 @@ def load_assets(config_path: str = "config.yaml") -> dict:
 
 
 def incremental_update(assets: dict, db_path: str = "finance.db",
-                       default_days: int = 45) -> dict:
-    """Дозагрузка только хвоста истории каждого актива.
+                       default_days: int = 45, hours_days: int = 60) -> dict:
+    """Дозагрузка только хвоста истории каждого актива на двух ТФ (1д и 1ч).
 
-    Точка начала — get_last_ts(secid) из БД (+1 день); если актива в БД нет —
-    грузим полную историю (default_days). Запись meta обновляет loader.
+    1д: точка начала — get_last_ts(secid, interval=24) из БД (+1 день); если актива
+        в БД нет — грузим полную историю (default_days).
+    1ч: MOEX отдаёт часовые свечи историей ~70 дней; при первой загрузке берём окно
+        hours_days, далее — хвост от get_last_ts(secid, interval=60).
+    Пустые ответы (выходные/праздники/нет торгов) обрабатываются штатно.
     Возвращает сводку {updated, new, empty, errors}.
     """
     db = DatabaseManager(db_path)
@@ -52,8 +55,9 @@ def incremental_update(assets: dict, db_path: str = "finance.db",
 
     for asset_type, secids in assets.items():
         for secid in secids:
+            # --- дневной таймфрейм ---
             try:
-                last_ts = db.get_last_ts(secid)
+                last_ts = db.get_last_ts(secid, interval=24)
                 if last_ts:
                     from_date = (datetime.fromtimestamp(last_ts)
                                  + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -68,7 +72,31 @@ def incremental_update(assets: dict, db_path: str = "finance.db",
                     stats["empty"] += 1  # выходные/праздники/нет торгов — штатно
             except Exception as e:
                 stats["errors"] += 1
-                logger.error(f"Инкрементальная загрузка {secid}: {e}")
+                logger.error(f"Инкрементальная загрузка {secid} (1д): {e}")
+
+            # --- часовой таймфрейм ---
+            try:
+                last_h = db.get_last_ts(secid, interval=60)
+                if last_h:
+                    from_h = datetime.fromtimestamp(last_h) + timedelta(hours=1)
+                    if from_h.strftime("%Y-%m-%d") >= today:
+                        pass  # свежее сегодняшнего — ничего не тянем
+                    else:
+                        dfh = loader.load_asset(secid, asset_type,
+                                                from_h.strftime("%Y-%m-%d"), today,
+                                                interval=60, end_on_load=True)
+                        if dfh is None or len(dfh) == 0:
+                            stats["empty"] += 1
+                else:
+                    dfh = loader.load_asset(secid, asset_type,
+                                            (datetime.now() - timedelta(days=hours_days)
+                                             ).strftime("%Y-%m-%d"), today,
+                                            interval=60, end_on_load=True)
+                    if dfh is None or len(dfh) == 0:
+                        stats["empty"] += 1
+            except Exception as e:
+                stats["errors"] += 1
+                logger.error(f"Инкрементальная загрузка {secid} (1ч): {e}")
     logger.info(f"Incremental update: {stats}")
     return stats
 
@@ -112,42 +140,82 @@ def fmt_price(v) -> str:
 
 
 def format_report_text(report: dict, top: int = 25) -> list[str]:
-    """Отчёт по результатам скана в сообщения Telegram (с учётом лимита 4096)."""
+    """Отчёт сканера для Telegram: сверху важные сигналы, ниже — список наблюдения,
+    отсортированный по сумме очков (не по алфавиту). Сообщения разбиваются под
+    лимит 4096 символов."""
     results = report["results"]
+
+    def strength(r):
+        return max(r.get("score_buy", 0), r.get("score_sell", 0))
+
     active = [r for r in results if r["verdict"] in ("buy", "sell")]
     watch = [r for r in results if r["verdict"] == "watch"]
+    active.sort(key=strength, reverse=True)
+    watch.sort(key=strength, reverse=True)
 
-    header = (f"📊 <b>Отчёт сканера MOEX</b>\n"
-              f"Дата: {report['generated_at'][:16].replace('T', ' ')} MSK\n"
-              f"Просканировано: {len(results)} | сигналы: 🟢{sum(1 for r in active if r['verdict']=='buy')} "
-              f"🔴{sum(1 for r in active if r['verdict']=='sell')} 👁{len(watch)}\n")
+    n_buy = sum(1 for r in active if r["verdict"] == "buy")
+    n_sell = sum(1 for r in active if r["verdict"] == "sell")
+    header = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
+              f"<code>{'─' * 38}</code>\n"
+              f"Таймфреймы: 1Д + подтверждение 1Ч | Просканировано: {len(results)}\n"
+              f"🟢 покупок: <b>{n_buy}</b>   🔴 продаж: <b>{n_sell}</b>   👁 наблюдение: <b>{len(watch)}</b>\n")
 
-    lines = []
-    for r in active + watch[:max(0, top - len(active))]:
+    def signal_line(r: dict, rank: int | None = None) -> str:
         icon = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
-                "watch": "👁 наблюдение"}.get(r["verdict"], r["verdict"])
-        if r.get("sell_blocked_reasons"):
-            icon += " (шорт запрещён)"
-        rules = "; ".join(s["rule"] for s in r["signals"][:4]) or "-"
-        sl_tp = ""
+                "watch": "👁 НАБЛЮДЕНИЕ"}.get(r["verdict"], r["verdict"])
+        head = ""
+        if rank is not None:
+            head = f"{rank:>2}. "
+        line = (f"{head}<b>{r['secid']}</b>  {icon}"
+                f"  {'✅' if r.get('tf_confirmed') else '⏳'}"
+                f"  📊 B{r['score_buy']}/S{r['score_sell']}")
+        extra = []
+        if r.get("score_buy_1h") or r.get("score_sell_1h"):
+            extra.append(f"1ч: B{r.get('score_buy_1h', 0)}/S{r.get('score_sell_1h', 0)}")
+        extra.append(f"цена {fmt_price(r['price'])}")
         if r["verdict"] in ("buy", "sell") and r.get("sl_tp"):
-            sl_tp = f" | SL {fmt_price(r['sl_tp']['stop_loss'])} → TP {fmt_price(r['sl_tp']['take_profit'])}"
-        lines.append(f"<code>{r['secid']:<7}</code> {icon} "
-                     f"B{r['score_buy']}/S{r['score_sell']} @ {fmt_price(r['price'])}{sl_tp}\n"
-                     f"   └ {rules}")
-    if not lines:
-        lines = ["Активных сигналов нет."]
+            extra.append(f"🛑 SL {fmt_price(r['sl_tp']['stop_loss'])} "
+                         f"→ 🎯 TP {fmt_price(r['sl_tp']['take_profit'])}")
+        line += "\n     " + " · ".join(extra)
+        rules = "; ".join(f"[{s.get('tf', '1Д')}] {s['rule']}"
+                          for s in r["signals"][:4]) or "-"
+        line += f"\n     💡 {rules}"
+        if r.get("sell_blocked_reasons"):
+            line += f"\n     ⛔ шорт запрещён: {r['sell_blocked_reasons'][0]}"
+        return line
 
+    lines: list[str] = []
+    if active:
+        lines.append("\n🚨 <b>ВАЖНЫЕ СИГНАЛЫ</b>")
+        lines.append("<code>" + "═" * 38 + "</code>")
+        for i, r in enumerate(active, 1):
+            lines.append(signal_line(r, rank=i))
+        lines.append("")
+    else:
+        lines.append("\n🚨 Активных сигналов нет.\n")
+
+    show_watch = watch[:max(0, top - len(active))]
+    if show_watch:
+        lines.append("👁 <b>НАБЛЮДЕНИЕ</b> (по очкам)")
+        lines.append("<code>" + "═" * 38 + "</code>")
+        for i, r in enumerate(show_watch, 1):
+            lines.append(signal_line(r, rank=i))
     body = "\n".join(lines)
-    chunks = []
+
+    # разбивка на сообщения ≤ 4096 по границам блоков
+    chunks: list[str] = []
     cur = header
-    for ln in lines:
-        if len(cur) + len(ln) + 1 > TG_MESSAGE_LIMIT - 200:
+    for block in lines:
+        piece = block + "\n"
+        if len(cur) + len(piece) > TG_MESSAGE_LIMIT - 100 and cur.strip():
             chunks.append(cur)
             cur = ""
-        cur += ln + "\n"
+        cur += piece
     if cur.strip():
         chunks.append(cur)
+    # нумерация частей, если их несколько
+    if len(chunks) > 1:
+        chunks = [f"{c}\n<i>({i}/{len(chunks)})</i>" for i, c in enumerate(chunks, 1)]
     return chunks
 
 

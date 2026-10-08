@@ -27,7 +27,7 @@ if __package__ in (None, ""):
 
 from aiogram import Bot, Dispatcher, F, Router
 from aiogram.filters import BaseFilter, Command, CommandObject, CommandStart
-from aiogram.types import Message
+from aiogram.types import LinkPreviewOptions, Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
@@ -88,7 +88,8 @@ async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
     for ch in chunks:
         try:
             await bot.send_message(chat_id, ch, parse_mode="HTML",
-                                   link_preview=False)
+                                   link_preview_options=LinkPreviewOptions(
+                                       is_disabled=True))
         except Exception as e:
             logger.error(f"Не удалось отправить кусок сообщения: {e}")
 

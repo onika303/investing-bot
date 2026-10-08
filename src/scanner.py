@@ -33,11 +33,18 @@ def load_short_restrictions(path: Optional[Path] = None) -> Dict[str, str]:
 
 
 class InvestmentScanner:
-    """Сканирует один актив по дневным свечам из БД и выдаёт список сигналов."""
+    """Сканирует актив по дневным (1д) и часовым (1ч) свечам из БД -> сигналы со скорингом."""
 
     MIN_ROWS = 60  # минимум свечей для осмысленного расчёта индикаторов
     NEW_EMISSION_DAYS = 365  # бумага считается "новой эмиссией", если торгуется < года
     ISS_TIMEOUT = 15
+    TIMEFRAMES = ('1d', '1h')  # таймфреймы скана; вердикт = 1д + подтверждение 1ч
+    TF_INTERVAL = {'1d': 24, '1h': 60}
+    TF_LABEL = {'1d': '1Д', '1h': '1Ч'}
+    # Пороги вердикта: сильный сигнал требует подтверждения часовиком
+    BUY_CONFIRM = 45   # score_buy >= этого И buy-сигнал на 1ч -> verdict=buy
+    SELL_CONFIRM = 45  # аналогично для шорта
+    SOLO_THRESHOLD = 30  # одиночный ТФ-сигнал -> максимум 'watch'
 
     def __init__(self, db: DatabaseManager,
                  short_restrictions: Optional[Dict[str, str]] = None):
@@ -126,12 +133,13 @@ class InvestmentScanner:
         return {'short_allowed': allowed, 'reasons': reasons}
 
     # ---------- данные ----------
-    def load_candles(self, secid: str, limit_rows: int = 500) -> Optional[pd.DataFrame]:
+    def load_candles(self, secid: str, limit_rows: int = 500,
+                     interval: int = 24) -> Optional[pd.DataFrame]:
         rows = self.db.fetch_all(
             """SELECT ts, open, high, low, close, volume, oi
-               FROM raw_candles WHERE secid = ?
+               FROM raw_candles WHERE secid = ? AND interval = ?
                ORDER BY ts DESC LIMIT ?""",
-            (secid, limit_rows),
+            (secid, interval, limit_rows),
         )
         if len(rows) < self.MIN_ROWS:
             return None
@@ -147,12 +155,27 @@ class InvestmentScanner:
         last = df.iloc[-1]
         prev = df.iloc[-2]
 
-        # Пересечение EMA12/EMA26
-        if {'ema_12', 'ema_26'} <= set(df.columns):
-            if prev['ema_12'] <= prev['ema_26'] and last['ema_12'] > last['ema_26']:
-                sig.append({'rule': 'EMA golden cross', 'type': 'buy', 'weight': 25})
-            elif prev['ema_12'] >= prev['ema_26'] and last['ema_12'] < last['ema_26']:
-                sig.append({'rule': 'EMA death cross', 'type': 'sell', 'weight': 25})
+        # Пересечения EMA по набору 13/21/50/100:
+        #   13x21 — быстрый кросс (вход), 21x50 и 50x100 — трендовые (медленнее, весомее)
+        for fast, slow, w in ((13, 21, 25), (21, 50, 20), (50, 100, 15)):
+            fc, sc = f'ema_{fast}', f'ema_{slow}'
+            if {fc, sc} <= set(df.columns):
+                if prev[fc] <= prev[sc] and last[fc] > last[sc]:
+                    sig.append({'rule': f'EMA {fast}x{slow} golden cross',
+                                'type': 'buy', 'weight': w})
+                elif prev[fc] >= prev[sc] and last[fc] < last[sc]:
+                    sig.append({'rule': f'EMA {fast}x{slow} death cross',
+                                'type': 'sell', 'weight': w})
+
+        # Конфлюэнция тренда: цена над/под всеми EMA 13/21/50/100
+        ema_cols = [f'ema_{p}' for p in (13, 21, 50, 100) if f'ema_{p}' in df.columns]
+        if len(ema_cols) == 4:
+            if all(last['close'] > last[c] for c in ema_cols):
+                sig.append({'rule': 'Close above EMA 13/21/50/100',
+                            'type': 'buy', 'weight': 15})
+            elif all(last['close'] < last[c] for c in ema_cols):
+                sig.append({'rule': 'Close below EMA 13/21/50/100',
+                            'type': 'sell', 'weight': 15})
 
         # RSI-зоны
         rsi_col = 'rsi_14' if 'rsi_14' in df.columns else None
@@ -175,12 +198,9 @@ class InvestmentScanner:
 
         return sig
 
-    # ---------- основной метод ----------
-    def scan_asset(self, secid: str, asset_type: str) -> Optional[Dict]:
-        df = self.load_candles(secid)
-        if df is None:
-            return None
-
+    # ---------- основной метод: скан по двум ТФ (1д + 1ч) ----------
+    def _scan_timeframe(self, df: pd.DataFrame) -> Dict:
+        """Индикаторы + дивергенции + правила для одного набора свечей."""
         df = IndicatorCalculator(df).compute_all()
         detector = DivergenceDetector(df)
         divergences = detector.scan_all_indicators(lookback=50)
@@ -197,36 +217,80 @@ class InvestmentScanner:
         score_buy = sum(s['weight'] for s in signals if s['type'] == 'buy')
         score_sell = sum(s['weight'] for s in signals if s['type'] == 'sell')
         boost = sum(s['weight'] for s in signals if s['type'] == 'boost')
-        score_buy += boost
-        score_sell += boost
+        return {'df': df, 'signals': signals,
+                'score_buy': score_buy + boost, 'score_sell': score_sell + boost}
+
+    def scan_asset(self, secid: str, asset_type: str) -> Optional[Dict]:
+        tf_results: Dict[str, Dict] = {}
+        for tf in self.TIMEFRAMES:
+            df = self.load_candles(secid, interval=self.TF_INTERVAL[tf])
+            if df is None:
+                continue  # часовиков может не быть в БД — скан тогда только по 1д
+            try:
+                tf_results[tf] = self._scan_timeframe(df)
+            except Exception as e:
+                logger.error(f"Скан {secid} ({tf}): {e}")
+        if not tf_results:
+            return None
+
+        daily = tf_results.get('1d')
+        base = daily or tf_results.get('1h')  # без дневных свечей — хотя бы часовик
+        df = base['df']
+        price = float(df['close'].iloc[-1])
+        atr = float(df['atr_14'].iloc[-1]) if 'atr_14' in df.columns else None
+
+        score_buy = base['score_buy']
+        score_sell = base['score_sell']
+        # Итоговый список сигналов: дневные с меткой ТФ
+        all_signals = [{**s, 'tf': self.TF_LABEL['1d']} for s in base['signals']] \
+            if daily else list(base['signals'])
+        confirmed_buy = confirmed_sell = False
+        if '1h' in tf_results and tf_results['1h'] is not base:
+            h = tf_results['1h']
+            for s in h['signals']:
+                all_signals.append({**s, 'tf': self.TF_LABEL['1h']})
+            confirmed_buy = any(s['type'] == 'buy' for s in h['signals'])
+            confirmed_sell = any(s['type'] == 'sell' for s in h['signals'])
 
         # Проверка доступности актива к сделке: если шорт запрещён (санкции,
         # новая эмиссия и т.п.) — сигнал на продажу не выдаём.
         access = self.check_trade_access(secid, asset_type, df['date'].iloc[0])
-        sell_blocked = not access['short_allowed'] and score_sell > score_buy and score_sell >= 30
+        sell_blocked = (not access['short_allowed']
+                        and score_sell > score_buy and score_sell >= self.SOLO_THRESHOLD)
 
+        # Вердикт: сильный сигнал (>= BUY_CONFIRM) требует подтверждения 1ч;
+        # без часовика или без подтверждения — максимум 'watch'.
+        verdict = 'watch' if all_signals else 'neutral'
+        tf_confirmed = False
         if sell_blocked:
             verdict = 'watch'
-        elif score_buy > score_sell and score_buy >= 30:
-            verdict = 'buy'
-        elif score_sell > score_buy and score_sell >= 30:
-            verdict = 'sell'
-        else:
-            verdict = 'watch' if signals else 'neutral'
+        elif score_buy >= self.SOLO_THRESHOLD and score_buy > score_sell:
+            if score_buy >= self.BUY_CONFIRM and confirmed_buy:
+                verdict, tf_confirmed = 'buy', True
+            else:
+                verdict = 'watch'
+        elif score_sell >= self.SOLO_THRESHOLD and score_sell > score_buy:
+            if score_sell >= self.SELL_CONFIRM and confirmed_sell:
+                verdict, tf_confirmed = 'sell', True
+            else:
+                verdict = 'watch'
 
-        atr = float(df['atr_14'].iloc[-1]) if 'atr_14' in df.columns else None
-        price = float(df['close'].iloc[-1])
         result = {
             'secid': secid,
             'asset_type': asset_type,
+            'timeframes': sorted(tf_results.keys()),
             'date': str(df['date'].iloc[-1].date()),
             'price': round(price, 4),
-            'signals': signals,
+            'signals': all_signals,
             'score_buy': score_buy,
             'score_sell': score_sell,
             'verdict': verdict,
+            'tf_confirmed': tf_confirmed,
             'trade_access': access,
         }
+        if '1h' in tf_results and tf_results['1h'] is not base:
+            result['score_buy_1h'] = tf_results['1h']['score_buy']
+            result['score_sell_1h'] = tf_results['1h']['score_sell']
         if sell_blocked:
             result['sell_blocked_reasons'] = access['reasons']
         if verdict == 'sell':
