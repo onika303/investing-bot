@@ -18,15 +18,21 @@ class DatabaseManager:
                 CREATE TABLE IF NOT EXISTS raw_candles (
                     secid TEXT NOT NULL,
                     ts INTEGER NOT NULL,
+                    interval INTEGER NOT NULL DEFAULT 24,
                     open REAL,
                     high REAL,
                     low REAL,
                     close REAL,
                     volume INTEGER,
                     oi INTEGER DEFAULT 0,
-                    PRIMARY KEY (secid, ts)
+                    PRIMARY KEY (secid, ts, interval)
                 )
             ''')
+            # Миграция старых БД без колонки interval (PK был (secid, ts))
+            cols = [r[1] for r in cursor.execute("PRAGMA table_info(raw_candles)")]
+            if 'interval' not in cols:
+                logger.info("Миграция raw_candles: добавляю колонку interval=24")
+                cursor.execute("ALTER TABLE raw_candles ADD COLUMN interval INTEGER NOT NULL DEFAULT 24")
             # Таблица для непрерывных рядов
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS continuous_ohlc (
@@ -89,8 +95,12 @@ class DatabaseManager:
             cursor.execute(query, params)
             return cursor.fetchone()
 
-    def insert_raw_candles(self, df: pd.DataFrame):
-        """Вставляет DataFrame с колонками: secid, ts, open, high, low, close, volume, oi."""
+    def insert_raw_candles(self, df: pd.DataFrame, interval: int = 24):
+        """Вставляет DataFrame с колонками: secid, ts, open, high, low, close, volume, oi.
+
+        interval — таймфрейм свечей (60 = 1 час, 24 = день); хранится в таблице,
+        PK (secid, ts, interval) позволяет держать несколько ТФ рядом.
+        """
         if df.empty:
             return
         # Проверяем наличие колонок
@@ -100,14 +110,19 @@ class DatabaseManager:
         # Если oi нет, добавляем со значением 0
         if 'oi' not in df.columns:
             df['oi'] = 0
+        if 'interval' in df.columns:
+            cols = ['secid', 'ts', 'interval', 'open', 'high', 'low', 'close', 'volume', 'oi']
+        else:
+            df = df.assign(interval=interval)
+            cols = ['secid', 'ts', 'interval', 'open', 'high', 'low', 'close', 'volume', 'oi']
         # Преобразуем в список кортежей
-        rows = list(df[['secid', 'ts', 'open', 'high', 'low', 'close', 'volume', 'oi']].itertuples(index=False, name=None))
+        rows = list(df[cols].itertuples(index=False, name=None))
         query = '''
-            INSERT OR REPLACE INTO raw_candles (secid, ts, open, high, low, close, volume, oi)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO raw_candles (secid, ts, interval, open, high, low, close, volume, oi)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         '''
         self.executemany(query, rows)
-        logger.info(f"Вставлено {len(rows)} записей в raw_candles")
+        logger.info(f"Вставлено {len(rows)} записей в raw_candles (interval={interval})")
 
     def insert_continuous_candles(self, df: pd.DataFrame):
         """Аналогично для continuous_ohlc."""
@@ -126,10 +141,17 @@ class DatabaseManager:
         self.executemany(query, rows)
         logger.info(f"Вставлено {len(rows)} записей в continuous_ohlc")
 
-    def get_last_ts(self, secid: str, table='raw_candles') -> Optional[int]:
-        """Возвращает максимальный timestamp для указанного secid в таблице."""
-        query = f"SELECT MAX(ts) FROM {table} WHERE secid = ?"
-        result = self.fetch_one(query, (secid,))
+    def get_last_ts(self, secid: str, table='raw_candles', interval: Optional[int] = None) -> Optional[int]:
+        """Возвращает максимальный timestamp для указанного secid в таблице.
+
+        Для raw_candles можно сузить до конкретного таймфрейма (interval=60/24).
+        """
+        if table == 'raw_candles' and interval is not None:
+            query = "SELECT MAX(ts) FROM raw_candles WHERE secid = ? AND interval = ?"
+            result = self.fetch_one(query, (secid, interval))
+        else:
+            query = f"SELECT MAX(ts) FROM {table} WHERE secid = ?"
+            result = self.fetch_one(query, (secid,))
         return result[0] if result and result[0] is not None else None
 
     def upsert_meta(self, secid: str, last_ts: int, source: str, total_rows: int = 0):

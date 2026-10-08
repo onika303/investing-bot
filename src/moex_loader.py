@@ -136,6 +136,7 @@ class MOEXLoader:
             df['oi'] = 0
 
         df = df[['secid', 'ts', 'open', 'high', 'low', 'close', 'volume', 'oi']]
+        df['interval'] = int(interval)
         df['open'] = df['open'].astype(float)
         df['high'] = df['high'].astype(float)
         df['low'] = df['low'].astype(float)
@@ -204,14 +205,9 @@ class MOEXLoader:
             logger.warning(f"Нет данных для {secid} ({asset_type})")
             return df
 
-        # Сохраняем в БД
-        if asset_type == 'futures':
-            # Для фьючерсов сохраняем в raw_candles (как и для всех)
-            self.db.insert_raw_candles(df)
-            self.db.upsert_meta(secid, df['ts'].max(), 'futures', len(df))
-        else:
-            self.db.insert_raw_candles(df)
-            self.db.upsert_meta(secid, df['ts'].max(), asset_type, len(df))
+        # Сохраняем в БД (interval уже в df — попадёт в PK (secid, ts, interval))
+        self.db.insert_raw_candles(df)
+        self.db.upsert_meta(secid, int(df['ts'].max()), asset_type, len(df))
 
         logger.info(f"Загружено {len(df)} свечей для {secid} ({asset_type})")
         return df

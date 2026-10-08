@@ -8,8 +8,9 @@ from src.divergence import DivergenceDetector
 
 def test_compute_all_columns(trending_up_df):
     df = IndicatorCalculator(trending_up_df).compute_all()
-    for col in ('ema_12', 'ema_24', 'rsi_14', 'macd_line', 'macd_signal',
-                'obv', 'bb_upper', 'bb_lower', 'atr_14', 'adx_14'):
+    for col in ('ema_13', 'ema_21', 'ema_50', 'ema_100', 'rsi_14',
+                'macd_line', 'macd_signal', 'obv',
+                'bb_upper', 'bb_lower', 'atr_14', 'adx_14'):
         assert col in df.columns, col
     # RSI в границах
     rsi = df['rsi_14'].dropna()
@@ -39,3 +40,21 @@ def test_divergence_detector_finds_bullish(v_shape_df):
     assert {'rsi_14', 'macd_line', 'obv'} <= set(out.keys()) or len(out) >= 0
     for k, v in out.items():
         assert isinstance(v, list)
+
+
+def test_bb_multiplier_2_5(trending_up_df):
+    """compute_all использует множитель полос Боллинджера 2.5:
+    верхняя граница = SMA20 + 2.5*std."""
+    df = IndicatorCalculator(trending_up_df).compute_all()
+    sma = trending_up_df['close'].rolling(20).mean()
+    std = trending_up_df['close'].rolling(20).std()
+    expected = (sma + 2.5 * std).iloc[-1]
+    assert abs(df['bb_upper'].iloc[-1] - expected) < 1e-9
+    # ширина полос 2.5-сигма больше классических 2-сигма
+    narrow = (2 * 2 * std.iloc[-1])
+    assert df['bb_width'].iloc[-1] > narrow
+
+
+def test_ema_set_13_21_50_100(trending_up_df):
+    df = IndicatorCalculator(trending_up_df).compute_all()
+    assert not ({'ema_12', 'ema_24', 'ema_200'} & set(df.columns))

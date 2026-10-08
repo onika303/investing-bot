@@ -108,8 +108,8 @@ class IndicatorCalculator:
         """
         result = self.df.copy()
 
-        # EMA
-        for period in [12, 24, 50, 200]:
+        # EMA — набор по требованию сканера: 13, 21, 50, 100
+        for period in [13, 21, 50, 100]:
             result[f'ema_{period}'] = self.ema(period)
 
         # RSI
@@ -124,8 +124,8 @@ class IndicatorCalculator:
         # OBV
         result['obv'] = self.obv()
 
-        # Bollinger Bands
-        bb_df = self.bollinger_bands()
+        # Bollinger Bands — множитель 2.5 (по требованию сканера)
+        bb_df = self.bollinger_bands(std=2.5)
         for col in ['bb_middle', 'bb_upper', 'bb_lower', 'bb_width', 'bb_position']:
             result[col] = bb_df[col]
 
