@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import pandas as pd
+import requests
 from loguru import logger
 
 from src.database import DatabaseManager
@@ -54,7 +55,9 @@ class InvestmentScanner:
         """
         if secid in self._issue_cache:
             return self._issue_cache[secid]
-        disk_cache = Path(__file__).resolve().parent / '.cache' / 'issue_info.json'
+        # путь кэша можно переопределить (тесты); по умолчанию src/.cache/issue_info.json
+        disk_cache = Path(getattr(self, '_disk_issue_cache',
+                                  Path(__file__).resolve().parent / '.cache' / 'issue_info.json'))
         if disk_cache.exists():
             try:
                 cached = json.loads(disk_cache.read_text(encoding='utf-8'))
@@ -66,7 +69,6 @@ class InvestmentScanner:
         info = {}
         url = f"https://iss.moex.com/iss/securities/{secid}.json?iss.meta=off"
         try:
-            import requests
             resp = requests.get(url, timeout=self.ISS_TIMEOUT)
             resp.raise_for_status()
             data = resp.json()
@@ -108,8 +110,9 @@ class InvestmentScanner:
             recent = None
             if issuedate:
                 try:
-                    days = (pd.Timestamp.now(tz='Europe/Moscow').normalize()
-                            - pd.Timestamp(issuedate)).days
+                    # ISS отдаёт tz-naive дату -> сравниваем с naive "сегодня" МСК
+                    today_msk = pd.Timestamp.now(tz='Europe/Moscow').tz_localize(None).normalize()
+                    days = (today_msk - pd.Timestamp(issuedate)).days
                     recent = days < self.NEW_EMISSION_DAYS
                 except Exception:
                     recent = None
