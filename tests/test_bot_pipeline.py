@@ -5,10 +5,11 @@
 """
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from src.config import BotConfig, ConfigError, load_config
 from src.pipeline import (
@@ -388,3 +389,48 @@ def test_do_full_scan_guard_blocks_parallel(monkeypatch):
         finally:
             state.scan_lock.release()
     run(scenario())
+
+
+# ---------------------------------------------------------------- cache/config consistency
+
+class TestReportMatchesConfig:
+    def _write_cfg(self, tmp_path, tickers):
+        cfg = tmp_path / "config.yaml"
+        cfg.write_text(yaml.safe_dump({"assets": {"stocks": tickers}}),
+                       encoding="utf-8")
+        return str(cfg)
+
+    def test_consistent_report_matches(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER", "GAZP"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}, {"secid": "GAZP"}]}
+        assert report_matches_config(rep, None, path) is True
+
+    def test_reduced_ticker_list_invalidates_cache(self, tmp_path):
+        """Кэш со старым (большим) списком не должен считаться актуальным."""
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}, {"secid": "GAZP"}]}
+        assert report_matches_config(rep, None, path) is False
+
+    def test_missing_asset_in_cache_invalidates(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER", "LKOH"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}]}
+        assert report_matches_config(rep, None, path) is False
+
+    def test_edited_config_newer_than_report_invalidates(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        old = (datetime.now() - timedelta(hours=5)).isoformat()
+        rep = {"generated_at": old, "results": [{"secid": "SBER"}]}
+        # config.yaml только что перезаписан → mtime новее generated_at
+        assert report_matches_config(rep, None, path) is False
+
+    def test_broken_report_is_not_matching(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        assert report_matches_config({}, None, path) is False

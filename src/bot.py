@@ -41,6 +41,7 @@ from src.pipeline import (
     load_assets,
     load_cached_report,
     report_age_hours,
+    report_matches_config,
     scan_and_report,
 )
 from src.scanner import InvestmentScanner
@@ -189,9 +190,16 @@ async def cmd_scan(message: Message, app: AppState):
 
     if not force and app.report:
         age = report_age_hours(app.report)
-        if age <= app.cfg.report_cache_hours:
+        fresh = age <= app.cfg.report_cache_hours
+        consistent = await asyncio.to_thread(
+            report_matches_config, app.report, app.assets, CONFIG_PATH)
+        if fresh and consistent:
             return await send_chunks(message.bot, message.chat.id,
                                      format_report_text(app.report))
+        if not consistent:
+            await message.answer(
+                "⚠️ Кэш отчёта не соответствует текущему config.yaml — "
+                "запускаю полный скан по актуальному списку...")
 
     if app.busy:
         return await message.answer("⏳ Уже выполняется задача, попробуйте позже.")
@@ -264,9 +272,17 @@ async def cmd_asset(message: Message, command: CommandObject, app: AppState):
 async def cmd_reload(message: Message, app: AppState):
     try:
         app.assets = await asyncio.to_thread(load_assets, CONFIG_PATH)
-        return await message.answer(
-            f"♻️ config.yaml перечитан: "
-            f"{sum(len(v) for v in app.assets.values())} активов.")
+        stale = bool(app.report) and not report_matches_config(
+            app.report, app.assets, CONFIG_PATH)
+        if stale:
+            app.report = None  # кэш рассогласован с новым списком — сбрасываем
+        msg = (f"♻️ config.yaml перечитан: "
+               f"{sum(len(v) for v in app.assets.values())} активов "
+               f"(акции {len(app.assets.get('stocks', []))}, "
+               f"фьючерсы {len(app.assets.get('futures', []))}).")
+        if stale:
+            msg += "\nСтарый кэш отчёта сброшен — выполните /scan для актуального списка."
+        return await message.answer(msg)
     except Exception as e:
         return await message.answer(f"❌ Ошибка чтения config.yaml: {e}")
 
