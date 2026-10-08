@@ -7,6 +7,7 @@ from pathlib import Path
 from dataclasses import dataclass, field
 
 from dotenv import load_dotenv
+from loguru import logger
 
 
 class ConfigError(RuntimeError):

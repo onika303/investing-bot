@@ -3,4 +3,6 @@ __pycache__/
 *.pyc
 
 # Logs
-*.log
+*.log__pycache__/
+*.pyc
+bot_live.log
