@@ -5,13 +5,13 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Копируем список зависимостей с хоста внутрь контейнера
-COPY requirements-dev.txt .
+COPY requirements.txt .
 
 # Устанавливаем библиотеки ВНУТРИ контейнера
-RUN pip install --no-cache-dir -r requirements-dev.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем весь остальной код с хоста внутрь контейнера
 COPY . .
 
 # Команда, которая запустит бота (пока просто тестовая)
-CMD ["python", "bot.py"]
+CMD ["python", "-m", "src.bot"]

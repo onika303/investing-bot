@@ -1,28 +1,25 @@
+# Сгенерировано 2026-10-08: все акции MOEX (common_share, TQBR) + топ-15 фьючерсов по дневной выручке
+# ВНИМАНИЕ: фьючерсы — конкретные серийные контракты (обновлять при ролльовере!)
 assets:
   stocks:
-    - SBERP
-    - GAZP
-    - ROSN
-    - LKOH
-    - VTBR
-    - YDEX
-    - NVTK
-    - PLZL
-    - TATN
-    - MGNT
-    - T
-    - PHOR
-    - X5
-    - MTSS
 
   futures:
-    - SiZ6          # доллар-рубль (уточните точный код, если он другой)
-    - GOLD-9.26     # золото (проверьте актуальный тикер)
-    - SILV-9.26
-    - BR-9.26       # нефть Brent
-    - MIX
-    
-    # добавьте другие фьючерсы по мере необходимости
+    - CRZ6
+    - SiZ6
+    - CNYRUBF
+    - BRX6
+    - MXZ6
+    - GDZ6
+    - USDRUBF
+    - IMOEXF
+    - SVZ6
+    - NGV6
+    - CCX6
+    - RIZ6
+    - MMZ6
+    - GLDRUBF
+    - EuZ6
+
   indices:
     - IMOEX
     - RGBI
