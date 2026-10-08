@@ -91,7 +91,8 @@ def test_scan_all_sorting_and_no_data(tmp_db, v_shape_df):
 
 
 def test_result_has_strength_and_tf_scores(tmp_db=None):
-    """scan_asset отдаёт strength (1Д*1.0 + 1Ч*0.5) и очки по каждому ТФ."""
+    """scan_asset отдаёт поле 'horizons' с отдельным verdict/strength на каждый ТФ;
+    плоские поля = основной горизонт (1Д). Смешивания очков между ТФ нет."""
     import sqlite3
     from src.database import DatabaseManager
     from src.scanner import InvestmentScanner
@@ -118,7 +119,14 @@ def test_result_has_strength_and_tf_scores(tmp_db=None):
     sc._fetch_issue_info = lambda secid: {}  # без сети
     r = sc.scan_asset("TEST", "stocks")
     assert r is not None
-    expected = round(max(r['score_buy'], r['score_sell']) * sc.WEIGHT_1D
-                     + max(r['score_buy_1h'], r['score_sell_1h']) * sc.WEIGHT_1H, 1)
-    assert r['strength'] == expected
-    assert set(['score_buy_1h', 'score_sell_1h']) <= set(r.keys())
+    assert set(r['horizons']) == {'1d', '1h'}
+    for tf, h in r['horizons'].items():
+        # сила считается строго внутри горизонта
+        assert h['strength'] == round(max(h['score_buy'], h['score_sell']), 1)
+        assert h['horizon'] == sc.HORIZON[tf]
+        assert all(s['tf'] == sc.TF_LABEL[tf] for s in h['signals'])
+    # сводные поля = дневной горизонт, без примеси часовика
+    hd = r['horizons']['1d']
+    assert r['verdict'] == hd['verdict']
+    assert r['score_buy'] == hd['score_buy'] and r['score_sell'] == hd['score_sell']
+    assert r['strength'] == hd['strength']

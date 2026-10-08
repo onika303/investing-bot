@@ -133,18 +133,21 @@ def _apply_closes(base_df, closes):
 
 
 def downtrend_df(base_df):
-    """Обвал затем резкий отскок: RSI overbought + close above upper BB + ADX-boost
-    -> S=35/B=10 (sell-доминанта >= 30)."""
+    """Боковик 200 -> обвальный drop до 100 -> резкий V-отскок до 150 за 6 баров:
+    RSI overbought (sell 15) + Close above upper BB (sell 10) + ADX boost (10)
+    -> S=35/B=0 (уверенная sell-доминанта >= порога 30)."""
     import numpy as np
-    closes = np.concatenate([np.linspace(150, 100, 100), np.linspace(100, 135, 12)])
+    drop = np.array([200., 170., 140., 110., 100.])
+    closes = np.concatenate([np.full(60, 200.), drop, np.linspace(100, 150, 6)])
     return _apply_closes(base_df, closes)
 
 
 def uptrend_df(base_df):
-    """Обвал с разворотом вверх: RSI oversold + ADX-boost -> B=25/S=10
-    (buy ниже порога 30 => verdict watch — используется в тесте buy+ограничение)."""
+    """Зеркальный бычий паттерн: боковик 100 -> рывок до 200 -> резкий откат
+    до 150 за 6 баров -> B=35/S=0 (buy-доминанта >= порога 30)."""
     import numpy as np
-    closes = np.linspace(150, 60, 120)
+    rally = np.array([100., 130., 160., 190., 200.])
+    closes = np.concatenate([np.full(60, 100.), rally, np.linspace(200, 150, 6)])
     return _apply_closes(base_df, closes)
 
 
@@ -164,37 +167,67 @@ def test_scan_asset_sell_blocked_to_watch(scanner, v_shape_df):
     with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
         r = scanner.scan_asset('BLOCKED', 'stocks')
     assert r is not None
-    assert r['score_sell'] >= 30 and r['score_sell'] > r['score_buy'], \
-        f"expected sell-dominant, got B{r['score_buy']}/S{r['score_sell']} {[s['rule'] for s in r['signals']]}"
-    assert r['verdict'] == 'watch'
-    assert 'sanctioned' in ' '.join(r['sell_blocked_reasons'])
+    h = r['horizons']['1d']
+    assert h['score_sell'] >= 30 and h['score_sell'] > h['score_buy'], \
+        f"expected sell-dominant, got B{h['score_buy']}/S{h['score_sell']} {[s['rule'] for s in h['signals']]}"
+    assert h['verdict'] == 'watch'
+    assert r['verdict'] == 'watch'  # основной горизонт — дневной
+    assert 'sanctioned' in ' '.join(h['sell_blocked_reasons'])
     assert r['trade_access']['short_allowed'] is False
 
 
 def test_scan_asset_sell_allowed_when_accessible(scanner, v_shape_df):
-    """Sell-паттерн на 1д + подтверждение на 1ч без ограничений -> verdict sell."""
+    """Sell-паттерн на 1д и отдельно на 1ч -> активный сигнал в КАЖДОМ горизонте
+    (смешивания ТФ больше нет: вердикт считается внутри своего горизонта)."""
     df = downtrend_df(v_shape_df)
     _insert_candles(scanner.db, 'ALLOWED', df, interval=24)
     _insert_candles(scanner.db, 'ALLOWED', df, interval=60)  # тот же паттерн на часовике
     with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
         r = scanner.scan_asset('ALLOWED', 'stocks')
-    assert r['verdict'] == 'sell', f"got {r['verdict']} B{r['score_buy']}/S{r['score_sell']}"
-    assert r['tf_confirmed'] is True
+    assert set(r['horizons']) == {'1d', '1h'}
+    assert r['horizons']['1d']['verdict'] == 'sell'
+    assert r['horizons']['1h']['verdict'] == 'sell'
+    assert r['verdict'] == 'sell'          # основной горизонт — 1Д
     assert r['trade_access']['short_allowed'] is True
     assert r['can_short'] is True
     assert 'sl_tp' in r and r['sl_tp']['stop_loss'] > r['price']
+    # SL/TP каждого горизонта считаются по ATR этого горизонта
+    h1 = r['horizons']['1h']
+    assert 'sl_tp' in h1 and h1['sl_tp']['stop_loss'] > h1['price']
 
 
-def test_sell_without_hourly_confirm_is_watch(scanner, v_shape_df):
-    """Дневная sell-доминанта БЕЗ подтверждения 1ч -> максимум watch."""
-    df = downtrend_df(v_shape_df)
-    _insert_candles(scanner.db, 'NOCONF', df, interval=24)  # 1ч свечей нет
+def test_horizons_analyzed_separately(scanner, v_shape_df):
+    """Бычий паттерн на дневке + медвежий на часовике -> горизонты НЕ перемешиваются:
+    1Д даёт buy, 1Ч даёт sell, вердикт основного горизонта = buy."""
+    import numpy as np
+    up = uptrend_df(v_shape_df)
+    down = downtrend_df(v_shape_df)
+    _insert_candles(scanner.db, 'MIXTF', up, interval=24)
+    _insert_candles(scanner.db, 'MIXTF', down, interval=60)
     with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
-        r = scanner.scan_asset('NOCONF', 'stocks')
-    assert r['score_sell'] >= 30 and r['score_sell'] > r['score_buy']
-    assert r['verdict'] == 'watch'
-    assert r['tf_confirmed'] is False
-    assert r['timeframes'] == ['1d']
+        r = scanner.scan_asset('MIXTF', 'stocks')
+    hd, hh = r['horizons']['1d'], r['horizons']['1h']
+    assert hd['verdict'] == 'buy' and hd['score_buy'] >= 30
+    assert hh['verdict'] == 'sell' and hh['score_sell'] >= 30
+    # сигналы горизонтов не сливаются в один список
+    assert all(s['tf'] == '1Д' for s in hd['signals'])
+    assert all(s['tf'] == '1Ч' for s in hh['signals'])
+    assert r['verdict'] == 'buy'  # основной = дневной
+
+
+def test_sell_on_hourly_only_does_not_affect_daily_verdict(scanner, v_shape_df):
+    """Sell только на часовике: горизонт 1Ч -> sell, горизонт 1Д -> watch;
+    сводный вердикт (основной горизонт) остаётся watch, без смешивания очков."""
+    df = downtrend_df(v_shape_df)
+    _insert_candles(scanner.db, 'HONLY', df, interval=60)  # только 1ч свечи
+    with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
+        r = scanner.scan_asset('HONLY', 'stocks')
+    assert r['timeframes'] == ['1h']
+    assert r['horizons']['1h']['verdict'] == 'sell'
+    # плоские поля = часовой горизонт (дневного нет)
+    assert r['verdict'] == 'sell'
+    assert r['strength'] == r['horizons']['1h']['strength']
+
 
 def test_buy_signal_not_affected_by_short_restriction(scanner, v_shape_df):
     """Ограничение на шорт НЕ блокирует buy-сигналы."""
@@ -203,6 +236,7 @@ def test_buy_signal_not_affected_by_short_restriction(scanner, v_shape_df):
     scanner.short_restrictions = {'BUYREST': 'sanctioned'}
     with patch.object(InvestmentScanner, '_fetch_issue_info', return_value={'issuedate': '2015-01-01'}):
         r = scanner.scan_asset('BUYREST', 'stocks')
-    assert r['score_buy'] > r['score_sell']
-    assert r['verdict'] == 'watch'          # B=25 < порога 30
-    assert 'sell_blocked_reasons' not in r  # sell не доминировал — блокировка не применялась
+    h = r['horizons']['1d']
+    assert h['score_buy'] > h['score_sell']
+    assert h['verdict'] == 'buy'             # buy не блокируется ограничениями шорта
+    assert 'sell_blocked_reasons' not in h   # sell не доминировал — блокировка не применялась

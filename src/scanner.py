@@ -38,17 +38,18 @@ class InvestmentScanner:
     MIN_ROWS = 60  # минимум свечей для осмысленного расчёта индикаторов
     NEW_EMISSION_DAYS = 365  # бумага считается "новой эмиссией", если торгуется < года
     ISS_TIMEOUT = 15
-    TIMEFRAMES = ('1d', '1h')  # таймфреймы скана; вердикт = 1д + подтверждение 1ч
+    TIMEFRAMES = ('1d', '1h')  # таймфреймы скана
     TF_INTERVAL = {'1d': 24, '1h': 60}
     TF_LABEL = {'1d': '1Д', '1h': '1Ч'}
-    # Пороги вердикта: сильный сигнал требует подтверждения часовиком
-    BUY_CONFIRM = 45   # score_buy >= этого И buy-сигнал на 1ч -> verdict=buy
-    SELL_CONFIRM = 45  # аналогично для шорта
-    SOLO_THRESHOLD = 30  # одиночный ТФ-сигнал -> максимум 'watch'
-    # Сила сигнала для ранжирования отчёта: суммарный балл по обоим ТФ.
-    # Дневной весит больше (основной ТФ), часовой — подтверждающий.
-    WEIGHT_1D = 1.0
-    WEIGHT_1H = 0.5
+    # Горизонты планирования: каждый ТФ = отдельный горизонт, СМЕШИВАТЬ
+    # сигналы между ними для подтверждения сетапа НЕЛЬЗЯ (решение от 10.10.2026):
+    #   1Ч -> сделки на 1-2 дня (скальп/свиг), 1Д -> сделка внутри недели (свинг).
+    HORIZON = {'1h': '1–2 дня', '1d': 'внутри недели'}
+    # Пороги вердикта — теперь ОТДЕЛЬНЫЕ НА ГОРИЗОНТ (без смешивания ТФ):
+    SIGNAL_THRESHOLD = 30  # порог активного сигнала внутри одного горизонта
+    SOLO_THRESHOLD = 30    # совместимость со старыми тестами/кодом
+    # Сила сигнала для ранжирования — считается ОТДЕЛЬНО на каждый горизонт
+    # (см. _horizon_result); WEIGHT_* сохранены только для совместимости.
 
     def __init__(self, db: DatabaseManager,
                  short_restrictions: Optional[Dict[str, str]] = None):
@@ -224,91 +225,106 @@ class InvestmentScanner:
         return {'df': df, 'signals': signals,
                 'score_buy': score_buy + boost, 'score_sell': score_sell + boost}
 
+    # ---------- вердикт в разрезе ОДНОГО горизонта ----------
+    def _horizon_result(self, secid: str, asset_type: str, tf: str,
+                        scan: Dict, access: Dict) -> Optional[Dict]:
+        """Сигналы одного таймфрейма = отдельный горизонт планирования.
+        Ничего не смешивается с другими ТФ: вердикт, сила и SL/TP считаются
+        только по свечам этого горизонта."""
+        df = scan['df']
+        if len(df) < self.MIN_ROWS:
+            return None
+        price = float(df['close'].iloc[-1])
+        atr = float(df['atr_14'].iloc[-1]) if 'atr_14' in df.columns else None
+        score_buy, score_sell = scan['score_buy'], scan['score_sell']
+        signals = scan['signals']
+
+        verdict = 'watch' if signals else 'neutral'
+        sell_blocked = (not access['short_allowed']
+                        and score_sell > score_buy
+                        and score_sell >= self.SIGNAL_THRESHOLD)
+        if sell_blocked:
+            verdict = 'watch'
+        elif score_buy >= self.SIGNAL_THRESHOLD and score_buy > score_sell:
+            verdict = 'buy'
+        elif score_sell >= self.SIGNAL_THRESHOLD and score_sell > score_buy:
+            verdict = 'sell'
+
+        res = {
+            'tf': tf,
+            'tf_label': self.TF_LABEL[tf],
+            'horizon': self.HORIZON[tf],
+            'date': str(df['date'].iloc[-1]),
+            'price': round(price, 4),
+            'signals': [{**s, 'tf': self.TF_LABEL[tf]} for s in signals],
+            'score_buy': score_buy,
+            'score_sell': score_sell,
+            'verdict': verdict,
+            # Сила — строго внутри горизонта (для ранжирования списков)
+            'strength': round(max(score_buy, score_sell), 1),
+        }
+        if sell_blocked:
+            res['sell_blocked_reasons'] = access['reasons']
+        if verdict in ('buy', 'sell') and atr:
+            res['sl_tp'] = {
+                'stop_loss': round(price - 2 * atr, 4) if verdict == 'buy'
+                             else round(price + 2 * atr, 4),
+                'take_profit': round(price + 3 * atr, 4) if verdict == 'buy'
+                               else round(price - 3 * atr, 4),
+            }
+        return res
+
     def scan_asset(self, secid: str, asset_type: str) -> Optional[Dict]:
         tf_results: Dict[str, Dict] = {}
+        first_dates = []
         for tf in self.TIMEFRAMES:
             df = self.load_candles(secid, interval=self.TF_INTERVAL[tf])
             if df is None:
-                continue  # часовиков может не быть в БД — скан тогда только по 1д
+                continue  # часовиков может не быть в БД — тогда только 1д
             try:
                 tf_results[tf] = self._scan_timeframe(df)
+                first_dates.append(str(df['date'].iloc[0]))
             except Exception as e:
                 logger.error(f"Скан {secid} ({tf}): {e}")
         if not tf_results:
             return None
 
-        daily = tf_results.get('1d')
-        base = daily or tf_results.get('1h')  # без дневных свечей — хотя бы часовик
-        df = base['df']
-        price = float(df['close'].iloc[-1])
-        atr = float(df['atr_14'].iloc[-1]) if 'atr_14' in df.columns else None
+        # Доступность шорта проверяем один раз на актив (по самой длинной истории)
+        daily = tf_results.get('1d') or tf_results.get('1h')
+        access = self.check_trade_access(
+            secid, asset_type, pd.Series(daily['df']['date']).iloc[0])
 
-        score_buy = base['score_buy']
-        score_sell = base['score_sell']
-        # Итоговый список сигналов: дневные с меткой ТФ
-        all_signals = [{**s, 'tf': self.TF_LABEL['1d']} for s in base['signals']] \
-            if daily else list(base['signals'])
-        confirmed_buy = confirmed_sell = False
-        h_buy = h_sell = 0
-        if '1h' in tf_results and tf_results['1h'] is not base:
-            h = tf_results['1h']
-            for s in h['signals']:
-                all_signals.append({**s, 'tf': self.TF_LABEL['1h']})
-            confirmed_buy = any(s['type'] == 'buy' for s in h['signals'])
-            confirmed_sell = any(s['type'] == 'sell' for s in h['signals'])
-            h_buy, h_sell = h['score_buy'], h['score_sell']
+        horizons = {}
+        for tf, scan in tf_results.items():
+            h = self._horizon_result(secid, asset_type, tf, scan, access)
+            if h is not None:
+                horizons[tf] = h
+        if not horizons:
+            return None
 
-        # Проверка доступности актива к сделке: если шорт запрещён (санкции,
-        # новая эмиссия и т.п.) — сигнал на продажу не выдаём.
-        access = self.check_trade_access(secid, asset_type, df['date'].iloc[0])
-        sell_blocked = (not access['short_allowed']
-                        and score_sell > score_buy and score_sell >= self.SOLO_THRESHOLD)
-
-        # Вердикт: сильный сигнал (>= BUY_CONFIRM) требует подтверждения 1ч;
-        # без часовика или без подтверждения — максимум 'watch'.
-        verdict = 'watch' if all_signals else 'neutral'
-        tf_confirmed = False
-        if sell_blocked:
-            verdict = 'watch'
-        elif score_buy >= self.SOLO_THRESHOLD and score_buy > score_sell:
-            if score_buy >= self.BUY_CONFIRM and confirmed_buy:
-                verdict, tf_confirmed = 'buy', True
-            else:
-                verdict = 'watch'
-        elif score_sell >= self.SOLO_THRESHOLD and score_sell > score_buy:
-            if score_sell >= self.SELL_CONFIRM and confirmed_sell:
-                verdict, tf_confirmed = 'sell', True
-            else:
-                verdict = 'watch'
-
+        # Плоские поля для обратной совместимости (CLI-отчёт, /asset):
+        # основной горизонт — дневной; если его нет — часовой.
+        main = horizons.get('1d') or horizons.get('1h')
         result = {
             'secid': secid,
             'asset_type': asset_type,
-            'timeframes': sorted(tf_results.keys()),
-            'date': str(df['date'].iloc[-1].date()),
-            'price': round(price, 4),
-            'signals': all_signals,
-            'score_buy': score_buy,
-            'score_sell': score_sell,
-            'verdict': verdict,
-            'tf_confirmed': tf_confirmed,
+            'timeframes': sorted(horizons.keys()),
+            'horizons': horizons,          # аналитика по отдельным горизонтам
+            'date': main['date'],
+            'price': main['price'],
+            'signals': main['signals'],
+            'score_buy': main['score_buy'],
+            'score_sell': main['score_sell'],
+            'verdict': main['verdict'],
+            'strength': main['strength'],
             'trade_access': access,
-            # Итоговая сила сигнала: 1Д (вес 1.0) + 1Ч (вес 0.5) — используется
-            # в отчёте для ранжирования списков (не по алфавиту, а по очкам).
-            'strength': round(max(score_buy, score_sell) * self.WEIGHT_1D
-                              + max(h_buy, h_sell) * self.WEIGHT_1H, 1),
-            'score_buy_1h': h_buy,
-            'score_sell_1h': h_sell,
         }
-        if sell_blocked:
-            result['sell_blocked_reasons'] = access['reasons']
-        if verdict == 'sell':
+        if 'sell_blocked_reasons' in main:
+            result['sell_blocked_reasons'] = main['sell_blocked_reasons']
+        if main['verdict'] == 'sell':
             result['can_short'] = access['short_allowed']
-        if atr and verdict in ('buy', 'sell'):
-            result['sl_tp'] = {
-                'stop_loss': round(price - 2 * atr, 4) if result['verdict'] == 'buy' else round(price + 2 * atr, 4),
-                'take_profit': round(price + 3 * atr, 4) if result['verdict'] == 'buy' else round(price - 3 * atr, 4),
-            }
+        if main.get('sl_tp'):
+            result['sl_tp'] = main['sl_tp']
         return result
 
     def scan_all(self, config_assets: Dict[str, List[str]]) -> List[Dict]:
