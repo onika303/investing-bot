@@ -48,6 +48,23 @@ class InvestmentScanner:
     # Пороги вердикта — теперь ОТДЕЛЬНЫЕ НА ГОРИЗОНТ (без смешивания ТФ):
     SIGNAL_THRESHOLD = 30  # порог активного сигнала внутри одного горизонта
     SOLO_THRESHOLD = 30    # совместимость со старыми тестами/кодом
+
+    # --- Веса критериев (решение пользователя от 10.10.2026) ---
+    # Основные факторы: RSI-экстремумы, закрытие у границ BB, пересечения
+    # сигнальной линии MACD, дивергенции цены с гистограммой MACD и с RSI.
+    # Их веса ВЫШЕ весов пересечений EMA.
+    W_RSI_EXTREME = 35   # RSI > 80 -> sell; RSI < 20 -> buy
+    W_BB_EDGE = 30       # close в верхней границе BB -> sell; в нижней -> buy
+    W_MACD_CROSS = 30    # пересечение сигнальной линии MACD сверху вниз -> sell, снизу вверх -> buy
+    W_DIVERGENCE = 40    # дивергенции (цена vs гистограмма MACD / RSI)
+    W_EMA_FAST = 25      # EMA 13x21 кросс
+    W_EMA_TREND = 20     # EMA 21x50 кросс
+    W_EMA_LONG = 15      # EMA 50x100 кросс
+    W_EMA_CONFLUENCE = 10  # цена над/под всеми четырьмя EMA
+    W_RSI_ZONE = 15      # мягкие зоны RSI 30/70 (не основные, ниже экстремумов)
+    W_ADX_BOOST = 10
+    BB_TOUCH_PCT = 0.95  # close >= middle + 0.95*(upper-middle) ~= верхняя граница BB
+    LOOKBACK_PEAKS = 3   # максимум/минимум из последних N свечей (для BB-касаний)
     # Сила сигнала для ранжирования — считается ОТДЕЛЬНО на каждый горизонт
     # (см. _horizon_result); WEIGHT_* сохранены только для совместимости.
 
@@ -154,15 +171,74 @@ class InvestmentScanner:
         return df
 
     # ---------- правила поверх индикаторов ----------
-    @staticmethod
-    def _rule_signals(df: pd.DataFrame) -> List[Dict]:
+    def _rule_signals(self, df: pd.DataFrame) -> List[Dict]:
         sig: List[Dict] = []
         last = df.iloc[-1]
         prev = df.iloc[-2]
 
+        # ===== ОСНОВНЫЕ КРИТЕРИИ (веса выше EMA, по решению пользователя) =====
+
+        # 1) RSI-экстремумы: >80 — продажа, <20 — покупка
+        if 'rsi_14' in df.columns and pd.notna(last['rsi_14']):
+            if last['rsi_14'] > 80:
+                sig.append({'rule': f"RSI > 80 ({last['rsi_14']:.1f})",
+                            'type': 'sell', 'weight': self.W_RSI_EXTREME})
+            elif last['rsi_14'] < 20:
+                sig.append({'rule': f"RSI < 20 ({last['rsi_14']:.1f})",
+                            'type': 'buy', 'weight': self.W_RSI_EXTREME})
+
+        # 2) Закрытие у границ Bollinger Bands (σ=2.5):
+        #    close на верхней границе -> sell; close на нижней границе -> buy.
+        if {'bb_middle', 'bb_upper', 'bb_lower'} <= set(df.columns):
+            def _touch(i: int) -> str | None:
+                """'up'/'down' — закрытие свечи i у соответствующей границы BB."""
+                c, mid = df['close'].iloc[i], df['bb_middle'].iloc[i]
+                up, lo = df['bb_upper'].iloc[i], df['bb_lower'].iloc[i]
+                if not all(pd.notna(x) for x in (c, mid, up, lo)):
+                    return None
+                bu, bl = up - mid, mid - lo
+                if bu > 0 and c >= mid + self.BB_TOUCH_PCT * bu:
+                    return 'up'
+                if bl > 0 and c <= mid - self.BB_TOUCH_PCT * bl:
+                    return 'down'
+                return None
+
+            t_now = _touch(-1)
+            # «закрыто в границе» засчитывается и по последней НЕЗАКРЫТОЙ волне:
+            # если после последнего касания цены не обновляли экстремум в
+            # противоположную сторону (иначе импульс уже отыгран).
+            win = range(-self.LOOKBACK_PEAKS, 0)
+            touches = [(_touch(i), df['close'].iloc[i]) for i in win]
+            new_lo_since = last['close'] <= min(c for _, c in touches)
+            new_hi_since = last['close'] >= max(c for _, c in touches)
+            hit_up = any(t == 'up' for t, _ in touches)
+            hit_dn = any(t == 'down' for t, _ in touches)
+            if t_now == 'up' or (hit_up and not new_lo_since):
+                sig.append({'rule': 'Close at upper BB (2.5σ)',
+                            'type': 'sell', 'weight': self.W_BB_EDGE})
+            elif t_now == 'down' or (hit_dn and not new_hi_since):
+                sig.append({'rule': 'Close at lower BB (2.5σ)',
+                            'type': 'buy', 'weight': self.W_BB_EDGE})
+
+        # 3) Пересечение сигнальной линии MACD:
+        #    macd_line пересекает signal сверху вниз -> sell; снизу вверх -> buy
+        if {'macd_line', 'macd_signal'} <= set(df.columns):
+            m0, s0 = last['macd_line'], last['macd_signal']
+            m1, s1 = prev['macd_line'], prev['macd_signal']
+            if all(pd.notna(x) for x in (m0, s0, m1, s1)):
+                if m1 >= s1 and m0 < s0:
+                    sig.append({'rule': 'MACD cross signal ↓',
+                                'type': 'sell', 'weight': self.W_MACD_CROSS})
+                elif m1 <= s1 and m0 > s0:
+                    sig.append({'rule': 'MACD cross signal ↑',
+                                'type': 'buy', 'weight': self.W_MACD_CROSS})
+
+        # --- Вспомогательные EMA-правила (веса НИЖЕ основных критериев) ---
         # Пересечения EMA по набору 13/21/50/100:
-        #   13x21 — быстрый кросс (вход), 21x50 и 50x100 — трендовые (медленнее, весомее)
-        for fast, slow, w in ((13, 21, 25), (21, 50, 20), (50, 100, 15)):
+        #   13x21 — быстрый кросс (вход), 21x50 и 50x100 — трендовые (медленнее)
+        for fast, slow, w in ((13, 21, self.W_EMA_FAST),
+                              (21, 50, self.W_EMA_TREND),
+                              (50, 100, self.W_EMA_LONG)):
             fc, sc = f'ema_{fast}', f'ema_{slow}'
             if {fc, sc} <= set(df.columns):
                 if prev[fc] <= prev[sc] and last[fc] > last[sc]:
@@ -177,29 +253,24 @@ class InvestmentScanner:
         if len(ema_cols) == 4:
             if all(last['close'] > last[c] for c in ema_cols):
                 sig.append({'rule': 'Close above EMA 13/21/50/100',
-                            'type': 'buy', 'weight': 15})
+                            'type': 'buy', 'weight': self.W_EMA_CONFLUENCE})
             elif all(last['close'] < last[c] for c in ema_cols):
                 sig.append({'rule': 'Close below EMA 13/21/50/100',
-                            'type': 'sell', 'weight': 15})
+                            'type': 'sell', 'weight': self.W_EMA_CONFLUENCE})
 
-        # RSI-зоны
-        rsi_col = 'rsi_14' if 'rsi_14' in df.columns else None
-        if rsi_col:
-            if last[rsi_col] < 30:
-                sig.append({'rule': f"RSI oversold ({last[rsi_col]:.1f})", 'type': 'buy', 'weight': 15})
-            elif last[rsi_col] > 70:
-                sig.append({'rule': f"RSI overbought ({last[rsi_col]:.1f})", 'type': 'sell', 'weight': 15})
-
-        # Bollinger breakout
-        if {'bb_lower', 'bb_upper'} <= set(df.columns):
-            if last['close'] < last['bb_lower']:
-                sig.append({'rule': 'Close below lower BB', 'type': 'buy', 'weight': 10})
-            elif last['close'] > last['bb_upper']:
-                sig.append({'rule': 'Close above upper BB', 'type': 'sell', 'weight': 10})
+        # Мягкие RSI-зоны 30/70 (не основные экстремумы 20/80)
+        if 'rsi_14' in df.columns and pd.notna(last['rsi_14']):
+            if 20 <= last['rsi_14'] < 30:
+                sig.append({'rule': f"RSI oversold zone ({last['rsi_14']:.1f})",
+                            'type': 'buy', 'weight': self.W_RSI_ZONE})
+            elif 70 < last['rsi_14'] <= 80:
+                sig.append({'rule': f"RSI overbought zone ({last['rsi_14']:.1f})",
+                            'type': 'sell', 'weight': self.W_RSI_ZONE})
 
         # ADX — сила тренда (не направление, усиливает существующий сигнал)
-        if 'adx_14' in df.columns and last['adx_14'] > 25:
-            sig.append({'rule': f"Strong trend ADX={last['adx_14']:.0f}", 'type': 'boost', 'weight': 10})
+        if 'adx_14' in df.columns and pd.notna(last['adx_14']) and last['adx_14'] > 25:
+            sig.append({'rule': f"Strong trend ADX={last['adx_14']:.0f}",
+                        'type': 'boost', 'weight': self.W_ADX_BOOST})
 
         return sig
 
@@ -208,16 +279,30 @@ class InvestmentScanner:
         """Индикаторы + дивергенции + правила для одного набора свечей."""
         df = IndicatorCalculator(df).compute_all()
         detector = DivergenceDetector(df)
-        divergences = detector.scan_all_indicators(lookback=50)
 
         signals = self._rule_signals(df)
-        for ind_name, divs in divergences.items():
-            for d in divs:
-                signals.append({
-                    'rule': f"{ind_name.upper()} {d.get('kind', 'divergence')}",
-                    'type': d.get('type', 'watch'),
-                    'weight': 30,
-                })
+
+        # --- Дивергенции из утверждённого списка критериев (вес W_DIVERGENCE):
+        # 1) гистограмма MACD: новый max цены + снижающийся max гистограммы -> sell;
+        #    новый min цены + повышающийся min гистограммы -> buy
+        for d in detector.detect_histogram_divergences(lookback=50):
+            signals.append({
+                'rule': ('MACD histogram bearish divergence' if d['type'] == 'bearish'
+                         else 'MACD histogram bullish divergence'),
+                'type': 'sell' if d['type'] == 'bearish' else 'buy',
+                'weight': self.W_DIVERGENCE,
+            })
+        # 2) RSI: новый max цены + снижающийся max RSI -> sell;
+        #    новый min цены + повышающийся min RSI -> buy
+        for d in detector.detect_classic_divergences(price_col='close',
+                                                    indicator_col='rsi_14',
+                                                    lookback=50):
+            signals.append({
+                'rule': ('RSI bearish divergence' if d['type'] == 'bearish'
+                         else 'RSI bullish divergence'),
+                'type': 'sell' if d['type'] == 'bearish' else 'buy',
+                'weight': self.W_DIVERGENCE,
+            })
 
         score_buy = sum(s['weight'] for s in signals if s['type'] == 'buy')
         score_sell = sum(s['weight'] for s in signals if s['type'] == 'sell')

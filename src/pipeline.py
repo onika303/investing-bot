@@ -189,10 +189,14 @@ def _horizons_of(r: dict) -> dict:
 
 
 def format_report_text(report: dict, top: int = 25) -> list[str]:
-    """Отчёт сканера для Telegram. Аналитика в разрезе ГОРИЗОНТОВ ПЛАНИРОВАНИЯ:
-    1Ч = сделки на 1-2 дня, 1Д = сделка внутри недели; сигналы горизонтов НЕ
-    смешиваются. Внутри каждого горизонта: сверху важные сигналы (buy/sell),
-    ниже — наблюдение; оба списка отсортированы по очкам (не по алфавиту)."""
+    """Отчёт сканера для Telegram. РАЗДЕЛЕНИЕ ПО СМЫСЛУ, а не по длине:
+    каждое ГОРИЗОНТ-сообщение — самостоятельный цельный блок (не режется
+    посередине): сначала важные сигналы (buy/sell), ниже — наблюдение,
+    оба списка отсортированы по очкам (не по алфавиту).
+
+    Возвращает список сообщений: [1Д ...], затем [1Ч ...]; если внутри
+    горизонта блок не влезает в лимит 4096 — он дополнительно дробится по
+      «важные» / «наблюдение», т.е. разрез идёт только по смысловым границам."""
     results = report["results"]
 
     # раскладываем активы по горизонтам
@@ -201,11 +205,6 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         for tf, h in _horizons_of(r).items():
             per_tf.setdefault(tf, []).append((r, h))
 
-    header = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
-              f"<code>{'─' * 38}</code>\n"
-              f"Индикаторы: EMA 13/21/50/100 | BB σ=2.5\n"
-              f"Просканировано активов: {len(results)}\n")
-
     def active_count(items) -> tuple[int, int, int]:
         nb = sum(1 for _, h in items if h["verdict"] == "buy")
         ns = sum(1 for _, h in items if h["verdict"] == "sell")
@@ -213,70 +212,104 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         return nb, ns, nw
 
     tf_meta = {"1h": ("⚡", "1–2 дня"), "1d": ("📅", "внутри недели")}
-    lines: list[str] = [header]
-    for tf in ("1d", "1h"):  # дневной — основной, показываем первым
-        items = per_tf.get(tf)
-        if not items:
-            continue
+
+    def signal_line(r: dict, h: dict, rank: int) -> str:
+        v = h["verdict"]
+        sym = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
+               "watch": "👁 наблюдение"}.get(v, v)
+        line = (f"{rank:>2}. <b>{r['secid']}</b>  {sym}  💪 {h['strength']:g}\n"
+                f"     📊 B{h['score_buy']}/S{h['score_sell']}"
+                f"  ·  💵 {fmt_price(h.get('price') or r['price'])}")
+        if v in ("buy", "sell") and h.get("sl_tp"):
+            line += (f"\n     🛑 SL {fmt_price(h['sl_tp']['stop_loss'])}"
+                     f"  →  🎯 TP {fmt_price(h['sl_tp']['take_profit'])}")
+        rules = "; ".join(s["rule"] for s in h.get("signals", [])[:4]) or "-"
+        line += f"\n     💡 {rules}"
+        if h.get("sell_blocked_reasons"):
+            line += f"\n     ⛔ шорт запрещён: {h['sell_blocked_reasons'][0]}"
+        return line
+
+    limit = TG_MESSAGE_LIMIT - 200  # запас на нумерацию частей
+
+    def build_horizon_messages(tf: str, items) -> list[str]:
         icon, horizon = tf_meta.get(tf, ("•", tf))
         label = {"1d": "1Д", "1h": "1Ч"}.get(tf, tf)
         nb, ns, nw = active_count(items)
-        lines.append(f"\n{icon} <b>ГОРИЗОНТ {label} — {horizon}</b>")
-        lines.append(f"🟢 покупка: <b>{nb}</b>   🔴 продажа: <b>{ns}</b>   👁 наблюдение: <b>{nw}</b>")
-        lines.append("<code>" + "═" * 38 + "</code>")
+        head = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
+                f"{icon} <b>ГОРИЗОНТ {label} — сделки на {horizon}</b>\n"
+                f"<code>{'─' * 38}</code>\n"
+                f"Индикаторы: EMA 13/21/50/100 | BB σ=2.5\n"
+                f"Активов просканировано: {len(results)}\n"
+                f"🟢 покупка: <b>{nb}</b>   🔴 продажа: <b>{ns}</b>   👁 наблюдение: <b>{nw}</b>\n")
 
         active = sorted([p for p in items if p[1]["verdict"] in ("buy", "sell")],
                         key=lambda p: p[1]["strength"], reverse=True)
         watch = sorted([p for p in items if p[1]["verdict"] == "watch"],
-                       key=lambda p: p[1]["strength"], reverse=True)
+                       key=lambda p: p[1]["strength"], reverse=True)[:max(0, top - len(active))]
 
-        def signal_line(r: dict, h: dict, rank: int) -> str:
-            v = h["verdict"]
-            sym = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
-                   "watch": "👁 наблюдение"}.get(v, v)
-            line = (f"{rank:>2}. <b>{r['secid']}</b>  {sym}  💪 {h['strength']:g}\n"
-                    f"     📊 B{h['score_buy']}/S{h['score_sell']}"
-                    f"  ·  💵 {fmt_price(h.get('price') or r['price'])}")
-            if v in ("buy", "sell") and h.get("sl_tp"):
-                line += (f"\n     🛑 SL {fmt_price(h['sl_tp']['stop_loss'])}"
-                         f"  →  🎯 TP {fmt_price(h['sl_tp']['take_profit'])}")
-            rules = "; ".join(s["rule"] for s in h.get("signals", [])[:4]) or "-"
-            line += f"\n     💡 {rules}"
-            if h.get("sell_blocked_reasons"):
-                line += f"\n     ⛔ шорт запрещён: {h['sell_blocked_reasons'][0]}"
-            return line
-
+        # блок «важные сигналы»
+        imp_lines = []
         if active:
-            lines.append("\n🚨 <b>ВАЖНЫЕ СИГНАЛЫ</b>")
+            imp_lines.append("\n🚨 <b>ВАЖНЫЕ СИГНАЛЫ</b>")
             for i, (r, h) in enumerate(active, 1):
-                lines.append(signal_line(r, h, i))
+                imp_lines.append(signal_line(r, h, i))
         else:
-            lines.append("\n🚨 Активных сигналов нет.")
+            imp_lines.append("\n🚨 Активных сигналов нет.")
+        imp_block = "\n".join(imp_lines) + "\n"
 
-        show_watch = watch[:max(0, top - len(active))]
-        if show_watch:
-            lines.append("\n👁 <b>НАБЛЮДЕНИЕ</b> (по очкам)")
-            for i, (r, h) in enumerate(show_watch, 1):
-                lines.append(signal_line(r, h, i))
-        lines.append("")
+        # блок «наблюдение»
+        obs_lines = []
+        if watch:
+            obs_lines.append("\n👁 <b>НАБЛЮДЕНИЕ</b> (по очкам)")
+            for i, (r, h) in enumerate(watch, 1):
+                obs_lines.append(signal_line(r, h, i))
+        obs_block = ("\n".join(obs_lines) + "\n") if obs_lines else ""
 
-    body_lines = lines
+        whole = head + imp_block + obs_block
+        if len(whole) <= limit:
+            return [whole]
 
-    # разбивка на сообщения ≤ 4096 по границам блоков
-    chunks: list[str] = []
-    cur = ""
-    for block in body_lines:
-        piece = block if block.endswith("\n") else block + "\n"
-        if len(cur) + len(piece) > TG_MESSAGE_LIMIT - 100 and cur.strip():
-            chunks.append(cur)
-            cur = ""
-        cur += piece
-    if cur.strip():
-        chunks.append(cur)
-    # нумерация частей, если их несколько
-    if len(chunks) > 1:
-        chunks = [f"{c}\n<i>({i}/{len(chunks)})</i>" for i, c in enumerate(chunks, 1)]
-    return chunks
+        # не влезает целиком -> режем ТОЛЬКО по смыслу: важные и наблюдение
+        msgs: list[str] = []
+        part_imp = head + imp_block
+        if len(part_imp) <= limit:
+            msgs.append(part_imp)
+        else:
+            # важные сигналы по одному активу (строки целые)
+            cur = head
+            for ln in imp_lines:
+                piece = ln + "\n"
+                if len(cur) + len(piece) > limit and cur.strip():
+                    msgs.append(cur)
+                    cur = ""
+                cur += piece
+            if cur.strip():
+                msgs.append(cur)
+        if obs_block:
+            cur = (f"📡 <b>Сканер MOEX · горизонт {label}</b>\n" + obs_block)
+            rest = []
+            for ln in obs_lines:
+                piece = ln + "\n"
+                if len(cur) + len(piece) > limit and cur.strip():
+                    rest.append(cur)
+                    cur = f"📡 <b>Сканер MOEX · горизонт {label} (продолжение)</b>\n"
+                cur += piece
+            if cur.strip():
+                rest.append(cur)
+            msgs.extend(rest)
+        return msgs
+
+    messages: list[str] = []
+    for tf in ("1d", "1h"):  # дневной (внутренедельный) — основной, показываем первым
+        items = per_tf.get(tf)
+        if not items:
+            continue
+        messages.extend(build_horizon_messages(tf, items))
+
+    if len(messages) > 1:
+        messages = [f"{m}\n<i>(часть {i}/{len(messages)})</i>"
+                    for i, m in enumerate(messages, 1)]
+    return messages
 
 
 def futures_exp_date(secid: str, now: datetime | None = None) -> datetime | None:
