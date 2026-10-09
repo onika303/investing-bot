@@ -1,13 +1,2 @@
-# Python cache
-__pycache__/
-*.pyc
-
-# Logs and temporary files
+# Logs
 *.log
-bot_live.log
-
-# Database files
-finance.db
-
-# Cache directories
-.cache/
