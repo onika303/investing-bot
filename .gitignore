@@ -1,11 +1,13 @@
-# Compiled and build artifacts
+# Python cache
 __pycache__/
 *.pyc
 
-# Logs and temp files
+# Logs and temporary files
 *.log
+bot_live.log
 
-# Environment and data files
-.env
-.env.local
-*.db
+# Database files
+finance.db
+
+# Cache directories
+.cache/

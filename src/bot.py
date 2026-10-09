@@ -63,6 +63,10 @@ class AppState:
         self.cfg = cfg
         self.report: dict | None = load_cached_report()
         self.assets = load_assets(CONFIG_PATH)
+        # если config.yaml новее кэша — не отдаём устаревший отчёт из памяти
+        if self.report and not report_matches_config(
+                self.report, self.assets, CONFIG_PATH):
+            self.report = None
         self.scan_lock = asyncio.Lock()
         self.update_lock = asyncio.Lock()
         self.last_update_stats: dict | None = None
@@ -189,14 +193,22 @@ async def cmd_status(message: Message, app: AppState):
 
 async def do_full_scan(app: AppState, bot: Bot | None, chat_id: int | None,
                        do_update: bool) -> dict:
-    """Единая точка запуска скана с guard-локом. Возвращает report."""
+    """Единая точка запуска скана с guard-локом. Возвращает report.
+
+    Лок снимается СРАЗУ после получения результатов из потока — отправка
+    сообщений в Telegram больше не удерживает «занятый» скан (раньше при
+    зависшей сетевой отправке /scan force блокировался навсегда)."""
     if app.scan_lock.locked():
         raise RuntimeError("Скан уже выполняется, подождите завершения.")
-    async with app.scan_lock:
-        report, stats = await asyncio.to_thread(
-            scan_and_report, DB_PATH, CONFIG_PATH, do_update)
-        app.report = report
-        app.last_update_stats = stats
+    try:
+        async with app.scan_lock:
+            report, stats = await asyncio.to_thread(
+                scan_and_report, DB_PATH, CONFIG_PATH, do_update)
+            app.report = report
+            app.last_update_stats = stats
+    except RuntimeError as e:
+        # гонка между проверкой locked() и захватом — отвечаем по-человечески
+        raise RuntimeError(str(e)) from None
     if bot and chat_id:
         await send_chunks(bot, chat_id, format_report_text(report))
     return report
@@ -204,10 +216,6 @@ async def do_full_scan(app: AppState, bot: Bot | None, chat_id: int | None,
 
 @router.message(Command("scan"), IsAuthorized())
 async def cmd_scan(message: Message, app: AppState):
-    if app.scan_lock.locked():
-        await message.answer("⏳ Сканирование уже выполняется (обычно 2–4 минуты). "
-                             "Дождитесь отчёта и повторите команду.")
-        return
     force = bool(message.text and "force" in message.text.lower())
 
     if not force and app.report:

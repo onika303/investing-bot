@@ -287,6 +287,17 @@ def make_state(cfg=None):
     return st
 
 
+def patch_real_fs(monkeypatch):
+    """Изоляция AppState/cmd_scan от реального config.yaml и last_report.json."""
+    import src.bot as botmod
+    monkeypatch.setattr(botmod, "load_cached_report", lambda *a, **k: None)
+    monkeypatch.setattr(botmod, "load_assets",
+                        lambda *a, **k: {"stocks": [], "futures": []})
+    monkeypatch.setattr(botmod, "report_matches_config",
+                        lambda *a, **k: True)
+    return botmod
+
+
 def run(coro):
     return asyncio.run(coro)
 
@@ -317,14 +328,48 @@ def test_status_unauthorized(fake_message):
     assert "chat_id" in denied.answers[0] and "777" in denied.answers[0]
 
 
-def test_scan_returns_cached_report(fake_message):
-    from src.bot import cmd_scan
+def test_scan_returns_cached_report(fake_message, monkeypatch):
+    botmod = patch_real_fs(monkeypatch)
     msg = fake_message("/scan")
     state = make_state(BotConfig(bot_token="1:a", admin_chat_id=100,
                                  report_cache_hours=1000))
-    run(cmd_scan(msg, state))
+    run(botmod.cmd_scan(msg, state))
     sent = "".join(t for _, t in msg.bot.send_message.sent)
     assert "Сканер MOEX" in sent and "FLOT" in sent
+
+
+def test_scan_force_ignores_cache_and_runs_full_scan(fake_message, monkeypatch):
+    """Регресс: /scan force обязан перезапускать скан, а не отдавать кэш."""
+    botmod = patch_real_fs(monkeypatch)
+    calls = []
+
+    def fake_scan(*a, **k):  # синхронно: вызывается через asyncio.to_thread
+        calls.append(1)
+        return {"results": [], "generated_at": "2026-10-09T12:00:00"}, {}
+    monkeypatch.setattr(botmod, "scan_and_report", fake_scan)
+    monkeypatch.setattr(botmod, "send_chunks",
+                        lambda *a, **k: asyncio.sleep(0))
+
+    msg = fake_message("/scan force")
+    state = make_state(BotConfig(bot_token="1:a", admin_chat_id=100,
+                                 report_cache_hours=1000))
+    run(botmod.cmd_scan(msg, state))
+    assert calls == [1], "force должен запускать полный скан"
+    # лок освобождён сразу после скана — параллельный вызов не блокируется
+    assert not state.scan_lock.locked()
+
+
+def test_app_state_drops_stale_cache_on_start(monkeypatch, tmp_path):
+    """Регресс: если config.yaml новее кэша отчёта, AppState стартует без кэша."""
+    import src.bot as botmod
+    stale = mk_report([mk_result("OLD1")])
+    monkeypatch.setattr(botmod, "load_cached_report", lambda *a, **k: stale)
+    monkeypatch.setattr(botmod, "load_assets",
+                        lambda *a, **k: {"stocks": ["NEW1"], "futures": []})
+    monkeypatch.setattr(botmod, "report_matches_config",
+                        lambda *a, **k: False)
+    st = botmod.AppState(BotConfig(bot_token="1:a", admin_chat_id=100))
+    assert st.report is None
 
 
 def test_signals_filter(fake_message):
