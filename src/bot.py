@@ -186,6 +186,10 @@ async def do_full_scan(app: AppState, bot: Bot | None, chat_id: int | None,
 
 @router.message(Command("scan"), IsAuthorized())
 async def cmd_scan(message: Message, app: AppState):
+    if app.scan_lock.locked():
+        await message.answer("⏳ Сканирование уже выполняется (обычно 2–4 минуты). "
+                             "Дождитесь отчёта и повторите команду.")
+        return
     force = bool(message.text and "force" in message.text.lower())
 
     if not force and app.report:
