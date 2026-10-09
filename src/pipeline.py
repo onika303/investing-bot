@@ -199,6 +199,12 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
       «важные» / «наблюдение», т.е. разрез идёт только по смысловым границам."""
     results = report["results"]
 
+    if not results:
+        return [f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
+                f"<code>{'─' * 38}</code>\n"
+                f"Просканировано активов: 0\n"
+                f"🚨 Активных сигналов нет."]
+
     # раскладываем активы по горизонтам
     per_tf: dict[str, list[tuple[dict, dict]]] = {}
     for r in results:
@@ -223,8 +229,13 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         if v in ("buy", "sell") and h.get("sl_tp"):
             line += (f"\n     🛑 SL {fmt_price(h['sl_tp']['stop_loss'])}"
                      f"  →  🎯 TP {fmt_price(h['sl_tp']['take_profit'])}")
-        rules = "; ".join(s["rule"] for s in h.get("signals", [])[:4]) or "-"
+        rules = "; ".join(("⚔️ " if s.get("conflict") else "") + s["rule"]
+                          for s in h.get("signals", [])[:4]) or "-"
+        if len(rules) > 120:  # защита от гигантских строк (сигналы не обрезаются молча)
+            rules = rules[:117] + "…"
         line += f"\n     💡 {rules}"
+        if any(s.get("conflict") for s in h.get("signals", [])):
+            line += "\n     ⚠️ приоритет у первого сигнала, контра-сигнал показан ⚔️"
         if h.get("sell_blocked_reasons"):
             line += f"\n     ⛔ шорт запрещён: {h['sell_blocked_reasons'][0]}"
         return line
@@ -236,7 +247,7 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         label = {"1d": "1Д", "1h": "1Ч"}.get(tf, tf)
         nb, ns, nw = active_count(items)
         head = (f"📡 <b>Сканер MOEX · {report['generated_at'][:16].replace('T', ' ')} МСК</b>\n"
-                f"{icon} <b>ГОРИЗОНТ {label} — сделки на {horizon}</b>\n"
+                f"{icon} <b>ГОРИЗОНТ {label} — {horizon}</b>\n"
                 f"<code>{'─' * 38}</code>\n"
                 f"Индикаторы: EMA 13/21/50/100 | BB σ=2.5\n"
                 f"Активов просканировано: {len(results)}\n"

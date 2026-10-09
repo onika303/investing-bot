@@ -171,14 +171,49 @@ class InvestmentScanner:
         return df
 
     # ---------- правила поверх индикаторов ----------
+    # Приоритет критериев (решение пользователя от 10.10.2026):
+    #   Шаг 1: дивергенции MACD-гистограмма + RSI   (вес W_DIVERGENCE)
+    #   Шаг 2: направленность EMA (кроссы + конфлюэнция)
+    #   Шаг 3: Bollinger Bands (закрытие у границ)
+    #   Шаг 4: пересечения EMA (быстрый/трендовые)
+    # Активы проверяются ПОСЛЕДОВАТЕЛЬНО по шагам: если актив дал сигнал на
+    # шаге N, а на шаге M>N появляется ПРОТИВОПОЛОЖНЫЙ сигнал — приоритет
+    # остаётся у первого сигнала (вердикт по нему), но в отчёт попадают ОБА
+    # сигнала (см. _prioritized / _horizon_result).
+    PRIORITY_STEPS = ('divergence', 'ema_trend', 'bb', 'ema_cross')
+
+    @staticmethod
+    def _group_signals(signals: List[Dict]) -> Dict[str, List[Dict]]:
+        """Раскладывает сигналы по шагам приоритета."""
+        groups: Dict[str, List[Dict]] = {k: [] for k in InvestmentScanner.PRIORITY_STEPS}
+        for s in signals:
+            rule = s.get('rule', '')
+            if 'divergence' in rule.lower():
+                groups['divergence'].append(s)
+            elif rule.startswith('Close above EMA') or rule.startswith('Close below EMA'):
+                groups['ema_trend'].append(s)          # шаг 2: направленность EMA
+            elif rule.startswith('Close at upper BB') or rule.startswith('Close at lower BB'):
+                groups['bb'].append(s)                 # шаг 3: Bollinger Bands
+            elif rule.startswith('EMA ') and 'cross' in rule:
+                groups['ema_cross'].append(s)          # шаг 4: пересечения EMA
+            else:
+                s.setdefault('aux', True)              # RSI-зоны/экстремумы/MACD-кросс/ADX — вне приоритетной цепочки
+        return groups
+
     def _rule_signals(self, df: pd.DataFrame) -> List[Dict]:
+        """Детекторы правил поверх индикаторов (без учёта приоритета).
+
+        Каждый детектор соответствует утверждённому критерию:
+          RSI-экстремумы (>80 sell / <20 buy), закрытие у границ BB 2.5σ,
+          пересечение сигнальной линии MACD, кроссы EMA 13/21/50/100,
+          направленность EMA (цена над/под всеми), мягкие RSI-зоны, ADX-boost.
+        Дивергенции добавляются отдельно в _scan_timeframe (шаг 1 приоритета).
+        """
         sig: List[Dict] = []
         last = df.iloc[-1]
         prev = df.iloc[-2]
 
-        # ===== ОСНОВНЫЕ КРИТЕРИИ (веса выше EMA, по решению пользователя) =====
-
-        # 1) RSI-экстремумы: >80 — продажа, <20 — покупка
+        # RSI-экстремумы: >80 — продажа, <20 — покупка
         if 'rsi_14' in df.columns and pd.notna(last['rsi_14']):
             if last['rsi_14'] > 80:
                 sig.append({'rule': f"RSI > 80 ({last['rsi_14']:.1f})",
@@ -187,11 +222,9 @@ class InvestmentScanner:
                 sig.append({'rule': f"RSI < 20 ({last['rsi_14']:.1f})",
                             'type': 'buy', 'weight': self.W_RSI_EXTREME})
 
-        # 2) Закрытие у границ Bollinger Bands (σ=2.5):
-        #    close на верхней границе -> sell; close на нижней границе -> buy.
+        # Закрытие у границ Bollinger Bands (σ=2.5): верхняя -> sell, нижняя -> buy
         if {'bb_middle', 'bb_upper', 'bb_lower'} <= set(df.columns):
-            def _touch(i: int) -> str | None:
-                """'up'/'down' — закрытие свечи i у соответствующей границы BB."""
+            def _touch(i: int):
                 c, mid = df['close'].iloc[i], df['bb_middle'].iloc[i]
                 up, lo = df['bb_upper'].iloc[i], df['bb_lower'].iloc[i]
                 if not all(pd.notna(x) for x in (c, mid, up, lo)):
@@ -204,10 +237,7 @@ class InvestmentScanner:
                 return None
 
             t_now = _touch(-1)
-            # «закрыто в границе» засчитывается и по последней НЕЗАКРЫТОЙ волне:
-            # если после последнего касания цены не обновляли экстремум в
-            # противоположную сторону (иначе импульс уже отыгран).
-            win = range(-self.LOOKBACK_PEAKS, 0)
+            win = range(max(-len(df), -self.LOOKBACK_PEAKS), 0)
             touches = [(_touch(i), df['close'].iloc[i]) for i in win]
             new_lo_since = last['close'] <= min(c for _, c in touches)
             new_hi_since = last['close'] >= max(c for _, c in touches)
@@ -220,8 +250,7 @@ class InvestmentScanner:
                 sig.append({'rule': 'Close at lower BB (2.5σ)',
                             'type': 'buy', 'weight': self.W_BB_EDGE})
 
-        # 3) Пересечение сигнальной линии MACD:
-        #    macd_line пересекает signal сверху вниз -> sell; снизу вверх -> buy
+        # Пересечение сигнальной линии MACD: сверху вниз -> sell, снизу вверх -> buy
         if {'macd_line', 'macd_signal'} <= set(df.columns):
             m0, s0 = last['macd_line'], last['macd_signal']
             m1, s1 = prev['macd_line'], prev['macd_signal']
@@ -233,9 +262,7 @@ class InvestmentScanner:
                     sig.append({'rule': 'MACD cross signal ↑',
                                 'type': 'buy', 'weight': self.W_MACD_CROSS})
 
-        # --- Вспомогательные EMA-правила (веса НИЖЕ основных критериев) ---
-        # Пересечения EMA по набору 13/21/50/100:
-        #   13x21 — быстрый кросс (вход), 21x50 и 50x100 — трендовые (медленнее)
+        # Пересечения EMA 13/21/50/100 (шаг 4 приоритета)
         for fast, slow, w in ((13, 21, self.W_EMA_FAST),
                               (21, 50, self.W_EMA_TREND),
                               (50, 100, self.W_EMA_LONG)):
@@ -248,7 +275,7 @@ class InvestmentScanner:
                     sig.append({'rule': f'EMA {fast}x{slow} death cross',
                                 'type': 'sell', 'weight': w})
 
-        # Конфлюэнция тренда: цена над/под всеми EMA 13/21/50/100
+        # Направленность EMA: цена над/под всеми EMA 13/21/50/100 (шаг 2 приоритета)
         ema_cols = [f'ema_{p}' for p in (13, 21, 50, 100) if f'ema_{p}' in df.columns]
         if len(ema_cols) == 4:
             if all(last['close'] > last[c] for c in ema_cols):
@@ -258,7 +285,7 @@ class InvestmentScanner:
                 sig.append({'rule': 'Close below EMA 13/21/50/100',
                             'type': 'sell', 'weight': self.W_EMA_CONFLUENCE})
 
-        # Мягкие RSI-зоны 30/70 (не основные экстремумы 20/80)
+        # Мягкие RSI-зоны 30/70
         if 'rsi_14' in df.columns and pd.notna(last['rsi_14']):
             if 20 <= last['rsi_14'] < 30:
                 sig.append({'rule': f"RSI oversold zone ({last['rsi_14']:.1f})",
@@ -267,25 +294,93 @@ class InvestmentScanner:
                 sig.append({'rule': f"RSI overbought zone ({last['rsi_14']:.1f})",
                             'type': 'sell', 'weight': self.W_RSI_ZONE})
 
-        # ADX — сила тренда (не направление, усиливает существующий сигнал)
+        # ADX — сила тренда (усиливает существующий сигнал)
         if 'adx_14' in df.columns and pd.notna(last['adx_14']) and last['adx_14'] > 25:
             sig.append({'rule': f"Strong trend ADX={last['adx_14']:.0f}",
                         'type': 'boost', 'weight': self.W_ADX_BOOST})
 
         return sig
 
+    def _prioritized(self, groups: Dict[str, List[Dict]],
+                     aux: List[Dict]) -> Dict:
+        """Последовательная проверка сигналов по номерам шагов приоритета.
+
+        Шаг 1: дивергенции MACD-гистограммы и RSI; шаг 2: направленность EMA;
+        шаг 3: BB; шаг 4: пересечения EMA. Вспомогательные сигналы (aux:
+        RSI-экстремумы/зоны, MACD-кросс, ADX) учитываются как усиление после
+        цепочки приоритетов.
+
+        Вернувшийся 'dir' — направление ПЕРВОГО сработавшего шага; если на
+        следующем шаге появляется противоположный сигнал, он НЕ меняет
+        вердикт, а попадает в 'conflicting' (оба сигнала показываются в отчёте).
+        score_buy/score_sell — суммы весов по направлению первого сигнала и
+        противоположному (для ранжирования и порога).
+        """
+        steps_seq: List[Dict] = []
+        for step in self.PRIORITY_STEPS:
+            if groups[step]:
+                steps_seq.append({'step': step, 'signals': list(groups[step])})
+        if aux:
+            steps_seq.append({'step': 'aux', 'signals': list(aux)})
+
+        primary_dir = None
+        primary_step = None
+        conflicting: List[Dict] = []
+        aligned: List[Dict] = []
+        for entry in steps_seq:
+            slist = entry['signals']
+            dirs = {s['type'] for s in slist if s['type'] in ('buy', 'sell')}
+            if not dirs:
+                continue
+            if primary_dir is None:
+                if {'buy', 'sell'} <= dirs:
+                    b = sum(s['weight'] for s in slist if s['type'] == 'buy')
+                    sl = sum(s['weight'] for s in slist if s['type'] == 'sell')
+                    primary_dir = 'buy' if b >= sl else 'sell'
+                else:
+                    primary_dir = dirs.copy().pop()
+                primary_step = entry['step']
+            if primary_dir in dirs:
+                aligned.extend([s for s in slist if s['type'] == primary_dir])
+            opposite = 'sell' if primary_dir == 'buy' else 'buy'
+            if entry['step'] != primary_step:
+                conflicting.extend([s for s in slist if s['type'] == opposite])
+
+        score_dir = sum(s['weight'] for s in aligned)
+        score_opp = sum(s['weight'] for s in conflicting)
+        return {'dir': primary_dir, 'step': primary_step,
+                'aligned': aligned, 'conflicting': conflicting,
+                'score_dir': score_dir, 'score_opp': score_opp}
+
     # ---------- основной метод: скан по двум ТФ (1д + 1ч) ----------
+    # Флаги дивергенций (для unit-тестов можно отключать по одной группе)
+    USE_MACD_HIST_DIVERGENCE = True
+    USE_RSI_DIVERGENCE = True
+
+    def compute_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Расчёт индикаторов. Вынесено в метод — тесты могут подменить
+        детерминированными данными без пересчёта."""
+        return IndicatorCalculator(df).compute_all()
+
     def _scan_timeframe(self, df: pd.DataFrame) -> Dict:
-        """Индикаторы + дивергенции + правила для одного набора свечей."""
-        df = IndicatorCalculator(df).compute_all()
+        """Индикаторы + дивергенции + правила для одного набора свечей.
+
+        Сигналы раскладываются по шагам приоритета и проверяются
+        последовательно (шаг 1 -> 4). Вердикт определяется ПЕРВЫМ сработавшим
+        шагом; противоположный сигнал более позднего шага не отменяет его, но
+        включается в список сигналов ('conflict') — в отчёте видны оба.
+        """
+        df = self.compute_indicators(df)
         detector = DivergenceDetector(df)
 
         signals = self._rule_signals(df)
 
-        # --- Дивергенции из утверждённого списка критериев (вес W_DIVERGENCE):
+        # --- Шаг 1 приоритета: дивергенции MACD-гистограммы и RSI (вес W_DIVERGENCE):
         # 1) гистограмма MACD: новый max цены + снижающийся max гистограммы -> sell;
         #    новый min цены + повышающийся min гистограммы -> buy
-        for d in detector.detect_histogram_divergences(lookback=50):
+        hist_divs = (detector.detect_histogram_divergences(lookback=50)
+                    if self.USE_MACD_HIST_DIVERGENCE else [])
+        for d in hist_divs:
             signals.append({
                 'rule': ('MACD histogram bearish divergence' if d['type'] == 'bearish'
                          else 'MACD histogram bullish divergence'),
@@ -294,9 +389,11 @@ class InvestmentScanner:
             })
         # 2) RSI: новый max цены + снижающийся max RSI -> sell;
         #    новый min цены + повышающийся min RSI -> buy
-        for d in detector.detect_classic_divergences(price_col='close',
-                                                    indicator_col='rsi_14',
-                                                    lookback=50):
+        rsi_divs = (detector.detect_classic_divergences(price_col='close',
+                                                        indicator_col='rsi_14',
+                                                        lookback=50)
+                    if self.USE_RSI_DIVERGENCE else [])
+        for d in rsi_divs:
             signals.append({
                 'rule': ('RSI bearish divergence' if d['type'] == 'bearish'
                          else 'RSI bullish divergence'),
@@ -304,11 +401,29 @@ class InvestmentScanner:
                 'weight': self.W_DIVERGENCE,
             })
 
-        score_buy = sum(s['weight'] for s in signals if s['type'] == 'buy')
-        score_sell = sum(s['weight'] for s in signals if s['type'] == 'sell')
+        groups = self._group_signals(signals)
+        aux = [s for s in signals if s.get('aux')]
+        pri = self._prioritized(groups, aux)
+
         boost = sum(s['weight'] for s in signals if s['type'] == 'boost')
-        return {'df': df, 'signals': signals,
-                'score_buy': score_buy + boost, 'score_sell': score_sell + boost}
+        aligned = pri['aligned']
+        conflicting = pri['conflicting']
+        other = [s for s in signals if s['type'] not in ('buy', 'sell', 'boost')]
+
+        ordered = aligned + conflicting + other + \
+                  [s for s in signals if s['type'] == 'boost']
+        score_dir = pri['score_dir'] + boost
+        score_opp = pri['score_opp']
+        if pri['dir'] == 'buy':
+            score_buy, score_sell = score_dir, score_opp
+        elif pri['dir'] == 'sell':
+            score_buy, score_sell = score_opp, score_dir
+        else:
+            score_buy = score_sell = 0
+
+        return {'df': df, 'signals': ordered,
+                'priority': {'dir': pri['dir'], 'step': pri['step']},
+                'score_buy': score_buy, 'score_sell': score_sell}
 
     # ---------- вердикт в разрезе ОДНОГО горизонта ----------
     def _horizon_result(self, secid: str, asset_type: str, tf: str,
@@ -335,13 +450,25 @@ class InvestmentScanner:
         elif score_sell >= self.SIGNAL_THRESHOLD and score_sell > score_buy:
             verdict = 'sell'
 
+        # Помечаем конфликтные сигналы (противоположные первому по приоритету):
+        # вердикт остаётся за первым сигналом, но оба видны в отчёте.
+        pri_dir = scan.get('priority', {}).get('dir')
+        opposite = 'sell' if pri_dir == 'buy' else 'buy'
+        marked_signals = []
+        for s in signals:
+            s2 = dict(s)
+            if s2.get('type') == opposite and pri_dir in ('buy', 'sell'):
+                s2['conflict'] = True
+            marked_signals.append(s2)
+
         res = {
             'tf': tf,
             'tf_label': self.TF_LABEL[tf],
             'horizon': self.HORIZON[tf],
             'date': str(df['date'].iloc[-1]),
             'price': round(price, 4),
-            'signals': [{**s, 'tf': self.TF_LABEL[tf]} for s in signals],
+            'signals': [{**s, 'tf': self.TF_LABEL[tf]} for s in marked_signals],
+            'priority': scan.get('priority'),
             'score_buy': score_buy,
             'score_sell': score_sell,
             'verdict': verdict,
