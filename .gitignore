@@ -1,1 +1,10 @@
+# Python cache and build artifacts
 __pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Data files (generated/local)
+finance.db
+last_report.json

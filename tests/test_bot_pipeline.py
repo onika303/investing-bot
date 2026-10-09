@@ -5,10 +5,11 @@
 """
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from src.config import BotConfig, ConfigError, load_config
 from src.pipeline import (
@@ -388,3 +389,130 @@ def test_do_full_scan_guard_blocks_parallel(monkeypatch):
         finally:
             state.scan_lock.release()
     run(scenario())
+
+
+# ---------------------------------------------------------------- cache/config consistency
+
+class TestReportMatchesConfig:
+    def _write_cfg(self, tmp_path, tickers):
+        cfg = tmp_path / "config.yaml"
+        cfg.write_text(yaml.safe_dump({"assets": {"stocks": tickers}}),
+                       encoding="utf-8")
+        return str(cfg)
+
+    def test_consistent_report_matches(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER", "GAZP"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}, {"secid": "GAZP"}]}
+        assert report_matches_config(rep, None, path) is True
+
+    def test_reduced_ticker_list_invalidates_cache(self, tmp_path):
+        """Кэш со старым (большим) списком не должен считаться актуальным."""
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}, {"secid": "GAZP"}]}
+        assert report_matches_config(rep, None, path) is False
+
+    def test_missing_asset_in_cache_invalidates(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER", "LKOH"])
+        rep = {"generated_at": datetime.now().isoformat(),
+               "results": [{"secid": "SBER"}]}
+        assert report_matches_config(rep, None, path) is False
+
+    def test_edited_config_newer_than_report_invalidates(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        old = (datetime.now() - timedelta(hours=5)).isoformat()
+        rep = {"generated_at": old, "results": [{"secid": "SBER"}]}
+        # config.yaml только что перезаписан → mtime новее generated_at
+        assert report_matches_config(rep, None, path) is False
+
+    def test_broken_report_is_not_matching(self, tmp_path):
+        from src.pipeline import report_matches_config
+        path = self._write_cfg(tmp_path, ["SBER"])
+        assert report_matches_config({}, None, path) is False
+
+
+# ---------------------------------------------------------------- incremental_update
+# Регрессия бага «Нет данных ... за период 2026-10-09 - 2026-10-08»: при загрузке
+# после 23:00 MSK (или повторном прогоне в тот же день) хвост БД оказывается
+# свежее today, и запрос с from > till был заведомо пустым. Теперь такие активы
+# помечаются skipped и не дёргают сеть.
+
+class _FakeLoader:
+    def __init__(self):
+        self.calls = []
+
+    def load_asset(self, secid, asset_type, from_date, till_date,
+                   interval=1, end_on_load=False):
+        self.calls.append((secid, from_date, till_date, interval))
+        import pandas as pd
+        return pd.DataFrame()
+
+
+@pytest.fixture
+def patch_pipeline(monkeypatch, tmp_path):
+    fake = _FakeLoader()
+    monkeypatch.setattr("src.pipeline.MOEXLoader", lambda db: fake)
+    monkeypatch.setattr("src.pipeline.DatabaseManager",
+                        lambda path: SimpleNamespace())
+    return fake
+
+
+def _mk_db_stub(ts_day=None, ts_hour=None):
+    class DB:
+        def __init__(self, path=None):
+            pass
+
+        def get_last_ts(self, secid, interval=None):
+            if interval == 24:
+                return ts_day
+            if interval == 60:
+                return ts_hour
+            return None
+    return DB
+
+
+def test_incremental_skips_stale_future_request(patch_pipeline, monkeypatch):
+    """Хвост 1д позже сегодняшнего дня → skipped, без сетевого запроса."""
+    from src.pipeline import incremental_update
+    future = int((datetime.now() + timedelta(days=1)).timestamp())
+    monkeypatch.setattr("src.pipeline.DatabaseManager", _mk_db_stub(future))
+    stats = incremental_update({"stocks": ["SBER"]})
+    assert stats["skipped"] >= 1
+    assert not [c for c in patch_pipeline.calls if c[3] == 24]
+    assert stats["errors"] == 0
+
+
+def test_incremental_updates_when_behind(patch_pipeline, monkeypatch):
+    """Хвост вчера → обычный инкрементальный запрос от вчера+1 (сегодня)."""
+    from src.pipeline import incremental_update
+    yesterday = int((datetime.now() - timedelta(days=1)).timestamp())
+    monkeypatch.setattr("src.pipeline.DatabaseManager", _mk_db_stub(yesterday))
+    stats = incremental_update({"stocks": ["SBER"]})
+    day_calls = [c for c in patch_pipeline.calls if c[3] == 24]
+    assert len(day_calls) == 1
+    assert day_calls[0][1] == datetime.now().strftime("%Y-%m-%d")  # from == till
+    assert stats["updated"] >= 1
+
+
+def test_incremental_hourly_skip_fresh(patch_pipeline, monkeypatch):
+    """Часовые свечи свежее текущего часа → skipped по 1ч."""
+    from src.pipeline import incremental_update
+    fresh_h = int((datetime.now() + timedelta(hours=2)).timestamp())
+    monkeypatch.setattr("src.pipeline.DatabaseManager",
+                        _mk_db_stub(int(datetime.now().timestamp()), fresh_h))
+    stats = incremental_update({"stocks": ["SBER"]})
+    assert not [c for c in patch_pipeline.calls if c[3] == 60]
+
+
+def test_incremental_new_asset_full_history(patch_pipeline, monkeypatch):
+    """Актива нет в БД → полная история, статус new."""
+    from src.pipeline import incremental_update
+    monkeypatch.setattr("src.pipeline.DatabaseManager", _mk_db_stub(None, None))
+    stats = incremental_update({"futures": ["SiZ6"]})
+    assert stats["new"] == 2  # 1д + 1ч
+    assert {c[3] for c in patch_pipeline.calls} == {24, 60}

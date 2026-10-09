@@ -7,6 +7,7 @@
 в асинхронном коде бота запускать через asyncio.to_thread.
 """
 import json
+import os
 import re
 import time
 from datetime import datetime, timedelta
@@ -45,13 +46,17 @@ def incremental_update(assets: dict, db_path: str = "finance.db",
         в БД нет — грузим полную историю (default_days).
     1ч: MOEX отдаёт часовые свечи историей ~70 дней; при первой загрузке берём окно
         hours_days, далее — хвост от get_last_ts(secid, interval=60).
+    Если хвост в БД уже свежее сегодняшнего дня (загрузка после 23:00 MSK или
+    повторный прогон в тот же день) — актив пропускается (skipped), чтобы не
+    слать заведомо пустой запрос с from > till.
     Пустые ответы (выходные/праздники/нет торгов) обрабатываются штатно.
-    Возвращает сводку {updated, new, empty, errors}.
+    Возвращает сводку {updated, new, empty, errors, skipped}.
     """
     db = DatabaseManager(db_path)
     loader = MOEXLoader(db)
-    today = datetime.now().strftime("%Y-%m-%d")
-    stats = {"updated": 0, "new": 0, "empty": 0, "errors": 0}
+    now = datetime.now()
+    today = now.strftime("%Y-%m-%d")
+    stats = {"updated": 0, "new": 0, "empty": 0, "errors": 0, "skipped": 0}
 
     for asset_type, secids in assets.items():
         for secid in secids:
@@ -59,17 +64,24 @@ def incremental_update(assets: dict, db_path: str = "finance.db",
             try:
                 last_ts = db.get_last_ts(secid, interval=24)
                 if last_ts:
-                    from_date = (datetime.fromtimestamp(last_ts)
-                                 + timedelta(days=1)).strftime("%Y-%m-%d")
-                    stats["updated"] += 1
+                    from_dt = datetime.fromtimestamp(last_ts) + timedelta(days=1)
+                    if from_dt.date() > now.date():
+                        # данные уже актуальны (загрузка позже 23:00 MSK или повторный
+                        # прогон в тот же день) — запрос был бы пустым (from > till)
+                        stats["skipped"] += 1
+                    else:
+                        from_date = from_dt.strftime("%Y-%m-%d")
+                        stats["updated"] += 1
+                        df = loader.load_asset(secid, asset_type, from_date, today,
+                                               interval=24, end_on_load=True)
+                        if df is None or len(df) == 0:
+                            stats["empty"] += 1  # праздники/нет торгов — штатно
                 else:
-                    from_date = (datetime.now() - timedelta(days=default_days)
+                    from_date = (now - timedelta(days=default_days)
                                  ).strftime("%Y-%m-%d")
                     stats["new"] += 1
-                df = loader.load_asset(secid, asset_type, from_date, today,
-                                       interval=24, end_on_load=True)
-                if df is None or len(df) == 0:
-                    stats["empty"] += 1  # выходные/праздники/нет торгов — штатно
+                    loader.load_asset(secid, asset_type, from_date, today,
+                                      interval=24, end_on_load=True)
             except Exception as e:
                 stats["errors"] += 1
                 logger.error(f"Инкрементальная загрузка {secid} (1д): {e}")
@@ -79,21 +91,21 @@ def incremental_update(assets: dict, db_path: str = "finance.db",
                 last_h = db.get_last_ts(secid, interval=60)
                 if last_h:
                     from_h = datetime.fromtimestamp(last_h) + timedelta(hours=1)
-                    if from_h.strftime("%Y-%m-%d") >= today:
-                        pass  # свежее сегодняшнего — ничего не тянем
+                    if from_h >= now:
+                        stats["skipped"] += 1  # часовки свежее текущего часа — не тянем
                     else:
+                        stats["updated"] += 1
                         dfh = loader.load_asset(secid, asset_type,
                                                 from_h.strftime("%Y-%m-%d"), today,
                                                 interval=60, end_on_load=True)
                         if dfh is None or len(dfh) == 0:
                             stats["empty"] += 1
                 else:
-                    dfh = loader.load_asset(secid, asset_type,
-                                            (datetime.now() - timedelta(days=hours_days)
-                                             ).strftime("%Y-%m-%d"), today,
-                                            interval=60, end_on_load=True)
-                    if dfh is None or len(dfh) == 0:
-                        stats["empty"] += 1
+                    stats["new"] += 1
+                    loader.load_asset(secid, asset_type,
+                                      (now - timedelta(days=hours_days)
+                                       ).strftime("%Y-%m-%d"), today,
+                                      interval=60, end_on_load=True)
             except Exception as e:
                 stats["errors"] += 1
                 logger.error(f"Инкрементальная загрузка {secid} (1ч): {e}")
@@ -130,6 +142,27 @@ def load_cached_report(path: Path = LAST_REPORT_PATH) -> Optional[dict]:
 def report_age_hours(report: dict) -> float:
     gen = datetime.fromisoformat(report["generated_at"])
     return (datetime.now() - gen).total_seconds() / 3600
+
+
+def report_matches_config(report: dict, assets: dict, config_path: str = "config.yaml") -> bool:
+    """Актуален ли кэш отчёта относительно ТЕКУЩЕГО config.yaml.
+
+    Отчёт считается несогласованным, если mtime config.yaml новее времени
+    генерации отчёта либо состав активов в отчёте расходится со списком
+    из файла конфигурации (например, список сократили, а бот отдаёт старый
+    кэш со «старым количеством активов»)."""
+    import yaml  # локальный импорт: модуль используется и в лёгких тестах
+    try:
+        gen = datetime.fromisoformat(report["generated_at"])
+        if datetime.fromtimestamp(os.path.getmtime(config_path)) > gen:
+            return False
+        with open(config_path, encoding="utf-8") as f:
+            cur = yaml.safe_load(f)["assets"]
+        cached = {r["secid"] for r in report["results"]}
+        wanted = {s for lst in cur.values() for s in lst}
+        return cached == wanted
+    except Exception:
+        return False
 
 
 def fmt_price(v) -> str:
