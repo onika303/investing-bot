@@ -193,12 +193,22 @@ def safe_send_text(text: str) -> str:
       2) закрывающие теги без пары вырезаются, незакрытые открывающие — добиваются.
     Идемпотентен на корректном входе.
     """
-    # одиночные угловые скобки: не открывающий </?tag...> и не конец его >
-    text = re.sub(r"<(?!/?\s*(?:b|i|u|s|code|pre|tg-spoiler)\b[^<>]*>)",
-                  "&lt;", text)
-    text = re.sub(r">&(?:(?![a-z]+;)|lt;|gt;)", "&gt;&", text)
-    # '>' без конца тега (после предыдущих замен это уже не часть тега) -> &gt;
-    text = re.sub(r">(?=[^A-Za-z0-9_/]|$)", "&gt;", text)
+    # 1) помечаем sentinel-символом \x00 концы валидных тегов (включая '/>');
+    #    одиночные '>' (не из тега) заменяются на '\x01' — это защищает их от
+    #    шага 2 и позволяет идемпотентно вернуть '&gt;' на шаге 3. Без такой
+    #    защиты '</b>' превращался в '</b&gt;' — битый закрывающий тег, из-за
+    #    чего Telegram отклонял ВСЁ сообщение и терялась часть отчёта;
+    text = re.sub(r"(<(?:/?\s*)(?:b|i|u|s|code|pre|tg-spoiler)\b[^<>]*?)/?>",
+                  lambda m: m.group(1) + "\x00", text)
+    text = text.replace(">", "\x01")
+    # 2) защищаем существующие HTML-сущности (&lt; &gt; &amp; &#123;) — иначе
+    #    шаг ниже превратит '&lt;' в '&amp;lt;' и Telegram покажет текст вида
+    #    "RSI &lt;" вместо "RSI <";
+    text = re.sub(r"&(?!#?\d{1,5};|[a-zA-Z][a-zA-Z0-9]{1,7};)", "&amp;", text)
+    # 3) возврат: концы тегов и экранированные одиночные '>'
+    text = text.replace("\x00", ">").replace("\x01", "&gt;")
+    # 4) одиночные '<' (не открывающие валидный тег) -> &lt;
+    text = re.sub(r"<(?!/?\s*(?:b|i|u|s|code|pre|tg-spoiler)\b)", "&lt;", text)
     # теперь '>' может быть только концом валидного тега
     stack: list[str] = []
     out_parts: list[str] = []
@@ -376,11 +386,29 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         messages.extend(build_horizon_messages(tf, items))
 
     if len(messages) > 1:
-        messages = [f"{m}\n<i>(часть {i}/{len(messages)})</i>"
+        messages = [f"{m}\n<i>(сообщение {i}/{len(messages)})</i>"
                     for i, m in enumerate(messages, 1)]
     # финальная страховка: каждое сообщение — валидный Telegram HTML,
-    # иначе Bad Request отклоняет кусок и пользователь теряет часть отчёта
-    return [safe_send_text(m)[:TG_MESSAGE_LIMIT] for m in messages]
+    # иначе Bad Request отклоняет кусок и пользователь теряет часть отчёта.
+    # Обрезка ТОЛЬКО по границам строк (раньше срез по 4096 мог разрезать
+    # тег '</b>' пополам -> 'can't parse entities' и потеря куска).
+    out = []
+    for m in messages:
+        m = safe_send_text(m)
+        if len(m) <= TG_MESSAGE_LIMIT:
+            out.append(m)
+            continue
+        lines, cur, curlen = m.split("\n"), [], 0
+        for ln in lines:
+            add = len(ln) + 1
+            if curlen + add > TG_MESSAGE_LIMIT and cur:
+                out.append(safe_send_text("\n".join(cur)))
+                cur, curlen = [], 0
+            cur.append(ln)
+            curlen += add
+        if cur:
+            out.append(safe_send_text("\n".join(cur)))
+    return out
 
 
 def futures_exp_date(secid: str, now: datetime | None = None) -> datetime | None:
