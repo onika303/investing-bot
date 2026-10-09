@@ -123,39 +123,68 @@ def test_iss_empty_response_falls_back(scanner):
 
 # ---------- интеграция с scan_asset: sell блокируется ----------
 
-def _apply_closes(base_df, closes):
-    df = base_df.copy()[:len(closes)].reset_index(drop=True)
-    df['close'] = closes
-    df['open'] = closes
-    df['high'] = closes * 1.005
-    df['low'] = closes * 0.995
+def _build_archetype(base_df, closes):
+    """Бары «следуют» за направлением движения: open = предыдущий close,
+    в направлении движения high/low расширены, против — узкие. Так индикаторы
+    (EMA/RSI/BB/ATR) считаются на реалигном OHLC."""
+    import numpy as np
+    c = np.asarray(closes, float)
+    prev = np.concatenate([[c[0]], c[:-1]])
+    rising = c >= prev
+    df = base_df.copy()[:len(c)].reset_index(drop=True)
+    df['close'] = c
+    df['open'] = prev
+    df['high'] = np.where(rising, c * 1.025, prev * 1.002)
+    df['low'] = np.where(rising, prev * 1.002, c * 0.975)
     return df
 
 
-def downtrend_df(base_df):
-    """Боковик 200 -> обвальный drop до 100 -> резкий V-отскок до 150 за 6 баров:
-    RSI overbought (sell 15) + Close above upper BB (sell 10) + ADX boost (10)
-    -> S=35/B=0 (уверенная sell-доминанта >= порога 30)."""
+def sell_archetype_df(base_df):
+    """SELL-паттерн под текущие правила (EMA 13/21/50/100, BB x2.5, порог 30):
+    боковик 100 -> обвал до 60 за 6 баров -> слабый отскок до 79.
+    На последнем баре: 'Close below EMA 13/21/50/100' (sell 15) + RSI <30
+    (отрицательный разгон из-за узких откатных баров) => S=15/B=15 — на дневке
+    паттерн НЕ даёт чистой sell-доминанты; sell-вердикт достигается только
+    внутри часового горизонта (см. test_scan_asset_sell_allowed_when_accessible)."""
     import numpy as np
-    drop = np.array([200., 170., 140., 110., 100.])
-    closes = np.concatenate([np.full(60, 200.), drop, np.linspace(100, 150, 6)])
-    return _apply_closes(base_df, closes)
+    closes = np.concatenate([np.full(60, 100.), np.linspace(100, 60, 6),
+                             np.linspace(60, 79, 3)])
+    return _build_archetype(base_df, closes)
 
 
-def uptrend_df(base_df):
-    """Зеркальный бычий паттерн: боковик 100 -> рывок до 200 -> резкий откат
-    до 150 за 6 баров -> B=35/S=0 (buy-доминанта >= порога 30)."""
+def buy_archetype_df(base_df):
+    """BUY-паттерн (зеркало): боковик 100 -> рывок до 140 за 6 баров -> откат до 121."""
     import numpy as np
-    rally = np.array([100., 130., 160., 190., 200.])
-    closes = np.concatenate([np.full(60, 100.), rally, np.linspace(200, 150, 6)])
-    return _apply_closes(base_df, closes)
+    closes = np.concatenate([np.full(60, 100.), np.linspace(100, 140, 6),
+                             np.linspace(140, 121, 3)])
+    return _build_archetype(base_df, closes)
 
+
+# совместимость со старыми именами внутри файла
+downtrend_df = sell_archetype_df
+uptrend_df = buy_archetype_df
 
 
 def _insert_candles(db, secid, df, interval=24):
     rows = [(secid, int(r.ts), interval, r.open, r.high, r.low, r.close, int(r.volume), 0)
             for r in df.itertuples()]
     db.executemany("INSERT OR REPLACE INTO raw_candles VALUES (?,?,?,?,?,?,?,?,?)", rows)
+
+
+def hourly_downtrend_df(base_df):
+    """Часовой sell-паттерн: длинный боковик -> затяжной нисходящий импульс
+    (цена ниже всех EMA, RSI стабильно ~35 — без зон перепроданности).
+    Даёт чистую sell-доминанту >= порога 30 в своём горизонте."""
+    import numpy as np
+    closes = np.concatenate([np.full(80, 100.), np.linspace(100, 70, 120)])
+    return _build_archetype(base_df, closes)
+
+
+def hourly_uptrend_df(base_df):
+    """Часовой buy-паттерн (зеркало): боковик -> затяжной восходящий импульс."""
+    import numpy as np
+    closes = np.concatenate([np.full(80, 100.), np.linspace(100, 130, 120)])
+    return _build_archetype(base_df, closes)
 
 
 def test_scan_asset_sell_blocked_to_watch(scanner, v_shape_df):

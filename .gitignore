@@ -1,7 +1,10 @@
-# Python compiled files
+# Python cache and build artifacts
 __pycache__/
 *.pyc
 
-# Logs and databases
+# Logs
 *.log
-*.db
+
+# Data files (generated/local)
+finance.db
+last_report.json

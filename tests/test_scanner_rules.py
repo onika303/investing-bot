@@ -101,18 +101,18 @@ def test_result_has_strength_and_tf_scores(tmp_db=None):
     db = DatabaseManager.__new__(DatabaseManager)
     db.db_path = ':memory:'
     db._conn = con
-    con.execute("CREATE TABLE raw_candles (secid TEXT, interval INT, ts INT, open REAL,"
-                " high REAL, low REAL, close REAL, volume REAL, oi INT)")
+    # схема совпадает с src/database.py: (secid, ts, interval, open, high, low, close, volume, oi)
+    con.execute("CREATE TABLE raw_candles (secid TEXT, ts INTEGER, interval INT DEFAULT 24,"
+                " open REAL, high REAL, low REAL, close REAL, volume REAL, oi INT)")
     # ровный растущий ряд 1Д + флэт 1Ч — индикаторы считаются стабильно
-    import math
     rows = []
     for i in range(250):
         c = 100 + i * 0.5
-        rows.append(("TEST", 24, 1_600_000_000 + i * 86400, c * 0.99, c * 1.01, c, c * 1e6, 0))
+        rows.append(("TEST", 1_600_000_000 + i * 86400, 24, c * 0.99, c * 1.01, c, c, 1_000_000, 0))
     for i in range(200):
         c = 100 + 249 * 0.5
-        rows.append(("TEST", 60, 1_740_000_000 + i * 3600, c * 0.995, c * 1.005, c, c * 1e5, 0))
-    con.executemany("INSERT INTO raw_candles VALUES (?,?,?,?,?,?,?,?)", rows)
+        rows.append(("TEST", 1_740_000_000 + i * 3600, 60, c * 0.995, c * 1.005, c, c, 100_000, 0))
+    con.executemany("INSERT INTO raw_candles VALUES (?,?,?,?,?,?,?,?,?)", rows)
     db.fetch_all = lambda q, p=(): list(con.execute(q, p))
 
     sc = InvestmentScanner(db, short_restrictions={})
