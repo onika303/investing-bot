@@ -1,10 +1,6 @@
-# Python cache and build artifacts
+# Compiled/Binary files
 __pycache__/
 *.pyc
 
-# Logs
+# Logs and temp files
 *.log
-
-# Data files (generated/local)
-finance.db
-last_report.json

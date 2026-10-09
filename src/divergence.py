@@ -121,3 +121,75 @@ class DivergenceDetector:
             if divergences:
                 result[col] = divergences
         return result
+
+    # ---------- классические дивергенции по парам экстремумов ----------
+    @staticmethod
+    def _local_extremes(series: pd.Series, kind: str, window: int = 2) -> List[int]:
+        """Индексы строгих локальных максимумов/минимумов (fractal): экстремум
+        должен быть больше/меньше всех соседей в окне (без плато-артефактов)."""
+        idx = []
+        for i in range(window, len(series) - window):
+            seg = series.iloc[i - window:i + window + 1].dropna()
+            if len(seg) < window * 2 + 1:
+                continue
+            v = series.iloc[i]
+            if pd.isna(v):
+                continue
+            if kind == 'max' and v > seg.drop(index=i).max():
+                idx.append(i)
+            elif kind == 'min' and v < seg.drop(index=i).min():
+                idx.append(i)
+        return idx
+
+    def detect_classic_divergences(self, price_col: str = 'close',
+                                   indicator_col: str = 'rsi_14',
+                                   lookback: int = 50) -> List[Dict]:
+        """Классический поиск дивергенций по последним двум экстремумам.
+
+        Правила (решение пользователя от 10.10.2026):
+          * новый МАКСИМУМ цены (> предыдущего max) при СНИЖАЮЩЕМСЯ максимуме
+            индикатора -> bearish (продажа);
+          * новый МИНИМУМ цены (< предыдущего min) при ПОВЫШАЮЩЕМСЯ минимуме
+            индикатора -> bullish (покупка).
+        Работает для rsi_14, macd_hist, macd_line и т.п.
+        """
+        if len(self.df) < lookback:
+            lookback = len(self.df)
+        sub = self.df.iloc[-lookback:].reset_index(drop=True)
+        if price_col not in sub.columns or indicator_col not in sub.columns:
+            return []
+
+        out: List[Dict] = []
+        for kind in ('max', 'min'):
+            p_idx = self._local_extremes(sub[price_col], kind)
+            i_idx = self._local_extremes(sub[indicator_col], kind)
+            if len(p_idx) < 2 or not i_idx:
+                continue
+            p1, p2 = p_idx[-2], p_idx[-1]
+            # индикаторный экстремум того же типа рядом с каждым пиком цены
+            m1 = [i for i in i_idx if abs(i - p1) <= 10]
+            m2 = [i for i in i_idx if abs(i - p2) <= 10]
+            if not m1 or not m2 or m1[-1] == m2[-1]:
+                continue
+            pv1, pv2 = sub[price_col].iloc[p1], sub[price_col].iloc[p2]
+            iv1 = sub[indicator_col].iloc[m1[-1]]
+            iv2 = sub[indicator_col].iloc[m2[-1]]
+            if any(pd.isna(x) for x in (pv1, pv2, iv1, iv2)):
+                continue
+            if kind == 'max' and pv2 > pv1 and iv2 < iv1:
+                out.append({'type': 'bearish',
+                            'description': f"Bearish divergence: new price high, lower {indicator_col} peak"})
+            elif kind == 'min' and pv2 < pv1 and iv2 > iv1:
+                out.append({'type': 'bullish',
+                            'description': f"Bullish divergence: new price low, higher {indicator_col} trough"})
+        return out
+
+    def detect_histogram_divergences(self, lookback: int = 50) -> List[Dict]:
+        """Дивергенции цены с ГИСТОГРАММОЙ MACD (требование пользователя):
+        новый max цены + снижающийся max гистограммы -> sell;
+        новый min цены + повышающийся min гистограммы -> buy."""
+        if 'macd_hist' not in self.df.columns:
+            return []
+        return self.detect_classic_divergences(price_col='close',
+                                               indicator_col='macd_hist',
+                                               lookback=lookback)
