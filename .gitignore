@@ -1,9 +1,5 @@
-# Python compiled files
-__pycache__/
-*.pyc
-
-# Logs
+# Logs and temp files
 *.log
 
-# Database files
-finance.db
+# Databases
+*.db
