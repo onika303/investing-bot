@@ -172,6 +172,59 @@ def fmt_price(v) -> str:
         return "-"
 
 
+def esc_html(s) -> str:
+    """Экранирование для Telegram parse_mode=HTML.
+
+    Сигналы содержат '<' и '>' (RSI < 20, RSI > 80, MACD cross signal ↓) —
+    без экранирования Telegram падает с 'Unsupported start tag'.
+    """
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;"))
+
+
+def safe_send_text(text: str) -> str:
+    """Финальный санитайзер HTML-сообщения перед отправкой в Telegram.
+
+    Даже если какой-то динамический фрагмент попал в разметку без esc_html,
+    Telegram отклоняет ВСЁ сообщение с ошибкой 'can't parse entities:
+    Unsupported start tag' — и пользователь теряет часть отчёта. Здесь:
+      1) экранируются все одиночные '<' / '>' (и '&lt;'/'&gt;'), не являющиеся
+         частью разрешённых тегов (b, i, u, s, code, pre, tg-spoiler);
+      2) закрывающие теги без пары вырезаются, незакрытые открывающие — добиваются.
+    Идемпотентен на корректном входе.
+    """
+    # одиночные угловые скобки: не открывающий </?tag...> и не конец его >
+    text = re.sub(r"<(?!/?\s*(?:b|i|u|s|code|pre|tg-spoiler)\b[^<>]*>)",
+                  "&lt;", text)
+    text = re.sub(r">&(?:(?![a-z]+;)|lt;|gt;)", "&gt;&", text)
+    # '>' без конца тега (после предыдущих замен это уже не часть тега) -> &gt;
+    text = re.sub(r">(?=[^A-Za-z0-9_/]|$)", "&gt;", text)
+    # теперь '>' может быть только концом валидного тега
+    stack: list[str] = []
+    out_parts: list[str] = []
+    pos = 0
+    for m in re.finditer(r"<(/?)([a-zA-Z][a-zA-Z0-9_-]*)[^<>]*>", text):
+        closing, tag = m.group(1), m.group(2).lower()
+        out_parts.append(text[pos:m.start()])
+        pos = m.end()
+        if closing:
+            if tag in stack:
+                while stack[-1] != tag:  # пересечённые теги — закрываем внутренние
+                    out_parts.append(f"</{stack.pop()}>")
+                stack.pop()
+                out_parts.append(m.group(0))
+            else:
+                pass  # </tag> без пары — удаляем целиком
+        else:
+            stack.append(tag)
+            out_parts.append(m.group(0))
+    out_parts.append(text[pos:])
+    res = "".join(out_parts)
+    for tag in reversed(stack):  # добиваем незакрытые
+        res += f"</{tag}>"
+    return res
+
+
 def _horizons_of(r: dict) -> dict:
     """Горизонты результата. Старые кэши без поля 'horizons' — считаем 1Д."""
     h = r.get("horizons")
@@ -223,21 +276,26 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
         v = h["verdict"]
         sym = {"buy": "🟢 ПОКУПКА", "sell": "🔴 ПРОДАЖА",
                "watch": "👁 наблюдение"}.get(v, v)
-        line = (f"{rank:>2}. <b>{r['secid']}</b>  {sym}  💪 {h['strength']:g}\n"
+        # secid экранируем: в динамических данных могут встречаться '<'/'>'
+        line = (f"{rank:>2}. <b>{esc_html(r['secid'])}</b>  {sym}  💪 {h['strength']:g}\n"
                 f"     📊 B{h['score_buy']}/S{h['score_sell']}"
                 f"  ·  💵 {fmt_price(h.get('price') or r['price'])}")
         if v in ("buy", "sell") and h.get("sl_tp"):
             line += (f"\n     🛑 SL {fmt_price(h['sl_tp']['stop_loss'])}"
                      f"  →  🎯 TP {fmt_price(h['sl_tp']['take_profit'])}")
-        rules = "; ".join(("⚔️ " if s.get("conflict") else "") + s["rule"]
+        # причина блокировки шорта может приходить и на уровне результата,
+        # и внутри горизонта — берём откуда есть
+        blocked = (h.get("sell_blocked_reasons")
+                   or r.get("sell_blocked_reasons"))
+        rules = "; ".join(("⚔️ " if s.get("conflict") else "") + esc_html(s["rule"])
                           for s in h.get("signals", [])[:4]) or "-"
         if len(rules) > 120:  # защита от гигантских строк (сигналы не обрезаются молча)
             rules = rules[:117] + "…"
         line += f"\n     💡 {rules}"
         if any(s.get("conflict") for s in h.get("signals", [])):
             line += "\n     ⚠️ приоритет у первого сигнала, контра-сигнал показан ⚔️"
-        if h.get("sell_blocked_reasons"):
-            line += f"\n     ⛔ шорт запрещён: {h['sell_blocked_reasons'][0]}"
+        if blocked:
+            line += f"\n     ⛔ шорт запрещён: {esc_html(blocked[0])}"
         return line
 
     limit = TG_MESSAGE_LIMIT - 200  # запас на нумерацию частей
@@ -320,7 +378,9 @@ def format_report_text(report: dict, top: int = 25) -> list[str]:
     if len(messages) > 1:
         messages = [f"{m}\n<i>(часть {i}/{len(messages)})</i>"
                     for i, m in enumerate(messages, 1)]
-    return messages
+    # финальная страховка: каждое сообщение — валидный Telegram HTML,
+    # иначе Bad Request отклоняет кусок и пользователь теряет часть отчёта
+    return [safe_send_text(m)[:TG_MESSAGE_LIMIT] for m in messages]
 
 
 def futures_exp_date(secid: str, now: datetime | None = None) -> datetime | None:

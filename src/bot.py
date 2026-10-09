@@ -17,6 +17,7 @@
 Запуск: python src/bot.py   (нужны BOT_TOKEN и ADMIN_CHAT_ID в .env)
 """
 import asyncio
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -36,12 +37,15 @@ from src.config import ConfigError, load_config
 from src.database import DatabaseManager
 from src.pipeline import (
     check_futures_expiration,
+    esc_html,
+    fmt_price,
     format_report_text,
     incremental_update,
     load_assets,
     load_cached_report,
     report_age_hours,
     report_matches_config,
+    safe_send_text,
     scan_and_report,
 )
 from src.scanner import InvestmentScanner
@@ -86,13 +90,27 @@ class IsAuthorized(BaseFilter):
 
 
 async def send_chunks(bot: Bot, chat_id: int, chunks: list[str]):
+    """Отправка с самовосстановлением при ошибках парсинга HTML.
+
+    Если Telegram отклоняет кусок (Bad Request: can't parse entities),
+    повторяем попытку в plaintext — иначе пользователь молча теряет часть
+    отчёта (наблюдение приходило без «важных сигналов» и наоборот).
+    """
     for ch in chunks:
         try:
             await bot.send_message(chat_id, ch, parse_mode="HTML",
                                    link_preview_options=LinkPreviewOptions(
                                        is_disabled=True))
         except Exception as e:
-            logger.error(f"Не удалось отправить кусок сообщения: {e}")
+            logger.error(f"Не удалось отправить HTML-кусок: {e}. "
+                         f"Повтор в plaintext.")
+            try:
+                plain = re.sub(r"</?(?:b|i|u|s|code|pre|tg-spoiler)[^>]*>", "", ch)
+                await bot.send_message(chat_id, plain,
+                                       link_preview_options=LinkPreviewOptions(
+                                           is_disabled=True))
+            except Exception as e2:
+                logger.error(f"Кусок не отправлен даже в plaintext: {e2}")
 
 
 # ---------------------------------------------------------------- handlers
@@ -254,21 +272,22 @@ async def cmd_asset(message: Message, command: CommandObject, app: AppState):
     if not res:
         return await message.answer(f"Нет данных по {secid} в БД.")
 
-    rules = "\n".join(f"• {s['rule']} ({s['type']}, вес {s['weight']})"
+    rules = "\n".join(f"• {esc_html(s['rule'])} ({s['type']}, вес {s['weight']})"
                       for s in res["signals"]) or "правил не сработало"
     sl_tp = ""
     if res.get("sl_tp"):
-        sl_tp = (f"\n🎯 SL: {res['sl_tp']['stop_loss']} | "
-                 f"TP: {res['sl_tp']['take_profit']} (ATR-based)")
-    blocked = ("\n⛔ Шорт запрещён: " + "; ".join(res["sell_blocked_reasons"])
+        sl_tp = (f"\n🎯 SL: {fmt_price(res['sl_tp']['stop_loss'])} | "
+                 f"TP: {fmt_price(res['sl_tp']['take_profit'])} (ATR-based)")
+    blocked = ("\n⛔ Шорт запрещён: " + "; ".join(esc_html(x) for x in res["sell_blocked_reasons"])
                if res.get("sell_blocked_reasons") else "")
     access = res.get("trade_access", {})
     allowed_txt = "?" if not access else ("да" if access.get("short_allowed") else "нет")
     await message.answer(
-        f"<b>{secid}</b> ({asset_type}) на {res['date']}\n"
-        f"Цена: {res['price']} | Вердикт: {res['verdict'].upper()} "
-        f"B{res['score_buy']}/S{res['score_sell']}{sl_tp}{blocked}\n"
-        f"Шорт доступен: {allowed_txt}\n\n{rules}",
+        safe_send_text(
+            f"<b>{secid}</b> ({asset_type}) на {res['date']}\n"
+            f"Цена: {res['price']} | Вердикт: {res['verdict'].upper()} "
+            f"B{res['score_buy']}/S{res['score_sell']}{sl_tp}{blocked}\n"
+            f"Шорт доступен: {allowed_txt}\n\n{rules}"),
         parse_mode="HTML")
 
 
