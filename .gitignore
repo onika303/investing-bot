@@ -1,6 +1,9 @@
-# Compiled/Binary files
+# Python compiled files
 __pycache__/
 *.pyc
 
-# Logs and temp files
+# Logs
 *.log
+
+# Database files
+finance.db

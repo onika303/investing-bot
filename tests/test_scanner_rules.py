@@ -13,7 +13,8 @@ def sig(prev=None, last=None):
     """
     base = {'ema_13': 100.0, 'ema_21': 100.0, 'ema_50': 100.0, 'ema_100': 100.0,
             'rsi_14': 50.0,
-            'bb_lower': 90.0, 'bb_upper': 110.0, 'adx_14': 15.0, 'close': 100.0}
+            'bb_lower': 90.0, 'bb_middle': 100.0, 'bb_upper': 110.0,
+            'adx_14': 15.0, 'close': 100.0}
     row_prev = dict(base); row_prev.update(prev or {})
     row_last = dict(base); row_last.update(last or {})
     return pd.DataFrame([row_prev, row_last])
@@ -35,12 +36,14 @@ def test_death_cross_21x50(scanner_rules_only):
 
 
 def test_trend_confluence(scanner_rules_only):
-    """Цена выше всех EMA 13/21/50/100 -> конфлюэнция buy (+15)."""
+    """Цена выше всех EMA 13/21/50/100 -> направленность buy (+W_EMA_CONFLUENCE)."""
     s = scanner_rules_only
-    out = s._rule_signals(sig(last={'close': 130}))
+    # bb_middle=105, чтобы close=130 не попадал в зону BB-касания
+    out = s._rule_signals(sig(last={'close': 130, 'bb_middle': 105}))
     assert any(o['rule'] == 'Close above EMA 13/21/50/100' and o['type'] == 'buy'
-               and o['weight'] == 15 for o in out)
-    out = s._rule_signals(sig(last={'close': 70}))
+               and o['weight'] == InvestmentScanner.W_EMA_CONFLUENCE for o in out)
+    # bb_middle=95, чтобы close=70 не попадал в зону BB-касания
+    out = s._rule_signals(sig(last={'close': 70, 'bb_middle': 95}))
     assert any(o['rule'] == 'Close below EMA 13/21/50/100' and o['type'] == 'sell'
                for o in out)
 
@@ -53,9 +56,82 @@ def test_rsi_zones(scanner_rules_only):
 
 
 def test_bb_breakout(scanner_rules_only):
+    """Закрытие у границ Bollinger Bands (σ=2.5): нижняя -> buy, верхняя -> sell."""
     s = scanner_rules_only
-    assert any(o['rule'] == 'Close below lower BB' and o['type'] == 'buy' for o in s._rule_signals(sig(last={'close': 89})))
-    assert any(o['rule'] == 'Close above upper BB' and o['type'] == 'sell' for o in s._rule_signals(sig(last={'close': 111})))
+    out = s._rule_signals(sig(last={'close': 89}))   # ниже mid-0.95*(mid-lower)
+    assert any(o['rule'] == 'Close at lower BB (2.5σ)' and o['type'] == 'buy'
+               and o['weight'] == InvestmentScanner.W_BB_EDGE for o in out)
+    out = s._rule_signals(sig(last={'close': 111}))
+    assert any(o['rule'] == 'Close at upper BB (2.5σ)' and o['type'] == 'sell'
+               for o in out)
+
+
+# ---------- приоритет критериев (решение пользователя от 10.10.2026) ----------
+def _mk(rule, typ, weight):
+    return {'rule': rule, 'type': typ, 'weight': weight}
+
+
+def test_group_signals_steps(scanner_rules_only):
+    """Каждый тип сигнала попадает в свой шаг приоритета; прочее — aux."""
+    s = scanner_rules_only
+    sigs = [_mk('RSI bullish divergence', 'buy', 40),
+            _mk('Close above EMA 13/21/50/100', 'buy', 10),
+            _mk('Close at lower BB (2.5σ)', 'buy', 30),
+            _mk('EMA 13x21 golden cross', 'buy', 25),
+            _mk('RSI < 20 (15.0)', 'buy', 35)]
+    g = s._group_signals(sigs)
+    assert g['divergence'] == [sigs[0]]
+    assert g['ema_trend'] == [sigs[1]]
+    assert g['bb'] == [sigs[2]]
+    assert g['ema_cross'] == [sigs[3]]
+    assert sigs[4].get('aux') is True
+
+
+def test_first_step_wins_over_opposite_later_step(scanner_rules_only):
+    """Шаг 1 дал sell (дивергенция), шаг 2 — противоположный buy:
+    вердикт остаётся sell (приоритет первого сигнала), оба сигнала видны."""
+    s = scanner_rules_only
+    sigs = [_mk('MACD histogram bearish divergence', 'sell', 40),
+            _mk('Close above EMA 13/21/50/100', 'buy', 10)]
+    g = s._group_signals(sigs)
+    pri = s._prioritized(g, [])
+    assert pri['dir'] == 'sell' and pri['step'] == 'divergence'
+    assert pri['score_dir'] == 40          # сила продажного сигнала
+    assert pri['score_opp'] == 10           # контра-сигнал не отменяет, а учтён
+    assert pri['conflicting'] == [sigs[1]]  # оба сигнала попадут в отчёт
+
+
+def test_same_direction_signals_accumulate(scanner_rules_only):
+    """Сигналы одного направления на разных шагах складываются в силу."""
+    s = scanner_rules_only
+    sigs = [_mk('RSI bearish divergence', 'sell', 40),
+            _mk('Close below EMA 13/21/50/100', 'sell', 10),
+            _mk('Close at upper BB (2.5σ)', 'sell', 30),
+            _mk('EMA 13x21 death cross', 'sell', 25)]
+    g = s._group_signals(sigs)
+    pri = s._prioritized(g, [])
+    assert pri['dir'] == 'sell' and pri['score_dir'] == 105
+    assert pri['conflicting'] == []
+
+
+def test_aux_extends_primary_direction(scanner_rules_only):
+    """Вспомогательный сигнал (RSI-экстремум) усиливает направление первого шага,
+    но не может задать его сам при отсутствии приоритетных сигналов — тоже задаёт
+    (шаги пустые -> aux становится первичным)."""
+    s = scanner_rules_only
+    sigs = [_mk('RSI > 80 (85.0)', 'sell', 35)]
+    g = s._group_signals(sigs)
+    aux = [x for x in sigs if x.get('aux')]
+    pri = s._prioritized(g, aux)
+    assert pri['dir'] == 'sell' and pri['step'] == 'aux'
+
+    sigs2 = [_mk('RSI bullish divergence', 'buy', 40),
+             _mk('RSI < 20 (15.0)', 'buy', 35)]
+    g2 = s._group_signals(sigs2)
+    aux2 = [x for x in sigs2 if x.get('aux')]
+    pri2 = s._prioritized(g2, aux2)
+    assert pri2['dir'] == 'buy' and pri2['step'] == 'divergence'
+    assert pri2['score_dir'] == 75
 
 
 def test_adx_boost(scanner_rules_only):
